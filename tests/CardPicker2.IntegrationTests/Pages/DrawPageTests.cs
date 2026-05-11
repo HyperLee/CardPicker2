@@ -1,9 +1,11 @@
 using System.Net;
 using System.Text.RegularExpressions;
+
 using CardPicker2.Services;
+
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CardPicker2.IntegrationTests.Pages;
 

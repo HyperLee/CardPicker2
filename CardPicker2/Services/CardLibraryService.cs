@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
 using CardPicker2.Models;
+
 using Microsoft.Extensions.Options;
 
 namespace CardPicker2.Services;
@@ -26,6 +28,7 @@ public sealed class CardLibraryService : ICardLibraryService
     /// Initializes a new instance of the <see cref="CardLibraryService"/> class.
     /// </summary>
     /// <param name="options">The card-library options.</param>
+    /// <param name="randomizer">The random index generator used for draw fairness.</param>
     /// <param name="duplicateDetector">The duplicate detector.</param>
     /// <param name="logger">The structured logger.</param>
     public CardLibraryService(

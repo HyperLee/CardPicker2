@@ -160,14 +160,57 @@
 
 **目的**: 完成跨故事品質要求、文件、效能、安全、可及性與交付檢查。
 
-- [ ] T063 [P] 補齊生產安全標頭整合測試，驗證 HSTS 與 Content-Security-Policy 於 tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs
-- [ ] T064 [P] 檢查並補齊所有公開模型與服務 XML 文件註解，必要時加入 `<example>` 或 `<code>`，於 CardPicker2/Models/MealType.cs、CardPicker2/Models/MealCard.cs、CardPicker2/Models/MealCardInputModel.cs、CardPicker2/Models/CardLibraryDocument.cs、CardPicker2/Models/SearchCriteria.cs、CardPicker2/Models/DrawOperationState.cs、CardPicker2/Models/DrawResult.cs、CardPicker2/Services/CardLibraryLoadResult.cs、CardPicker2/Services/CardLibraryOptions.cs、CardPicker2/Services/DuplicateCardDetector.cs、CardPicker2/Services/ICardLibraryService.cs、CardPicker2/Services/CardLibraryService.cs、CardPicker2/Services/IMealCardRandomizer.cs、CardPicker2/Services/MealCardRandomizer.cs、CardPicker2/Services/SeedMealCards.cs
-- [ ] T065 更新 shared layout 導覽、繁中文案與卡牌頁入口於 CardPicker2/Pages/Shared/_Layout.cshtml
-- [ ] T066 驗證並調整桌面與行動尺寸下首頁、列表、詳情與表單無重疊或溢出，並確認鍵盤操作、焦點狀態與 WCAG 2.1 AA 目標於 CardPicker2/wwwroot/css/site.css
-- [ ] T067 驗證 reduced-motion、重複提交防護與表單前端行為於 CardPicker2/wwwroot/js/site.js
-- [ ] T068 執行格式、建置、完整測試與覆蓋率品質閘門，確認關鍵業務邏輯覆蓋率達 80% 以上或在本任務記錄合理例外，於 CardPicker2.sln、tests/CardPicker2.UnitTests/CardPicker2.UnitTests.csproj 與 tests/CardPicker2.IntegrationTests/CardPicker2.IntegrationTests.csproj
-- [ ] T069 依 quickstart 手動驗證首次啟動、抽卡、搜尋、CRUD、腐敗 JSON、reduced motion、老虎機視覺驗收與效能預算量測，並保留 FCP、LCP、搜尋回應與 Page handler p95 證據於 specs/001-casino-meal-picker/quickstart.md
-- [ ] T070 更新交付紀錄與驗證證據於 specs/001-casino-meal-picker/tasks.md
+- [X] T063 [P] 補齊生產安全標頭整合測試，驗證 HSTS 與 Content-Security-Policy 於 tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs
+- [X] T064 [P] 檢查並補齊所有公開模型與服務 XML 文件註解，必要時加入 `<example>` 或 `<code>`，於 CardPicker2/Models/MealType.cs、CardPicker2/Models/MealCard.cs、CardPicker2/Models/MealCardInputModel.cs、CardPicker2/Models/CardLibraryDocument.cs、CardPicker2/Models/SearchCriteria.cs、CardPicker2/Models/DrawOperationState.cs、CardPicker2/Models/DrawResult.cs、CardPicker2/Services/CardLibraryLoadResult.cs、CardPicker2/Services/CardLibraryOptions.cs、CardPicker2/Services/DuplicateCardDetector.cs、CardPicker2/Services/ICardLibraryService.cs、CardPicker2/Services/CardLibraryService.cs、CardPicker2/Services/IMealCardRandomizer.cs、CardPicker2/Services/MealCardRandomizer.cs、CardPicker2/Services/SeedMealCards.cs
+- [X] T065 更新 shared layout 導覽、繁中文案與卡牌頁入口於 CardPicker2/Pages/Shared/_Layout.cshtml
+- [X] T066 驗證並調整桌面與行動尺寸下首頁、列表、詳情與表單無重疊或溢出，並確認鍵盤操作、焦點狀態與 WCAG 2.1 AA 目標於 CardPicker2/wwwroot/css/site.css
+- [X] T067 驗證 reduced-motion、重複提交防護與表單前端行為於 CardPicker2/wwwroot/js/site.js
+- [X] T068 執行格式、建置、完整測試與覆蓋率品質閘門，確認關鍵業務邏輯覆蓋率達 80% 以上或在本任務記錄合理例外，於 CardPicker2.sln、tests/CardPicker2.UnitTests/CardPicker2.UnitTests.csproj 與 tests/CardPicker2.IntegrationTests/CardPicker2.IntegrationTests.csproj
+- [X] T069 依 quickstart 手動驗證首次啟動、抽卡、搜尋、CRUD、腐敗 JSON、reduced motion、老虎機視覺驗收與效能預算量測，並保留 FCP、LCP、搜尋回應與 Page handler p95 證據於 specs/001-casino-meal-picker/quickstart.md
+- [X] T070 更新交付紀錄與驗證證據於 specs/001-casino-meal-picker/tasks.md
+
+---
+
+## 交付紀錄
+
+### Phase 1: Setup
+
+- Commit: `6c95234 chore(setup): add test projects and logging packages`
+- Push: `001-casino-meal-picker` 已推送
+- 驗證：`dotnet test CardPicker2.sln -m:1 /nr:false` 通過
+
+### Phase 2: Foundational
+
+- Commit: `d42ac29 feat(storage): add card library foundation`
+- Push: `001-casino-meal-picker` 已推送
+- 驗證：`dotnet test CardPicker2.sln -m:1 /nr:false` 通過
+
+### Phase 3: User Story 1
+
+- Commit: `d22a441 feat(draw): add slot machine meal draw`
+- Push: `001-casino-meal-picker` 已推送
+- 驗證：單元與整合測試通過，首頁抽卡流程可用
+
+### Phase 4: User Story 2
+
+- Commit: `7fa888f feat(cards): add browse and search pages`
+- Push: `001-casino-meal-picker` 已推送
+- 驗證：單元與整合測試通過，瀏覽、搜尋與詳情頁可用
+
+### Phase 5: User Story 3
+
+- Commit: `b5e8d43 feat(cards): add card management flows`
+- Push: `001-casino-meal-picker` 已推送
+- 驗證：單元與整合測試通過，新增、編輯、刪除流程可用且不使 US1/US2 回歸
+
+### Phase 6: Polish 與跨切面工作
+
+- Commit: `chore(polish): finalize validation and delivery evidence`
+- 視覺驗收：Chrome CDP 驗證 1366x768 與 390x844 首頁、列表、詳情、表單皆無水平溢出；390x844 首頁首屏包含餐別、投幣、拉桿、3 欄老虎機與狀態文字
+- 前端行為：一般動態送出會停用按鈕並加上 `is-spinning`；reduced motion 送出會停用按鈕但不加 `is-spinning`
+- 效能：首頁 desktop FCP/LCP 76ms/76ms；首頁 mobile FCP/LCP 60ms/60ms；搜尋 p95 1ms；Page handler p95 最大 1ms
+- 覆蓋率：UnitTests root line-rate 54.0% 屬合理例外，因 Razor Page/Program 由 IntegrationTests 覆蓋；`CardLibraryService` 83.90%、`DuplicateCardDetector` 84.61%
+- 最終驗證命令已執行：`dotnet format`、`dotnet build`、`dotnet test`、`dotnet test --collect:"XPlat Code Coverage"`
 
 ---
 

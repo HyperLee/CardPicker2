@@ -5,6 +5,10 @@ namespace CardPicker2.Services;
 /// <summary>
 /// Describes the outcome of loading the local card library.
 /// </summary>
+/// <param name="Status">The load state.</param>
+/// <param name="Document">The validated document when loading succeeds.</param>
+/// <param name="UserMessage">A Traditional Chinese message suitable for UI feedback.</param>
+/// <param name="DiagnosticMessage">A non-secret diagnostic summary for logs and tests.</param>
 public sealed record CardLibraryLoadResult(
     CardLibraryLoadStatus Status,
     CardLibraryDocument? Document,

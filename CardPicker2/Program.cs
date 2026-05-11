@@ -1,4 +1,5 @@
 using CardPicker2.Services;
+
 using Serilog;
 
 namespace CardPicker2;
@@ -18,6 +19,10 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddRazorPages();
+        builder.Services.AddHsts(options =>
+        {
+            options.ExcludedHosts.Clear();
+        });
         builder.Services.Configure<CardLibraryOptions>(options =>
         {
             options.LibraryFilePath = Path.Combine(builder.Environment.ContentRootPath, "data", "cards.json");

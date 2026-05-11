@@ -1,5 +1,7 @@
 using System.Net;
+
 using CardPicker2.Services;
+
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;

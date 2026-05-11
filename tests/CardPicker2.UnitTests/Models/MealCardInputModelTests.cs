@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 using CardPicker2.Models;
 
 namespace CardPicker2.UnitTests.Models;

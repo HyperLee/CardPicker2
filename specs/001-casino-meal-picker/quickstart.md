@@ -161,3 +161,49 @@ dotnet run --project CardPicker2/CardPicker2.csproj
 - 關鍵業務邏輯測試覆蓋率達 80% 以上；若無法達成，必須在交付紀錄中說明例外、風險與補救計畫。
 - 公開服務與模型具備 XML 文件註解；需要示例的 API 包含 `<example>` 或 `<code>`。
 - 日誌不包含秘密值、連線字串或 JSON 檔案完整內容。
+
+## 實作驗證紀錄（2026-05-11）
+
+自動化品質閘門：
+
+```bash
+dotnet format CardPicker2.sln --verify-no-changes
+dotnet build CardPicker2.sln -m:1 /nr:false
+dotnet test CardPicker2.sln -m:1 /nr:false
+dotnet test CardPicker2.sln -m:1 /nr:false --collect:"XPlat Code Coverage"
+```
+
+本輪驗證結果：
+
+- 格式檢查通過。
+- 建置通過，0 warning、0 error。
+- 完整測試通過：UnitTests 33/33、IntegrationTests 20/20。
+- 覆蓋率輸出：
+  - UnitTests root line-rate 54.0%，branch-rate 35.33%；此數字包含 Razor Page、Program 與整合測試負責覆蓋的頁面協調程式碼，因此低於業務邏輯門檻。
+  - IntegrationTests root line-rate 77.79%，branch-rate 68.66%。
+  - 關鍵業務邏輯 `CardLibraryService` line-rate 83.90%，`DuplicateCardDetector` line-rate 84.61%，符合 80% 以上要求。
+
+瀏覽器與視覺驗收：
+
+- 使用 Google Chrome DevTools Protocol 驗證 1366x768 desktop 與 390x844 mobile viewport。
+- 首頁、卡牌列表、詳情頁、新增表單在 390x844 與 1366x768 的 `scrollWidth == clientWidth`，無水平溢出。
+- 390x844 首頁首屏可見餐別選擇、投幣確認、拉桿按鈕、3 欄老虎機視覺區與狀態文字。
+- 桌面 Chrome 手動流程：選擇早餐、投幣、拉桿後成功揭示早餐卡牌。
+- CDP 前端行為檢查：
+  - 一般動態：送出後按鈕 disabled=true、slot 加上 `is-spinning`、狀態文字為「轉動中，請稍候。」
+  - reduced motion：送出後按鈕 disabled=true、不加 `is-spinning`、狀態文字為「正在揭示結果。」
+
+效能量測：
+
+- 1366x768 首頁 FCP 76ms、LCP 76ms、loadEventEnd 34ms。
+- 390x844 首頁 FCP 60ms、LCP 60ms、loadEventEnd 33ms。
+- 本機 HTTP 20 次取樣 p95：
+  - `/`：1ms
+  - `/Cards`：1ms
+  - `/Cards?Keyword=鮪&MealType=Breakfast`：1ms
+  - `/Cards/11111111-1111-1111-1111-111111111111`：0ms
+
+資料與安全驗證：
+
+- 首次啟動、缺失 JSON 建立種子資料、腐敗 JSON 保留並阻斷操作、搜尋、抽卡、CRUD、Anti-Forgery 與正式環境 HSTS/CSP 均由整合測試覆蓋。
+- 腐敗 JSON 與 CRUD 的破壞性/資料變更情境以暫存目錄整合測試驗證，未手動破壞 repo 內 `CardPicker2/data/cards.json`。

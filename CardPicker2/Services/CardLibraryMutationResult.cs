@@ -5,6 +5,9 @@ namespace CardPicker2.Services;
 /// <summary>
 /// Describes the outcome of a create, edit, or delete card operation.
 /// </summary>
+/// <param name="Status">The mutation state.</param>
+/// <param name="Card">The affected card when the mutation succeeds and one is available.</param>
+/// <param name="UserMessage">A Traditional Chinese message suitable for UI feedback.</param>
 public sealed record CardLibraryMutationResult(
     CardLibraryMutationStatus Status,
     MealCard? Card,
