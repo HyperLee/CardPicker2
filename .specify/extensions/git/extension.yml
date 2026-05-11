@@ -42,11 +42,11 @@ provides:
 hooks:
   before_constitution:
     command: speckit.git.initialize
-    optional: false
+    optional: true
     description: "Initialize Git repository before constitution setup"
   before_specify:
     command: speckit.git.feature
-    optional: false
+    optional: true
     description: "Create feature branch before specification"
   before_clarify:
     command: speckit.git.commit
