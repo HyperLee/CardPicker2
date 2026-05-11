@@ -42,28 +42,28 @@
 
 ### Tests for Foundational，必須先失敗
 
-- [ ] T005 [P] 新增 MealCardInputModel 必填欄位與非法餐別驗證測試於 tests/CardPicker2.UnitTests/Models/MealCardInputModelTests.cs
-- [ ] T006 [P] 新增 DuplicateCardDetector trim 與大小寫不敏感重複判斷測試於 tests/CardPicker2.UnitTests/Services/DuplicateCardDetectorTests.cs
-- [ ] T007 [P] 新增 CardLibraryService 缺檔建種子、腐敗 JSON 保留阻斷、不支援 schemaVersion、必要欄位缺失、非法餐別、持久化資料重複與原子寫入失敗不污染資料測試於 tests/CardPicker2.UnitTests/Services/CardLibraryServiceTests.cs
-- [ ] T008 執行 foundational 新增測試並確認實作前失敗於 tests/CardPicker2.UnitTests/CardPicker2.UnitTests.csproj
+- [X] T005 [P] 新增 MealCardInputModel 必填欄位與非法餐別驗證測試於 tests/CardPicker2.UnitTests/Models/MealCardInputModelTests.cs
+- [X] T006 [P] 新增 DuplicateCardDetector trim 與大小寫不敏感重複判斷測試於 tests/CardPicker2.UnitTests/Services/DuplicateCardDetectorTests.cs
+- [X] T007 [P] 新增 CardLibraryService 缺檔建種子、腐敗 JSON 保留阻斷、不支援 schemaVersion、必要欄位缺失、非法餐別、持久化資料重複與原子寫入失敗不污染資料測試於 tests/CardPicker2.UnitTests/Services/CardLibraryServiceTests.cs
+- [X] T008 執行 foundational 新增測試並確認實作前失敗於 tests/CardPicker2.UnitTests/CardPicker2.UnitTests.csproj
 
 ### Implementation for Foundational
 
-- [ ] T009 [P] 建立 MealType 列舉與繁中顯示名稱輔助方法於 CardPicker2/Models/MealType.cs
-- [ ] T010 [P] 建立不可變 ID 的 MealCard 領域模型與 XML 文件註解於 CardPicker2/Models/MealCard.cs
-- [ ] T011 [P] 建立含 Data Annotations 與繁中驗證訊息的 MealCardInputModel 於 CardPicker2/Models/MealCardInputModel.cs
-- [ ] T012 [P] 建立 schemaVersion 與 cards 根文件模型於 CardPicker2/Models/CardLibraryDocument.cs
-- [ ] T013 [P] 建立搜尋條件模型與輸入正規化邏輯於 CardPicker2/Models/SearchCriteria.cs
-- [ ] T014 [P] 建立抽卡狀態與抽卡結果模型於 CardPicker2/Models/DrawOperationState.cs 與 CardPicker2/Models/DrawResult.cs
-- [ ] T015 [P] 建立卡牌庫載入結果與儲存選項模型於 CardPicker2/Services/CardLibraryLoadResult.cs 與 CardPicker2/Services/CardLibraryOptions.cs
-- [ ] T016 建立重複卡牌偵測服務，使用 Name.Trim()、MealType、Description.Trim() 與 OrdinalIgnoreCase 於 CardPicker2/Services/DuplicateCardDetector.cs
-- [ ] T017 建立早餐、午餐、晚餐各至少 3 張且不重複的種子資料於 CardPicker2/Services/SeedMealCards.cs
-- [ ] T018 建立卡牌庫服務介面，涵蓋載入、搜尋、詳情、抽卡、建立、編輯、刪除與 blocking 狀態查詢於 CardPicker2/Services/ICardLibraryService.cs
-- [ ] T019 實作 JSON 載入、缺檔重建、腐敗檔案保留、資料驗證與原子寫入於 CardPicker2/Services/CardLibraryService.cs
-- [ ] T020 建立與 SeedMealCards 一致的初始卡牌庫文件於 CardPicker2/data/cards.json
-- [ ] T021 註冊 CardLibraryOptions、ICardLibraryService、Serilog console/file logging 與正式環境 CSP middleware 於 CardPicker2/Program.cs
-- [ ] T022 設定 Serilog rolling file 與非秘密日誌層級設定於 CardPicker2/appsettings.json 與 CardPicker2/appsettings.Development.json
-- [ ] T023 執行 foundational 測試並確認通過於 tests/CardPicker2.UnitTests/CardPicker2.UnitTests.csproj
+- [X] T009 [P] 建立 MealType 列舉與繁中顯示名稱輔助方法於 CardPicker2/Models/MealType.cs
+- [X] T010 [P] 建立不可變 ID 的 MealCard 領域模型與 XML 文件註解於 CardPicker2/Models/MealCard.cs
+- [X] T011 [P] 建立含 Data Annotations 與繁中驗證訊息的 MealCardInputModel 於 CardPicker2/Models/MealCardInputModel.cs
+- [X] T012 [P] 建立 schemaVersion 與 cards 根文件模型於 CardPicker2/Models/CardLibraryDocument.cs
+- [X] T013 [P] 建立搜尋條件模型與輸入正規化邏輯於 CardPicker2/Models/SearchCriteria.cs
+- [X] T014 [P] 建立抽卡狀態與抽卡結果模型於 CardPicker2/Models/DrawOperationState.cs 與 CardPicker2/Models/DrawResult.cs
+- [X] T015 [P] 建立卡牌庫載入結果與儲存選項模型於 CardPicker2/Services/CardLibraryLoadResult.cs 與 CardPicker2/Services/CardLibraryOptions.cs
+- [X] T016 建立重複卡牌偵測服務，使用 Name.Trim()、MealType、Description.Trim() 與 OrdinalIgnoreCase 於 CardPicker2/Services/DuplicateCardDetector.cs
+- [X] T017 建立早餐、午餐、晚餐各至少 3 張且不重複的種子資料於 CardPicker2/Services/SeedMealCards.cs
+- [X] T018 建立卡牌庫服務介面，涵蓋載入、搜尋、詳情、抽卡、建立、編輯、刪除與 blocking 狀態查詢於 CardPicker2/Services/ICardLibraryService.cs
+- [X] T019 實作 JSON 載入、缺檔重建、腐敗檔案保留、資料驗證與原子寫入於 CardPicker2/Services/CardLibraryService.cs
+- [X] T020 建立與 SeedMealCards 一致的初始卡牌庫文件於 CardPicker2/data/cards.json
+- [X] T021 註冊 CardLibraryOptions、ICardLibraryService、Serilog console/file logging 與正式環境 CSP middleware 於 CardPicker2/Program.cs
+- [X] T022 設定 Serilog rolling file 與非秘密日誌層級設定於 CardPicker2/appsettings.json 與 CardPicker2/appsettings.Development.json
+- [X] T023 執行 foundational 測試並確認通過於 tests/CardPicker2.UnitTests/CardPicker2.UnitTests.csproj
 
 **Checkpoint**: 基礎完成後，使用者故事可依優先級或團隊容量平行展開。
 
