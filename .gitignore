@@ -49,6 +49,7 @@ Generated\ Files/
 Thumbs.db
 *.swp
 .vscode/
+!.vscode/
 .idea/
 
 # MSTest test Results
