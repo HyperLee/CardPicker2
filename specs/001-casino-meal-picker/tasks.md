@@ -77,23 +77,23 @@
 
 ### Tests for User Story 1，必須先失敗
 
-- [ ] T024 [P] [US1] 新增 MealCardRandomizer 等機率索引範圍與空集合拒絕測試於 tests/CardPicker2.UnitTests/Services/MealCardRandomizerTests.cs，並新增 DrawOperationState 狀態轉換與 DrawResult 顯示映射測試於 tests/CardPicker2.UnitTests/Models/DrawOperationStateTests.cs
-- [ ] T025 [US1] 新增抽卡服務只從所選餐別抽出、空卡池拒絕與 blocking recovery 拒絕測試於 tests/CardPicker2.UnitTests/Services/CardLibraryServiceTests.cs
-- [ ] T026 [P] [US1] 新增首頁抽卡整合測試，覆蓋未選餐別、未投幣、成功揭示、Anti-Forgery 與 blocking recovery 狀態於 tests/CardPicker2.IntegrationTests/Pages/DrawPageTests.cs
-- [ ] T027 [US1] 執行 US1 新增測試並確認實作前失敗於 CardPicker2.sln
+- [X] T024 [P] [US1] 新增 MealCardRandomizer 等機率索引範圍與空集合拒絕測試於 tests/CardPicker2.UnitTests/Services/MealCardRandomizerTests.cs，並新增 DrawOperationState 狀態轉換與 DrawResult 顯示映射測試於 tests/CardPicker2.UnitTests/Models/DrawOperationStateTests.cs
+- [X] T025 [US1] 新增抽卡服務只從所選餐別抽出、空卡池拒絕與 blocking recovery 拒絕測試於 tests/CardPicker2.UnitTests/Services/CardLibraryServiceTests.cs
+- [X] T026 [P] [US1] 新增首頁抽卡整合測試，覆蓋未選餐別、未投幣、成功揭示、Anti-Forgery 與 blocking recovery 狀態於 tests/CardPicker2.IntegrationTests/Pages/DrawPageTests.cs
+- [X] T027 [US1] 執行 US1 新增測試並確認實作前失敗於 CardPicker2.sln
 
 ### Implementation for User Story 1
 
-- [ ] T028 [P] [US1] 建立可替換抽卡亂數介面於 CardPicker2/Services/IMealCardRandomizer.cs
-- [ ] T029 [P] [US1] 實作 MealCardRandomizer 使用 BCL random API 產生 [0,count) 索引於 CardPicker2/Services/MealCardRandomizer.cs
-- [ ] T030 [US1] 擴充 ICardLibraryService 抽卡合約以回傳 DrawResult 與繁中失敗訊息於 CardPicker2/Services/ICardLibraryService.cs
-- [ ] T031 [US1] 實作抽卡篩選、空卡池拒絕、blocking recovery 拒絕與抽卡成功 Information log 於 CardPicker2/Services/CardLibraryService.cs
-- [ ] T032 [US1] 更新首頁 PageModel 的 OnGet 與 OnPostDrawAsync，處理 mealType query、CoinInserted、ModelState 與 DrawOperationState 於 CardPicker2/Pages/Index.cshtml.cs
-- [ ] T033 [US1] 更新首頁 Razor 表單，加入餐別選擇、投幣確認、拉桿/開始、Anti-Forgery token、狀態文字與揭示結果於 CardPicker2/Pages/Index.cshtml
-- [ ] T034 [US1] 加入老虎機視覺、響應式版面、焦點狀態與 reduced-motion CSS 於 CardPicker2/wwwroot/css/site.css
-- [ ] T035 [US1] 加入投幣/拉桿前端狀態、送出後禁用重複提交與 reduced-motion 揭示處理於 CardPicker2/wwwroot/js/site.js
-- [ ] T036 [US1] 註冊 IMealCardRandomizer 服務與首頁相關結構化日誌分類於 CardPicker2/Program.cs
-- [ ] T037 [US1] 執行 US1 單元與整合測試並確認通過於 CardPicker2.sln
+- [X] T028 [P] [US1] 建立可替換抽卡亂數介面於 CardPicker2/Services/IMealCardRandomizer.cs
+- [X] T029 [P] [US1] 實作 MealCardRandomizer 使用 BCL random API 產生 [0,count) 索引於 CardPicker2/Services/MealCardRandomizer.cs
+- [X] T030 [US1] 擴充 ICardLibraryService 抽卡合約以回傳 DrawResult 與繁中失敗訊息於 CardPicker2/Services/ICardLibraryService.cs
+- [X] T031 [US1] 實作抽卡篩選、空卡池拒絕、blocking recovery 拒絕與抽卡成功 Information log 於 CardPicker2/Services/CardLibraryService.cs
+- [X] T032 [US1] 更新首頁 PageModel 的 OnGet 與 OnPostDrawAsync，處理 mealType query、CoinInserted、ModelState 與 DrawOperationState 於 CardPicker2/Pages/Index.cshtml.cs
+- [X] T033 [US1] 更新首頁 Razor 表單，加入餐別選擇、投幣確認、拉桿/開始、Anti-Forgery token、狀態文字與揭示結果於 CardPicker2/Pages/Index.cshtml
+- [X] T034 [US1] 加入老虎機視覺、響應式版面、焦點狀態與 reduced-motion CSS 於 CardPicker2/wwwroot/css/site.css
+- [X] T035 [US1] 加入投幣/拉桿前端狀態、送出後禁用重複提交與 reduced-motion 揭示處理於 CardPicker2/wwwroot/js/site.js
+- [X] T036 [US1] 註冊 IMealCardRandomizer 服務與首頁相關結構化日誌分類於 CardPicker2/Program.cs
+- [X] T037 [US1] 執行 US1 單元與整合測試並確認通過於 CardPicker2.sln
 
 **Checkpoint**: User Story 1 MUST 可獨立展示、測試與交付。
 

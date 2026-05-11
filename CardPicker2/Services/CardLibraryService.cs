@@ -18,6 +18,7 @@ public sealed class CardLibraryService : ICardLibraryService
     };
 
     private readonly CardLibraryOptions _options;
+    private readonly IMealCardRandomizer _randomizer;
     private readonly DuplicateCardDetector _duplicateDetector;
     private readonly ILogger<CardLibraryService> _logger;
 
@@ -29,10 +30,12 @@ public sealed class CardLibraryService : ICardLibraryService
     /// <param name="logger">The structured logger.</param>
     public CardLibraryService(
         IOptions<CardLibraryOptions> options,
+        IMealCardRandomizer randomizer,
         DuplicateCardDetector duplicateDetector,
         ILogger<CardLibraryService> logger)
     {
         _options = options.Value;
+        _randomizer = randomizer;
         _duplicateDetector = duplicateDetector;
         _logger = logger;
     }
@@ -103,7 +106,7 @@ public sealed class CardLibraryService : ICardLibraryService
     /// <inheritdoc />
     public Task<DrawResult> DrawAsync(MealType mealType, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(DrawResult.Failure(mealType, "抽卡功能尚未完成。"));
+        return DrawCoreAsync(mealType, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -149,6 +152,40 @@ public sealed class CardLibraryService : ICardLibraryService
             filePath,
             document.Cards.Count);
         return CardLibraryLoadResult.CreatedFromSeed(document);
+    }
+
+    private async Task<DrawResult> DrawCoreAsync(MealType mealType, CancellationToken cancellationToken)
+    {
+        if (!Enum.IsDefined(typeof(MealType), mealType))
+        {
+            _logger.LogWarning("Draw rejected because meal type is invalid: {MealType}", mealType);
+            return DrawResult.Failure(mealType, "請先選擇早餐、午餐或晚餐。");
+        }
+
+        var loadResult = await LoadAsync(cancellationToken);
+        if (loadResult.IsBlocked || loadResult.Document is null)
+        {
+            _logger.LogWarning("Draw blocked because card library is unavailable. Status: {LoadStatus}", loadResult.Status);
+            return DrawResult.Failure(mealType, loadResult.UserMessage);
+        }
+
+        var pool = loadResult.Document.Cards
+            .Where(card => card.MealType == mealType)
+            .ToList();
+        if (pool.Count == 0)
+        {
+            _logger.LogWarning("Draw rejected because meal type {MealType} has no cards", mealType);
+            return DrawResult.Failure(mealType, "這個餐別目前沒有可抽取的餐點卡牌。");
+        }
+
+        var selected = pool[_randomizer.NextIndex(pool.Count)];
+        _logger.LogInformation(
+            "Meal draw succeeded for {MealType} with card {CardId} from pool size {PoolCount}",
+            mealType,
+            selected.Id,
+            pool.Count);
+
+        return DrawResult.Success(mealType, selected);
     }
 
     private async Task WriteDocumentAsync(string filePath, CardLibraryDocument document, CancellationToken cancellationToken)

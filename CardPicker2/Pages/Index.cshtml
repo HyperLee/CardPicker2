@@ -1,10 +1,68 @@
 ﻿@page
+@using CardPicker2.Models
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "餐點抽卡機";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="slot-page" aria-labelledby="draw-title">
+    <div class="slot-header">
+        <p class="slot-kicker">今日餐點</p>
+        <h1 id="draw-title">餐點抽卡機</h1>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+    {
+        var alertClass = Model.OperationState == CardPicker2.Models.DrawOperationState.Blocked ? "alert-danger" : "alert-info";
+        <div class="alert @alertClass" role="status" id="draw-state">@Model.StatusMessage</div>
+    }
+
+    <form method="post" asp-page-handler="Draw" class="slot-console" data-draw-form>
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+        <fieldset class="meal-selector" disabled="@Model.IsBlocked">
+            <legend>選擇餐別</legend>
+            <div class="meal-options" role="radiogroup" aria-label="選擇餐別">
+                @foreach (var mealType in Model.MealTypes)
+                {
+                    var id = $"meal-{mealType}";
+                    <input class="btn-check" type="radio" asp-for="MealType" id="@id" value="@mealType" />
+                    <label class="btn meal-option" for="@id">@mealType.ToDisplayName()</label>
+                }
+            </div>
+            <span asp-validation-for="MealType" class="text-danger"></span>
+        </fieldset>
+
+        <div class="slot-machine" aria-label="老虎機抽卡視覺區" data-slot-machine>
+            <div class="slot-reel"><span>早</span><span>午</span><span>晚</span></div>
+            <div class="slot-reel"><span>飯</span><span>麵</span><span>湯</span></div>
+            <div class="slot-reel"><span>鮮</span><span>香</span><span>熱</span></div>
+        </div>
+
+        <div class="draw-controls">
+            <div class="form-check coin-control">
+                <input asp-for="CoinInserted" class="form-check-input" disabled="@Model.IsBlocked" />
+                <label asp-for="CoinInserted" class="form-check-label">投幣確認</label>
+            </div>
+            <span asp-validation-for="CoinInserted" class="text-danger"></span>
+
+            <button type="submit" class="btn btn-danger lever-button" disabled="@Model.IsBlocked" data-draw-submit>
+                拉桿開始抽卡
+            </button>
+        </div>
+    </form>
+
+    @if (Model.Result?.Succeeded == true)
+    {
+        <section class="draw-result" aria-labelledby="draw-result-title">
+            <p class="slot-kicker">抽卡結果</p>
+            <h2 id="draw-result-title">@Model.Result.Name</h2>
+            <p class="meal-badge">@Model.Result.MealTypeDisplayName</p>
+            <p>@Model.Result.Description</p>
+        </section>
+    }
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

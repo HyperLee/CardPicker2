@@ -23,6 +23,7 @@ public class Program
             options.LibraryFilePath = Path.Combine(builder.Environment.ContentRootPath, "data", "cards.json");
         });
         builder.Services.AddSingleton<DuplicateCardDetector>();
+        builder.Services.AddSingleton<IMealCardRandomizer, MealCardRandomizer>();
         builder.Services.AddScoped<ICardLibraryService, CardLibraryService>();
 
         var app = builder.Build();

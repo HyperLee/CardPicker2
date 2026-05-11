@@ -20,6 +20,11 @@ public sealed record DrawResult(
     string UserMessage)
 {
     /// <summary>
+    /// Gets the Traditional Chinese display name of the selected card meal type.
+    /// </summary>
+    public string MealTypeDisplayName => MealType?.ToDisplayName() ?? string.Empty;
+
+    /// <summary>
     /// Creates a successful draw result from a meal card.
     /// </summary>
     /// <param name="selectedMealType">The meal type submitted by the user.</param>

@@ -154,10 +154,85 @@ public sealed class CardLibraryServiceTests
         Assert.False(File.Exists(library.FilePath));
     }
 
-    private static CardLibraryService CreateService(string filePath)
+    [Fact]
+    public async Task DrawAsync_SelectsOnlyFromRequestedMealType()
+    {
+        using var library = TempCardLibrary.Create();
+        await WriteJsonAsync(library.FilePath, new
+        {
+            schemaVersion = 1,
+            cards = new[]
+            {
+                new
+                {
+                    id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                    name = "早餐卡",
+                    mealType = "Breakfast",
+                    description = "早餐描述"
+                },
+                new
+                {
+                    id = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
+                    name = "午餐卡",
+                    mealType = "Lunch",
+                    description = "午餐描述"
+                }
+            }
+        });
+        var service = CreateService(library.FilePath, new FixedMealCardRandomizer(0));
+
+        var result = await service.DrawAsync(MealType.Lunch);
+
+        Assert.True(result.Succeeded);
+        Assert.Equal(Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"), result.CardId);
+        Assert.Equal(MealType.Lunch, result.MealType);
+        Assert.Equal("午餐卡", result.Name);
+    }
+
+    [Fact]
+    public async Task DrawAsync_WithEmptyMealPool_ReturnsFailure()
+    {
+        using var library = TempCardLibrary.Create();
+        await WriteJsonAsync(library.FilePath, new
+        {
+            schemaVersion = 1,
+            cards = new[]
+            {
+                new
+                {
+                    id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                    name = "早餐卡",
+                    mealType = "Breakfast",
+                    description = "早餐描述"
+                }
+            }
+        });
+        var service = CreateService(library.FilePath);
+
+        var result = await service.DrawAsync(MealType.Dinner);
+
+        Assert.False(result.Succeeded);
+        Assert.Contains("沒有可抽取", result.UserMessage);
+    }
+
+    [Fact]
+    public async Task DrawAsync_WhenLibraryIsBlocked_ReturnsRecoveryFailure()
+    {
+        using var library = TempCardLibrary.Create();
+        await File.WriteAllTextAsync(library.FilePath, "{");
+        var service = CreateService(library.FilePath);
+
+        var result = await service.DrawAsync(MealType.Breakfast);
+
+        Assert.False(result.Succeeded);
+        Assert.Contains("卡牌庫", result.UserMessage);
+    }
+
+    private static CardLibraryService CreateService(string filePath, IMealCardRandomizer? randomizer = null)
     {
         return new CardLibraryService(
             Options.Create(new CardLibraryOptions { LibraryFilePath = filePath }),
+            randomizer ?? new FixedMealCardRandomizer(0),
             new DuplicateCardDetector(),
             NullLogger<CardLibraryService>.Instance);
     }
@@ -190,6 +265,22 @@ public sealed class CardLibraryServiceTests
             {
                 Directory.Delete(DirectoryPath, recursive: true);
             }
+        }
+    }
+
+    private sealed class FixedMealCardRandomizer : IMealCardRandomizer
+    {
+        private readonly int _index;
+
+        public FixedMealCardRandomizer(int index)
+        {
+            _index = index;
+        }
+
+        public int NextIndex(int count)
+        {
+            Assert.InRange(_index, 0, count - 1);
+            return _index;
         }
     }
 }

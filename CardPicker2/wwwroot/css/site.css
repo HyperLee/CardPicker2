@@ -19,6 +19,8 @@ html {
 
 body {
   margin-bottom: 60px;
+  background: #f7f5ef;
+  color: #24201c;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -28,4 +30,211 @@ body {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+.slot-page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+}
+
+.slot-header {
+  margin-bottom: 1.25rem;
+}
+
+.slot-header h1 {
+  margin: 0;
+  font-size: 3.25rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.slot-kicker {
+  margin: 0 0 0.25rem;
+  color: #8d241f;
+  font-weight: 700;
+}
+
+.slot-console {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  border: 2px solid #3b3028;
+  border-radius: 8px;
+  background: #fffaf0;
+  box-shadow: 0 16px 40px rgba(53, 38, 26, 0.15);
+}
+
+.meal-selector {
+  min-width: 0;
+}
+
+.meal-selector legend {
+  float: none;
+  width: auto;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.meal-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.meal-option {
+  width: 100%;
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #9e8f71;
+  background: #fffdf6;
+  color: #24201c;
+  font-weight: 700;
+}
+
+.btn-check:checked + .meal-option {
+  border-color: #b52821;
+  background: #b52821;
+  color: #fff;
+}
+
+.slot-machine {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(72px, 1fr));
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: #32271f;
+  min-height: 8rem;
+}
+
+.slot-reel {
+  position: relative;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  overflow: hidden;
+  border: 2px solid #d5b75c;
+  border-radius: 6px;
+  background: #fff7dc;
+  color: #2b211a;
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.slot-reel span {
+  display: flex;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.slot-machine.is-spinning .slot-reel span {
+  animation: slotPulse 0.38s linear infinite;
+}
+
+.draw-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.coin-control {
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d5b75c;
+  border-radius: 8px;
+  background: #fffdf6;
+  font-weight: 700;
+}
+
+.lever-button {
+  min-height: 2.75rem;
+  padding-inline: 1.25rem;
+  font-weight: 800;
+}
+
+.draw-result {
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  border-left: 6px solid #2f7d54;
+  border-radius: 8px;
+  background: #f1fff6;
+}
+
+.draw-result h2 {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+  letter-spacing: 0;
+}
+
+.meal-badge {
+  display: inline-flex;
+  margin: 0 0 0.75rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  background: #2f7d54;
+  color: #fff;
+  font-weight: 700;
+}
+
+@keyframes slotPulse {
+  0% {
+    transform: translateY(-0.15rem);
+  }
+  50% {
+    transform: translateY(0.15rem);
+  }
+  100% {
+    transform: translateY(-0.15rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .slot-page {
+    padding-top: 1rem;
+  }
+
+  .slot-console {
+    padding: 1rem;
+  }
+
+  .slot-header h1 {
+    font-size: 2.25rem;
+  }
+
+  .draw-result h2 {
+    font-size: 1.5rem;
+  }
+
+  .meal-options,
+  .draw-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .slot-machine {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .slot-reel {
+    font-size: 1.5rem;
+  }
+
+  .lever-button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slot-machine.is-spinning .slot-reel span {
+    animation: none;
+  }
 }
