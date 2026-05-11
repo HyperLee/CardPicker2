@@ -134,23 +134,23 @@
 
 ### Tests for User Story 3，必須先失敗
 
-- [ ] T049 [P] [US3] 新增卡牌建立、編輯、刪除、重複拒絕與編輯失敗保留原內容的服務測試於 tests/CardPicker2.UnitTests/Services/CardLibraryMutationTests.cs
-- [ ] T050 [P] [US3] 新增卡牌管理整合測試，覆蓋 Create/Edit/Delete 表單、POST /Cards/{id}?handler=Delete、Anti-Forgery、欄位錯誤、重複錯誤與 blocking recovery 停用操作於 tests/CardPicker2.IntegrationTests/Pages/CardManagementPageTests.cs
-- [ ] T051 [US3] 執行 US3 新增測試並確認實作前失敗於 CardPicker2.sln
+- [X] T049 [P] [US3] 新增卡牌建立、編輯、刪除、重複拒絕與編輯失敗保留原內容的服務測試於 tests/CardPicker2.UnitTests/Services/CardLibraryMutationTests.cs
+- [X] T050 [P] [US3] 新增卡牌管理整合測試，覆蓋 Create/Edit/Delete 表單、POST /Cards/{id}?handler=Delete、Anti-Forgery、欄位錯誤、重複錯誤與 blocking recovery 停用操作於 tests/CardPicker2.IntegrationTests/Pages/CardManagementPageTests.cs
+- [X] T051 [US3] 執行 US3 新增測試並確認實作前失敗於 CardPicker2.sln
 
 ### Implementation for User Story 3
 
-- [ ] T052 [US3] 擴充 ICardLibraryService 建立、編輯、刪除合約，定義成功、驗證失敗、重複、找不到與寫入失敗結果於 CardPicker2/Services/ICardLibraryService.cs
-- [ ] T053 [US3] 實作建立卡牌的新 Guid 產生、trim 驗證、非法餐別拒絕、重複拒絕與寫入失敗回復於 CardPicker2/Services/CardLibraryService.cs
-- [ ] T054 [US3] 實作編輯卡牌不可變 ID、編輯成重複時完整失敗、刪除永久移除與結構化警告/錯誤日誌於 CardPicker2/Services/CardLibraryService.cs
-- [ ] T055 [P] [US3] 建立共用卡牌表單 partial，包含欄位錯誤與繁中標籤於 CardPicker2/Pages/Cards/_CardForm.cshtml
-- [ ] T056 [P] [US3] 建立新增卡牌 PageModel，處理 GET、POST、ModelState、服務結果與 TempData 成功訊息於 CardPicker2/Pages/Cards/Create.cshtml.cs
-- [ ] T057 [P] [US3] 建立編輯卡牌 PageModel，處理 GET、POST、找不到、不可變 ID 與服務失敗訊息於 CardPicker2/Pages/Cards/Edit.cshtml.cs
-- [ ] T058 [US3] 建立新增卡牌 Razor Page，包含 Anti-Forgery、validation summary 與 blocking recovery 停用狀態於 CardPicker2/Pages/Cards/Create.cshtml
-- [ ] T059 [US3] 建立編輯卡牌 Razor Page，包含 Anti-Forgery、validation summary 與 blocking recovery 停用狀態於 CardPicker2/Pages/Cards/Edit.cshtml
-- [ ] T060 [US3] 在卡牌列表加入編輯/刪除管理入口，並在詳情頁加入刪除確認表單與 OnPostDeleteAsync handler，要求 ConfirmDelete=true 並保留 Anti-Forgery 於 CardPicker2/Pages/Cards/Index.cshtml、CardPicker2/Pages/Cards/Details.cshtml 與 CardPicker2/Pages/Cards/Details.cshtml.cs
-- [ ] T061 [US3] 補齊卡牌管理表單、確認區、停用狀態與行動版排版樣式於 CardPicker2/wwwroot/css/site.css
-- [ ] T062 [US3] 執行 US3 測試並確認 US1、US2 不回歸於 CardPicker2.sln
+- [X] T052 [US3] 擴充 ICardLibraryService 建立、編輯、刪除合約，定義成功、驗證失敗、重複、找不到與寫入失敗結果於 CardPicker2/Services/ICardLibraryService.cs
+- [X] T053 [US3] 實作建立卡牌的新 Guid 產生、trim 驗證、非法餐別拒絕、重複拒絕與寫入失敗回復於 CardPicker2/Services/CardLibraryService.cs
+- [X] T054 [US3] 實作編輯卡牌不可變 ID、編輯成重複時完整失敗、刪除永久移除與結構化警告/錯誤日誌於 CardPicker2/Services/CardLibraryService.cs
+- [X] T055 [P] [US3] 建立共用卡牌表單 partial，包含欄位錯誤與繁中標籤於 CardPicker2/Pages/Cards/_CardForm.cshtml
+- [X] T056 [P] [US3] 建立新增卡牌 PageModel，處理 GET、POST、ModelState、服務結果與 TempData 成功訊息於 CardPicker2/Pages/Cards/Create.cshtml.cs
+- [X] T057 [P] [US3] 建立編輯卡牌 PageModel，處理 GET、POST、找不到、不可變 ID 與服務失敗訊息於 CardPicker2/Pages/Cards/Edit.cshtml.cs
+- [X] T058 [US3] 建立新增卡牌 Razor Page，包含 Anti-Forgery、validation summary 與 blocking recovery 停用狀態於 CardPicker2/Pages/Cards/Create.cshtml
+- [X] T059 [US3] 建立編輯卡牌 Razor Page，包含 Anti-Forgery、validation summary 與 blocking recovery 停用狀態於 CardPicker2/Pages/Cards/Edit.cshtml
+- [X] T060 [US3] 在卡牌列表加入編輯/刪除管理入口，並在詳情頁加入刪除確認表單與 OnPostDeleteAsync handler，要求 ConfirmDelete=true 並保留 Anti-Forgery 於 CardPicker2/Pages/Cards/Index.cshtml、CardPicker2/Pages/Cards/Details.cshtml 與 CardPicker2/Pages/Cards/Details.cshtml.cs
+- [X] T061 [US3] 補齊卡牌管理表單、確認區、停用狀態與行動版排版樣式於 CardPicker2/wwwroot/css/site.css
+- [X] T062 [US3] 執行 US3 測試並確認 US1、US2 不回歸於 CardPicker2.sln
 
 **Checkpoint**: 所有已選使用者故事 MUST 獨立可用且整體不回歸。
 

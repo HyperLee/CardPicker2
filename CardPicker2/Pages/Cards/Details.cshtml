@@ -6,6 +6,11 @@
 }
 
 <section class="card-detail" aria-labelledby="card-detail-title">
+    @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+    {
+        <div class="alert alert-success" role="status">@Model.StatusMessage</div>
+    }
+
     @if (Model.IsBlocked)
     {
         <div class="alert alert-danger" role="alert">@Model.Message</div>
@@ -20,6 +25,19 @@
         <h1 id="card-detail-title">@Model.Card.Name</h1>
         <p class="meal-badge">@Model.Card.MealType.ToDisplayName()</p>
         <p class="card-description">@Model.Card.Description</p>
+
+        <div class="detail-actions">
+            <a class="btn btn-danger" href="/Cards/Edit/@Model.Card.Id">編輯卡牌</a>
+        </div>
+
+        <form method="post" asp-page-handler="Delete" asp-route-id="@Model.Card.Id" class="delete-panel">
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+            <div class="form-check">
+                <input asp-for="ConfirmDelete" class="form-check-input" />
+                <label asp-for="ConfirmDelete" class="form-check-label">我確認要永久刪除此餐點卡牌</label>
+            </div>
+            <button type="submit" class="btn btn-outline-danger mt-3">刪除卡牌</button>
+        </form>
     }
 
     <a class="btn btn-outline-secondary" asp-page="/Cards/Index">返回卡牌庫</a>

@@ -1,0 +1,26 @@
+@model CardPicker2.Models.MealCardInputModel
+@using CardPicker2.Models
+
+<div class="mb-3">
+    <label asp-for="Name" class="form-label">餐點名稱</label>
+    <input asp-for="Name" class="form-control" maxlength="100" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="MealType" class="form-label">餐別</label>
+    <select asp-for="MealType" class="form-select">
+        <option value="">請選擇餐別</option>
+        @foreach (var mealType in Enum.GetValues<MealType>())
+        {
+            <option value="@mealType">@mealType.ToDisplayName()</option>
+        }
+    </select>
+    <span asp-validation-for="MealType" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Description" class="form-label">描述</label>
+    <textarea asp-for="Description" class="form-control" rows="5" maxlength="500"></textarea>
+    <span asp-validation-for="Description" class="text-danger"></span>
+</div>

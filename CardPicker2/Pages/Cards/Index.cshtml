@@ -15,6 +15,14 @@
     {
         <div class="alert alert-danger" role="alert">@Model.LibraryState?.UserMessage</div>
     }
+    else if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+    {
+        <div class="alert alert-success" role="status">@Model.StatusMessage</div>
+    }
+
+    <div class="management-bar">
+        <a class="btn btn-danger" asp-page="/Cards/Create">新增卡牌</a>
+    </div>
 
     <form method="get" class="search-panel" role="search">
         <div>
@@ -51,7 +59,10 @@
                         <h2>@card.Name</h2>
                         <p class="meal-badge">@card.MealType.ToDisplayName()</p>
                     </div>
-                    <a class="btn btn-outline-danger" href="/Cards/@card.Id">查看詳情</a>
+                    <div class="card-actions">
+                        <a class="btn btn-outline-danger" href="/Cards/@card.Id">查看詳情</a>
+                        <a class="btn btn-outline-secondary" href="/Cards/Edit/@card.Id">編輯</a>
+                    </div>
                 </article>
             }
         </div>

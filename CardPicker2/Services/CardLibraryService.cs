@@ -112,19 +112,19 @@ public sealed class CardLibraryService : ICardLibraryService
     /// <inheritdoc />
     public Task<CardLibraryMutationResult> CreateAsync(MealCardInputModel input, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(CardLibraryMutationResult.NotAvailable("卡牌管理功能尚未完成。"));
+        return CreateCoreAsync(input, cancellationToken);
     }
 
     /// <inheritdoc />
     public Task<CardLibraryMutationResult> UpdateAsync(Guid id, MealCardInputModel input, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(CardLibraryMutationResult.NotAvailable("卡牌管理功能尚未完成。"));
+        return UpdateCoreAsync(id, input, cancellationToken);
     }
 
     /// <inheritdoc />
     public Task<CardLibraryMutationResult> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(CardLibraryMutationResult.NotAvailable("卡牌管理功能尚未完成。"));
+        return DeleteCoreAsync(id, cancellationToken);
     }
 
     private async Task<CardLibraryLoadResult> CreateSeedFileAsync(string filePath, CancellationToken cancellationToken)
@@ -228,6 +228,123 @@ public sealed class CardLibraryService : ICardLibraryService
         }
 
         return loadResult.Document.Cards.FirstOrDefault(card => card.Id == id);
+    }
+
+    private async Task<CardLibraryMutationResult> CreateCoreAsync(MealCardInputModel input, CancellationToken cancellationToken)
+    {
+        var loadResult = await LoadAsync(cancellationToken);
+        if (loadResult.IsBlocked || loadResult.Document is null)
+        {
+            return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.Blocked, loadResult.UserMessage);
+        }
+
+        var normalized = input.Normalize();
+        if (!IsValidInput(normalized))
+        {
+            _logger.LogWarning("Create card rejected due to invalid input");
+            return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.ValidationFailed, "請確認餐點名稱、餐別與描述皆已正確填寫。");
+        }
+
+        if (_duplicateDetector.HasDuplicate(loadResult.Document.Cards, normalized))
+        {
+            _logger.LogWarning("Create card rejected because duplicate card content was submitted");
+            return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.Duplicate, "已有相同餐點名稱、餐別與描述的卡牌。");
+        }
+
+        var card = new MealCard(Guid.NewGuid(), normalized.Name!, normalized.MealType!.Value, normalized.Description!);
+        var updatedDocument = new CardLibraryDocument
+        {
+            SchemaVersion = CardLibraryDocument.CurrentSchemaVersion,
+            Cards = loadResult.Document.Cards.Concat(new[] { card }).ToList()
+        };
+
+        var writeResult = await TryWriteDocumentAsync(updatedDocument, cancellationToken);
+        return writeResult ?? CardLibraryMutationResult.Success(card, "已新增餐點卡牌。");
+    }
+
+    private async Task<CardLibraryMutationResult> UpdateCoreAsync(Guid id, MealCardInputModel input, CancellationToken cancellationToken)
+    {
+        var loadResult = await LoadAsync(cancellationToken);
+        if (loadResult.IsBlocked || loadResult.Document is null)
+        {
+            return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.Blocked, loadResult.UserMessage);
+        }
+
+        var existing = loadResult.Document.Cards.FirstOrDefault(card => card.Id == id);
+        if (existing is null)
+        {
+            return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.NotFound, "找不到餐點卡牌。");
+        }
+
+        var normalized = input.Normalize();
+        if (!IsValidInput(normalized))
+        {
+            _logger.LogWarning("Update card {CardId} rejected due to invalid input", id);
+            return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.ValidationFailed, "請確認餐點名稱、餐別與描述皆已正確填寫。");
+        }
+
+        if (_duplicateDetector.HasDuplicate(loadResult.Document.Cards, normalized, ignoredCardId: id))
+        {
+            _logger.LogWarning("Update card {CardId} rejected because duplicate card content was submitted", id);
+            return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.Duplicate, "已有相同餐點名稱、餐別與描述的卡牌。");
+        }
+
+        var updatedCard = new MealCard(id, normalized.Name!, normalized.MealType!.Value, normalized.Description!);
+        var cards = loadResult.Document.Cards
+            .Select(card => card.Id == id ? updatedCard : card)
+            .ToList();
+        var updatedDocument = new CardLibraryDocument
+        {
+            SchemaVersion = CardLibraryDocument.CurrentSchemaVersion,
+            Cards = cards
+        };
+
+        var writeResult = await TryWriteDocumentAsync(updatedDocument, cancellationToken);
+        return writeResult ?? CardLibraryMutationResult.Success(updatedCard, "已更新餐點卡牌。");
+    }
+
+    private async Task<CardLibraryMutationResult> DeleteCoreAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var loadResult = await LoadAsync(cancellationToken);
+        if (loadResult.IsBlocked || loadResult.Document is null)
+        {
+            return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.Blocked, loadResult.UserMessage);
+        }
+
+        var existing = loadResult.Document.Cards.FirstOrDefault(card => card.Id == id);
+        if (existing is null)
+        {
+            return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.NotFound, "找不到餐點卡牌。");
+        }
+
+        var updatedDocument = new CardLibraryDocument
+        {
+            SchemaVersion = CardLibraryDocument.CurrentSchemaVersion,
+            Cards = loadResult.Document.Cards.Where(card => card.Id != id).ToList()
+        };
+
+        var writeResult = await TryWriteDocumentAsync(updatedDocument, cancellationToken);
+        return writeResult ?? CardLibraryMutationResult.Success(existing, "已刪除餐點卡牌。");
+    }
+
+    private async Task<CardLibraryMutationResult?> TryWriteDocumentAsync(CardLibraryDocument document, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await WriteDocumentAsync(GetLibraryFilePath(), document, cancellationToken);
+            return null;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            _logger.LogError(ex, "Card library write failed");
+            return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.WriteFailed, "卡牌暫時無法儲存，請稍後再試。");
+        }
+    }
+
+    private static bool IsValidInput(MealCardInputModel input)
+    {
+        var validationResults = new List<ValidationResult>();
+        return Validator.TryValidateObject(input, new ValidationContext(input), validationResults, validateAllProperties: true);
     }
 
     private async Task WriteDocumentAsync(string filePath, CardLibraryDocument document, CancellationToken cancellationToken)

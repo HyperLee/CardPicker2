@@ -16,6 +16,28 @@ public sealed record CardLibraryMutationResult(
     public bool Succeeded => Status == CardLibraryMutationStatus.Succeeded;
 
     /// <summary>
+    /// Creates a successful result.
+    /// </summary>
+    /// <param name="card">The affected card when available.</param>
+    /// <param name="message">The Traditional Chinese success message.</param>
+    /// <returns>A successful mutation result.</returns>
+    public static CardLibraryMutationResult Success(MealCard? card, string message)
+    {
+        return new CardLibraryMutationResult(CardLibraryMutationStatus.Succeeded, card, message);
+    }
+
+    /// <summary>
+    /// Creates a failed mutation result.
+    /// </summary>
+    /// <param name="status">The failure status.</param>
+    /// <param name="message">The Traditional Chinese failure message.</param>
+    /// <returns>A failed mutation result.</returns>
+    public static CardLibraryMutationResult Failure(CardLibraryMutationStatus status, string message)
+    {
+        return new CardLibraryMutationResult(status, null, message);
+    }
+
+    /// <summary>
     /// Creates a failed result for behavior not yet available in the current implementation phase.
     /// </summary>
     /// <param name="message">The Traditional Chinese failure message.</param>

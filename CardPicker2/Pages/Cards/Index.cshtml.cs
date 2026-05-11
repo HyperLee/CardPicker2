@@ -26,6 +26,9 @@ public sealed class IndexModel : PageModel
 
     public CardLibraryLoadResult? LibraryState { get; private set; }
 
+    [TempData]
+    public string? StatusMessage { get; set; }
+
     public bool IsBlocked => LibraryState?.IsBlocked == true;
 
     public async Task OnGetAsync(CancellationToken cancellationToken)

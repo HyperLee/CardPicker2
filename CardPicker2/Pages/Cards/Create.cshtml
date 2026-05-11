@@ -1,0 +1,28 @@
+@page
+@model CardPicker2.Pages.Cards.CreateModel
+@{
+    ViewData["Title"] = "新增餐點卡牌";
+}
+
+<section class="card-form-page" aria-labelledby="create-card-title">
+    <p class="slot-kicker">卡牌管理</p>
+    <h1 id="create-card-title">新增餐點卡牌</h1>
+
+    @if (Model.IsBlocked)
+    {
+        <div class="alert alert-danger" role="alert">@Model.LibraryState?.UserMessage</div>
+    }
+
+    <form method="post" class="card-form">
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+        <fieldset disabled="@Model.IsBlocked">
+            <partial name="_CardForm" for="Input" />
+            <button type="submit" class="btn btn-danger">新增卡牌</button>
+            <a class="btn btn-outline-secondary" asp-page="/Cards/Index">取消</a>
+        </fieldset>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
