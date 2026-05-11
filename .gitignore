@@ -5,6 +5,7 @@
 
 # dotenv files
 .env
+.env*
 
 # User-specific files
 *.rsuser
@@ -42,6 +43,13 @@ bld/
 
 # Visual Studio 2017 auto generated files
 Generated\ Files/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/

@@ -27,10 +27,10 @@
 
 **目的**: 建立功能所需的專案、測試專案、套件與目錄基礎。
 
-- [ ] T001 建立功能目錄結構於 CardPicker2/Models/、CardPicker2/Services/、CardPicker2/data/、CardPicker2/Pages/Cards/、tests/CardPicker2.UnitTests/、tests/CardPicker2.IntegrationTests/
-- [ ] T002 建立 xUnit 單元測試專案並加入方案於 tests/CardPicker2.UnitTests/CardPicker2.UnitTests.csproj 與 CardPicker2.sln
-- [ ] T003 建立 xUnit 整合測試專案並加入方案於 tests/CardPicker2.IntegrationTests/CardPicker2.IntegrationTests.csproj 與 CardPicker2.sln
-- [ ] T004 設定測試與日誌套件參考於 CardPicker2/CardPicker2.csproj、tests/CardPicker2.UnitTests/CardPicker2.UnitTests.csproj、tests/CardPicker2.IntegrationTests/CardPicker2.IntegrationTests.csproj
+- [X] T001 建立功能目錄結構於 CardPicker2/Models/、CardPicker2/Services/、CardPicker2/data/、CardPicker2/Pages/Cards/、tests/CardPicker2.UnitTests/、tests/CardPicker2.IntegrationTests/
+- [X] T002 建立 xUnit 單元測試專案並加入方案於 tests/CardPicker2.UnitTests/CardPicker2.UnitTests.csproj 與 CardPicker2.sln
+- [X] T003 建立 xUnit 整合測試專案並加入方案於 tests/CardPicker2.IntegrationTests/CardPicker2.IntegrationTests.csproj 與 CardPicker2.sln
+- [X] T004 設定測試與日誌套件參考於 CardPicker2/CardPicker2.csproj、tests/CardPicker2.UnitTests/CardPicker2.UnitTests.csproj、tests/CardPicker2.IntegrationTests/CardPicker2.IntegrationTests.csproj
 
 ---
 
