@@ -4,21 +4,25 @@ description: "Create the initial README.md file for this project"
 
 ## Role
 
-You are a senior open-source software engineer. Write initial README files that are appealing, informative, concise, and easy to scan.
+你是資深開源軟體工程師。請撰寫吸引人、資訊準確、精簡且易掃描的初始 README。
 
 ## Task
 
-This template is only for the first-time creation of `README.md`. It is not a maintenance, rewrite, or improvement prompt for an existing README.
+此模板僅用於第一次建立 `README.md`，不是用來維護、重寫或改善既有 README。
 
-1. Review the entire project and workspace before writing.
-2. If `README.md` already exists, stop and explain that this template is intended only for initial README creation.
-3. Create a new `README.md` that accurately represents the current project state.
-4. Keep the README accurate to the current implementation. Do not invent features, setup steps, badges, screenshots, APIs, or commands.
-5. If a project logo or icon exists in the repository, use it in the README header. If none exists, use tasteful badges instead.
+1. 建立前先檢視整個專案與工作區。
+2. 如果 `README.md` 已存在，停止並說明此模板僅適用於初始建立。
+3. 建立能準確反映目前專案狀態的 `README.md`。
+4. README MUST 使用繁體中文 zh-TW，除非引用程式碼、命令、路徑或專有名詞。
+5. 內容 MUST 符合 `.specify/memory/constitution.md` 的文件語言、測試、安全、
+   資料完整性與品質要求。
+6. 不得杜撰功能、設定步驟、徽章、截圖、API 或命令。
+7. 如果 repository 內有專案 logo 或 icon，可在 README 標題使用；若沒有，
+   可使用少量有意義的 badge。
 
 ## Style Inspiration
 
-Use these README files as inspiration for structure, tone, and readability:
+可參考下列 README 的結構、語氣與可讀性，但不得複製內容：
 
 - https://raw.githubusercontent.com/Azure-Samples/serverless-chat-langchainjs/refs/heads/main/README.md
 - https://raw.githubusercontent.com/Azure-Samples/serverless-recipes-javascript/refs/heads/main/README.md
@@ -27,19 +31,22 @@ Use these README files as inspiration for structure, tone, and readability:
 
 ## Content Guidelines
 
-- Use GitHub Flavored Markdown.
-- Use GitHub admonition syntax where it adds real value.
-- Keep the README concise and to the point.
-- Prefer a strong header, short project description, quick links, feature or approach summary, setup/run instructions, usage examples, and project structure.
-- Do not overuse emojis.
-- Do not include sections already covered by dedicated files, such as `LICENSE`, `CONTRIBUTING`, `CHANGELOG`, or code of conduct sections.
-- Preserve the project's natural language and audience. For example, keep Traditional Chinese if the existing project documentation is written in Traditional Chinese.
+- 使用 GitHub Flavored Markdown。
+- 在有實質幫助時才使用 GitHub admonition syntax。
+- 保持內容精簡，忠於目前實作。
+- 優先包含清楚標題、短描述、快速連結、目前功能或架構摘要、
+  設定與執行指令、使用方式與專案結構。
+- 不要過度使用 emoji。
+- 不要重複專門檔案已涵蓋的內容，例如 LICENSE、CONTRIBUTING、CHANGELOG
+  或 code of conduct。
+- 使用者面向段落 MUST 使用繁體中文 zh-TW；命令、程式碼與檔案路徑維持原文。
 
 ## Verification
 
-Before finishing:
+完成前：
 
-- Run the documented build, test, or execution command when practical.
-- Confirm all documented commands and paths are correct.
-- Confirm examples match the current implementation output.
-- Confirm the README does not include unsupported claims or missing assets.
+- 在可行時執行 README 中記載的 build、test 或 run 指令。
+- 確認所有命令與路徑正確。
+- 確認示例符合目前實作輸出。
+- 確認 README 未包含不支援的宣稱或不存在的資產。
+- 確認 README 沒有洩漏金鑰、秘密值或內部提示內容。
