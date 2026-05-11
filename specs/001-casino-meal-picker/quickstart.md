@@ -139,6 +139,7 @@ dotnet test CardPicker2.sln
 ```bash
 dotnet build CardPicker2.sln
 dotnet test CardPicker2.sln
+dotnet test CardPicker2.sln --collect:"XPlat Code Coverage"
 dotnet run --project CardPicker2/CardPicker2.csproj
 ```
 
@@ -150,10 +151,13 @@ dotnet run --project CardPicker2/CardPicker2.csproj
 - Page handler/API p95 < 200ms。
 - 90% 首次使用者應能在 30 秒內完成一次有效抽卡。
 - 90% 首次使用者應能在 20 秒內透過瀏覽或搜尋找到目標卡牌。
+- 若無法取得真實使用者樣本，至少記錄維護者手動流程計時，作為本機驗收代理指標。
 
 品質檢查：
 
 - 使用者可見文字皆為繁體中文。
 - 桌面與行動寬度無文字、按鈕、卡牌或老虎機視覺元素重疊。
+- 桌面 1366x768 與行動 390x844 首屏同時呈現投幣或等效確認、拉桿或開始控制、至少 3 欄 reel/slot 視覺區，以及轉動中或結果揭示文字。
+- 關鍵業務邏輯測試覆蓋率達 80% 以上；若無法達成，必須在交付紀錄中說明例外、風險與補救計畫。
 - 公開服務與模型具備 XML 文件註解；需要示例的 API 包含 `<example>` 或 `<code>`。
 - 日誌不包含秘密值、連線字串或 JSON 檔案完整內容。

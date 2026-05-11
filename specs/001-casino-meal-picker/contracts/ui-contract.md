@@ -93,7 +93,7 @@
 - HTTP 200。
 - 顯示搜尋表單。
 - 列表預設顯示每張卡牌的餐點名稱與餐別。
-- 每筆提供查看詳情、編輯、刪除入口。
+- 每筆提供查看詳情入口；編輯與刪除入口僅在卡牌管理故事完成後提供，避免瀏覽搜尋故事獨立交付時出現無法使用的管理操作。
 
 **無結果回應**:
 
@@ -203,9 +203,9 @@
 | 編輯後會與另一張卡牌完全重複 | HTTP 200 回表單，顯示「已有相同餐點名稱、餐別與描述的卡牌。」 |
 | 寫入失敗 | HTTP 200 回表單，保留原卡牌內容並顯示儲存失敗訊息。 |
 
-## POST `/Cards/Delete/{id}`
+## POST `/Cards/{id}?handler=Delete`
 
-**PageModel handler**: `DetailsModel.OnPostDeleteAsync` 或獨立刪除 handler
+**PageModel handler**: `DetailsModel.OnPostDeleteAsync`，由 `Pages/Cards/Details.cshtml` 的 `@page "{id:guid}"` 表單送出。
 
 **目的**: 在使用者確認後永久刪除卡牌。
 

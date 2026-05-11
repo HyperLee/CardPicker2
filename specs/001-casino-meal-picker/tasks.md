@@ -44,7 +44,7 @@
 
 - [ ] T005 [P] 新增 MealCardInputModel 必填欄位與非法餐別驗證測試於 tests/CardPicker2.UnitTests/Models/MealCardInputModelTests.cs
 - [ ] T006 [P] 新增 DuplicateCardDetector trim 與大小寫不敏感重複判斷測試於 tests/CardPicker2.UnitTests/Services/DuplicateCardDetectorTests.cs
-- [ ] T007 [P] 新增 CardLibraryService 缺檔建種子、腐敗 JSON 保留阻斷、原子寫入失敗不污染資料測試於 tests/CardPicker2.UnitTests/Services/CardLibraryServiceTests.cs
+- [ ] T007 [P] 新增 CardLibraryService 缺檔建種子、腐敗 JSON 保留阻斷、不支援 schemaVersion、必要欄位缺失、非法餐別、持久化資料重複與原子寫入失敗不污染資料測試於 tests/CardPicker2.UnitTests/Services/CardLibraryServiceTests.cs
 - [ ] T008 執行 foundational 新增測試並確認實作前失敗於 tests/CardPicker2.UnitTests/CardPicker2.UnitTests.csproj
 
 ### Implementation for Foundational
@@ -77,7 +77,7 @@
 
 ### Tests for User Story 1，必須先失敗
 
-- [ ] T024 [P] [US1] 新增 MealCardRandomizer 等機率索引範圍與空集合拒絕測試於 tests/CardPicker2.UnitTests/Services/MealCardRandomizerTests.cs
+- [ ] T024 [P] [US1] 新增 MealCardRandomizer 等機率索引範圍與空集合拒絕測試於 tests/CardPicker2.UnitTests/Services/MealCardRandomizerTests.cs，並新增 DrawOperationState 狀態轉換與 DrawResult 顯示映射測試於 tests/CardPicker2.UnitTests/Models/DrawOperationStateTests.cs
 - [ ] T025 [US1] 新增抽卡服務只從所選餐別抽出、空卡池拒絕與 blocking recovery 拒絕測試於 tests/CardPicker2.UnitTests/Services/CardLibraryServiceTests.cs
 - [ ] T026 [P] [US1] 新增首頁抽卡整合測試，覆蓋未選餐別、未投幣、成功揭示、Anti-Forgery 與 blocking recovery 狀態於 tests/CardPicker2.IntegrationTests/Pages/DrawPageTests.cs
 - [ ] T027 [US1] 執行 US1 新增測試並確認實作前失敗於 CardPicker2.sln
@@ -117,7 +117,7 @@
 - [ ] T042 [US2] 實作名稱部分比對、餐別篩選、組合條件與已刪除資料排除於 CardPicker2/Services/CardLibraryService.cs
 - [ ] T043 [P] [US2] 建立卡牌列表 PageModel，處理 keyword、mealType query、blocking recovery 與查無結果狀態於 CardPicker2/Pages/Cards/Index.cshtml.cs
 - [ ] T044 [P] [US2] 建立卡牌詳情 PageModel，處理 Guid route、blocking recovery 與找不到卡牌 404 於 CardPicker2/Pages/Cards/Details.cshtml.cs
-- [ ] T045 [US2] 建立卡牌列表 Razor Page，顯示搜尋表單、餐點名稱、餐別、詳情/編輯/刪除入口與查無結果訊息於 CardPicker2/Pages/Cards/Index.cshtml
+- [ ] T045 [US2] 建立卡牌列表 Razor Page，顯示搜尋表單、餐點名稱、餐別、詳情入口與查無結果訊息於 CardPicker2/Pages/Cards/Index.cshtml
 - [ ] T046 [US2] 建立卡牌詳情 Razor Page，依 UI 契約顯示餐點名稱、餐別、完整描述與找不到訊息於 CardPicker2/Pages/Cards/Details.cshtml
 - [ ] T047 [US2] 補齊列表與詳情的 Bootstrap 5 響應式樣式、空狀態與可及性樣式於 CardPicker2/wwwroot/css/site.css
 - [ ] T048 [US2] 執行 US2 測試並確認 US1 不回歸於 CardPicker2.sln
@@ -135,7 +135,7 @@
 ### Tests for User Story 3，必須先失敗
 
 - [ ] T049 [P] [US3] 新增卡牌建立、編輯、刪除、重複拒絕與編輯失敗保留原內容的服務測試於 tests/CardPicker2.UnitTests/Services/CardLibraryMutationTests.cs
-- [ ] T050 [P] [US3] 新增卡牌管理整合測試，覆蓋 Create/Edit/Delete 表單、Anti-Forgery、欄位錯誤、重複錯誤與 blocking recovery 停用操作於 tests/CardPicker2.IntegrationTests/Pages/CardManagementPageTests.cs
+- [ ] T050 [P] [US3] 新增卡牌管理整合測試，覆蓋 Create/Edit/Delete 表單、POST /Cards/{id}?handler=Delete、Anti-Forgery、欄位錯誤、重複錯誤與 blocking recovery 停用操作於 tests/CardPicker2.IntegrationTests/Pages/CardManagementPageTests.cs
 - [ ] T051 [US3] 執行 US3 新增測試並確認實作前失敗於 CardPicker2.sln
 
 ### Implementation for User Story 3
@@ -148,7 +148,7 @@
 - [ ] T057 [P] [US3] 建立編輯卡牌 PageModel，處理 GET、POST、找不到、不可變 ID 與服務失敗訊息於 CardPicker2/Pages/Cards/Edit.cshtml.cs
 - [ ] T058 [US3] 建立新增卡牌 Razor Page，包含 Anti-Forgery、validation summary 與 blocking recovery 停用狀態於 CardPicker2/Pages/Cards/Create.cshtml
 - [ ] T059 [US3] 建立編輯卡牌 Razor Page，包含 Anti-Forgery、validation summary 與 blocking recovery 停用狀態於 CardPicker2/Pages/Cards/Edit.cshtml
-- [ ] T060 [US3] 在詳情頁加入刪除確認表單與 OnPostDeleteAsync handler，要求 ConfirmDelete=true 並保留 Anti-Forgery 於 CardPicker2/Pages/Cards/Details.cshtml 與 CardPicker2/Pages/Cards/Details.cshtml.cs
+- [ ] T060 [US3] 在卡牌列表加入編輯/刪除管理入口，並在詳情頁加入刪除確認表單與 OnPostDeleteAsync handler，要求 ConfirmDelete=true 並保留 Anti-Forgery 於 CardPicker2/Pages/Cards/Index.cshtml、CardPicker2/Pages/Cards/Details.cshtml 與 CardPicker2/Pages/Cards/Details.cshtml.cs
 - [ ] T061 [US3] 補齊卡牌管理表單、確認區、停用狀態與行動版排版樣式於 CardPicker2/wwwroot/css/site.css
 - [ ] T062 [US3] 執行 US3 測試並確認 US1、US2 不回歸於 CardPicker2.sln
 
@@ -161,12 +161,12 @@
 **目的**: 完成跨故事品質要求、文件、效能、安全、可及性與交付檢查。
 
 - [ ] T063 [P] 補齊生產安全標頭整合測試，驗證 HSTS 與 Content-Security-Policy 於 tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs
-- [ ] T064 [P] 檢查並補齊公開模型與服務 XML 文件註解於 CardPicker2/Models/MealCard.cs、CardPicker2/Models/CardLibraryDocument.cs、CardPicker2/Services/ICardLibraryService.cs、CardPicker2/Services/CardLibraryService.cs
+- [ ] T064 [P] 檢查並補齊所有公開模型與服務 XML 文件註解，必要時加入 `<example>` 或 `<code>`，於 CardPicker2/Models/MealType.cs、CardPicker2/Models/MealCard.cs、CardPicker2/Models/MealCardInputModel.cs、CardPicker2/Models/CardLibraryDocument.cs、CardPicker2/Models/SearchCriteria.cs、CardPicker2/Models/DrawOperationState.cs、CardPicker2/Models/DrawResult.cs、CardPicker2/Services/CardLibraryLoadResult.cs、CardPicker2/Services/CardLibraryOptions.cs、CardPicker2/Services/DuplicateCardDetector.cs、CardPicker2/Services/ICardLibraryService.cs、CardPicker2/Services/CardLibraryService.cs、CardPicker2/Services/IMealCardRandomizer.cs、CardPicker2/Services/MealCardRandomizer.cs、CardPicker2/Services/SeedMealCards.cs
 - [ ] T065 更新 shared layout 導覽、繁中文案與卡牌頁入口於 CardPicker2/Pages/Shared/_Layout.cshtml
-- [ ] T066 驗證並調整桌面與行動尺寸下首頁、列表、詳情與表單無重疊或溢出於 CardPicker2/wwwroot/css/site.css
+- [ ] T066 驗證並調整桌面與行動尺寸下首頁、列表、詳情與表單無重疊或溢出，並確認鍵盤操作、焦點狀態與 WCAG 2.1 AA 目標於 CardPicker2/wwwroot/css/site.css
 - [ ] T067 驗證 reduced-motion、重複提交防護與表單前端行為於 CardPicker2/wwwroot/js/site.js
-- [ ] T068 執行格式、建置與完整測試品質閘門於 CardPicker2.sln
-- [ ] T069 依 quickstart 手動驗證首次啟動、抽卡、搜尋、CRUD、腐敗 JSON 與 reduced motion 流程於 specs/001-casino-meal-picker/quickstart.md
+- [ ] T068 執行格式、建置、完整測試與覆蓋率品質閘門，確認關鍵業務邏輯覆蓋率達 80% 以上或在本任務記錄合理例外，於 CardPicker2.sln、tests/CardPicker2.UnitTests/CardPicker2.UnitTests.csproj 與 tests/CardPicker2.IntegrationTests/CardPicker2.IntegrationTests.csproj
+- [ ] T069 依 quickstart 手動驗證首次啟動、抽卡、搜尋、CRUD、腐敗 JSON、reduced motion、老虎機視覺驗收與效能預算量測，並保留 FCP、LCP、搜尋回應與 Page handler p95 證據於 specs/001-casino-meal-picker/quickstart.md
 - [ ] T070 更新交付紀錄與驗證證據於 specs/001-casino-meal-picker/tasks.md
 
 ---

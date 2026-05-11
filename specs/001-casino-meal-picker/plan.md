@@ -122,10 +122,13 @@ tests/
 ├── CardPicker2.UnitTests/
 │   ├── Services/
 │   │   ├── CardLibraryServiceTests.cs
+│   │   ├── CardLibrarySearchTests.cs
+│   │   ├── CardLibraryMutationTests.cs
 │   │   ├── DuplicateCardDetectorTests.cs
 │   │   └── MealCardRandomizerTests.cs
 │   └── Models/
-│       └── MealCardInputModelTests.cs
+│       ├── MealCardInputModelTests.cs
+│       └── DrawOperationStateTests.cs
 └── CardPicker2.IntegrationTests/
     ├── Pages/
     │   ├── CardManagementPageTests.cs
