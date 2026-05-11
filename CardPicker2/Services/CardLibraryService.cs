@@ -94,13 +94,13 @@ public sealed class CardLibraryService : ICardLibraryService
     /// <inheritdoc />
     public Task<IReadOnlyList<MealCard>> SearchAsync(SearchCriteria criteria, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult<IReadOnlyList<MealCard>>(Array.Empty<MealCard>());
+        return SearchCoreAsync(criteria, cancellationToken);
     }
 
     /// <inheritdoc />
     public Task<MealCard?> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult<MealCard?>(null);
+        return FindByIdCoreAsync(id, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -186,6 +186,48 @@ public sealed class CardLibraryService : ICardLibraryService
             pool.Count);
 
         return DrawResult.Success(mealType, selected);
+    }
+
+    private async Task<IReadOnlyList<MealCard>> SearchCoreAsync(SearchCriteria criteria, CancellationToken cancellationToken)
+    {
+        var loadResult = await LoadAsync(cancellationToken);
+        if (loadResult.IsBlocked || loadResult.Document is null)
+        {
+            return Array.Empty<MealCard>();
+        }
+
+        if (criteria.MealType is MealType mealType && !Enum.IsDefined(typeof(MealType), mealType))
+        {
+            return Array.Empty<MealCard>();
+        }
+
+        var query = loadResult.Document.Cards.AsEnumerable();
+        var keyword = criteria.NormalizedKeyword;
+        if (!string.IsNullOrEmpty(keyword))
+        {
+            query = query.Where(card => card.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (criteria.MealType is not null)
+        {
+            query = query.Where(card => card.MealType == criteria.MealType.Value);
+        }
+
+        return query
+            .OrderBy(card => card.MealType)
+            .ThenBy(card => card.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private async Task<MealCard?> FindByIdCoreAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var loadResult = await LoadAsync(cancellationToken);
+        if (loadResult.IsBlocked || loadResult.Document is null)
+        {
+            return null;
+        }
+
+        return loadResult.Document.Cards.FirstOrDefault(card => card.Id == id);
     }
 
     private async Task WriteDocumentAsync(string filePath, CardLibraryDocument document, CancellationToken cancellationToken)

@@ -1,0 +1,59 @@
+@page
+@using CardPicker2.Models
+@model CardPicker2.Pages.Cards.IndexModel
+@{
+    ViewData["Title"] = "餐點卡牌庫";
+}
+
+<section class="card-library" aria-labelledby="cards-title">
+    <div class="page-heading">
+        <p class="slot-kicker">卡牌庫</p>
+        <h1 id="cards-title">餐點卡牌庫</h1>
+    </div>
+
+    @if (Model.IsBlocked)
+    {
+        <div class="alert alert-danger" role="alert">@Model.LibraryState?.UserMessage</div>
+    }
+
+    <form method="get" class="search-panel" role="search">
+        <div>
+            <label asp-for="Keyword" class="form-label">餐點名稱關鍵字</label>
+            <input asp-for="Keyword" class="form-control" placeholder="輸入餐點名稱" />
+        </div>
+        <div>
+            <label asp-for="MealType" class="form-label">餐別</label>
+            <select asp-for="MealType" class="form-select">
+                <option value="">全部餐別</option>
+                @foreach (var mealType in Model.MealTypes)
+                {
+                    <option value="@mealType">@mealType.ToDisplayName()</option>
+                }
+            </select>
+        </div>
+        <div class="search-actions">
+            <button class="btn btn-danger" type="submit" disabled="@Model.IsBlocked">搜尋</button>
+            <a class="btn btn-outline-secondary" asp-page="/Cards/Index">清除</a>
+        </div>
+    </form>
+
+    @if (!Model.IsBlocked && Model.Cards.Count == 0)
+    {
+        <div class="empty-state" role="status">查無符合條件的餐點卡牌。</div>
+    }
+    else if (!Model.IsBlocked)
+    {
+        <div class="meal-card-list" aria-label="餐點卡牌列表">
+            @foreach (var card in Model.Cards)
+            {
+                <article class="meal-card-item">
+                    <div>
+                        <h2>@card.Name</h2>
+                        <p class="meal-badge">@card.MealType.ToDisplayName()</p>
+                    </div>
+                    <a class="btn btn-outline-danger" href="/Cards/@card.Id">查看詳情</a>
+                </article>
+            }
+        </div>
+    }
+</section>

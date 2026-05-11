@@ -185,6 +185,80 @@ body {
   font-weight: 700;
 }
 
+.card-library,
+.card-detail {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+}
+
+.page-heading {
+  margin-bottom: 1rem;
+}
+
+.page-heading h1,
+.card-detail h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.search-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(12rem, 0.8fr) auto;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border: 1px solid #d5b75c;
+  border-radius: 8px;
+  background: #fffdf6;
+}
+
+.search-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.meal-card-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.meal-card-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #dfd2ad;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.meal-card-item h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.empty-state {
+  padding: 1rem;
+  border: 1px dashed #9e8f71;
+  border-radius: 8px;
+  background: #fffdf6;
+  color: #5c5145;
+}
+
+.card-description {
+  max-width: 64ch;
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
 @keyframes slotPulse {
   0% {
     transform: translateY(-0.15rem);
@@ -230,6 +304,21 @@ body {
 
   .lever-button {
     width: 100%;
+  }
+
+  .page-heading h1,
+  .card-detail h1 {
+    font-size: 2rem;
+  }
+
+  .search-panel,
+  .meal-card-item {
+    grid-template-columns: 1fr;
+  }
+
+  .search-actions {
+    flex-direction: column;
+    align-items: stretch;
   }
 }
 

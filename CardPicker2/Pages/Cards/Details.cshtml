@@ -1,0 +1,26 @@
+@page "/Cards/{id:guid}"
+@using CardPicker2.Models
+@model CardPicker2.Pages.Cards.DetailsModel
+@{
+    ViewData["Title"] = Model.Card?.Name ?? "餐點卡牌詳情";
+}
+
+<section class="card-detail" aria-labelledby="card-detail-title">
+    @if (Model.IsBlocked)
+    {
+        <div class="alert alert-danger" role="alert">@Model.Message</div>
+    }
+    else if (Model.Card is null)
+    {
+        <div class="alert alert-warning" role="alert">@Model.Message</div>
+    }
+    else
+    {
+        <p class="slot-kicker">卡牌詳情</p>
+        <h1 id="card-detail-title">@Model.Card.Name</h1>
+        <p class="meal-badge">@Model.Card.MealType.ToDisplayName()</p>
+        <p class="card-description">@Model.Card.Description</p>
+    }
+
+    <a class="btn btn-outline-secondary" asp-page="/Cards/Index">返回卡牌庫</a>
+</section>

@@ -107,20 +107,20 @@
 
 ### Tests for User Story 2，必須先失敗
 
-- [ ] T038 [P] [US2] 新增搜尋服務測試，覆蓋無條件、關鍵字、餐別、組合條件與查無結果於 tests/CardPicker2.UnitTests/Services/CardLibrarySearchTests.cs
-- [ ] T039 [P] [US2] 新增卡牌列表與詳情整合測試，覆蓋 /Cards 查詢字串、查無結果、/Cards/{id} 與 404 於 tests/CardPicker2.IntegrationTests/Pages/SearchPageTests.cs
-- [ ] T040 [US2] 執行 US2 新增測試並確認實作前失敗於 CardPicker2.sln
+- [X] T038 [P] [US2] 新增搜尋服務測試，覆蓋無條件、關鍵字、餐別、組合條件與查無結果於 tests/CardPicker2.UnitTests/Services/CardLibrarySearchTests.cs
+- [X] T039 [P] [US2] 新增卡牌列表與詳情整合測試，覆蓋 /Cards 查詢字串、查無結果、/Cards/{id} 與 404 於 tests/CardPicker2.IntegrationTests/Pages/SearchPageTests.cs
+- [X] T040 [US2] 執行 US2 新增測試並確認實作前失敗於 CardPicker2.sln
 
 ### Implementation for User Story 2
 
-- [ ] T041 [US2] 擴充 ICardLibraryService 搜尋與詳情查詢合約，支援 SearchCriteria 與 Guid 查找於 CardPicker2/Services/ICardLibraryService.cs
-- [ ] T042 [US2] 實作名稱部分比對、餐別篩選、組合條件與已刪除資料排除於 CardPicker2/Services/CardLibraryService.cs
-- [ ] T043 [P] [US2] 建立卡牌列表 PageModel，處理 keyword、mealType query、blocking recovery 與查無結果狀態於 CardPicker2/Pages/Cards/Index.cshtml.cs
-- [ ] T044 [P] [US2] 建立卡牌詳情 PageModel，處理 Guid route、blocking recovery 與找不到卡牌 404 於 CardPicker2/Pages/Cards/Details.cshtml.cs
-- [ ] T045 [US2] 建立卡牌列表 Razor Page，顯示搜尋表單、餐點名稱、餐別、詳情入口與查無結果訊息於 CardPicker2/Pages/Cards/Index.cshtml
-- [ ] T046 [US2] 建立卡牌詳情 Razor Page，依 UI 契約顯示餐點名稱、餐別、完整描述與找不到訊息於 CardPicker2/Pages/Cards/Details.cshtml
-- [ ] T047 [US2] 補齊列表與詳情的 Bootstrap 5 響應式樣式、空狀態與可及性樣式於 CardPicker2/wwwroot/css/site.css
-- [ ] T048 [US2] 執行 US2 測試並確認 US1 不回歸於 CardPicker2.sln
+- [X] T041 [US2] 擴充 ICardLibraryService 搜尋與詳情查詢合約，支援 SearchCriteria 與 Guid 查找於 CardPicker2/Services/ICardLibraryService.cs
+- [X] T042 [US2] 實作名稱部分比對、餐別篩選、組合條件與已刪除資料排除於 CardPicker2/Services/CardLibraryService.cs
+- [X] T043 [P] [US2] 建立卡牌列表 PageModel，處理 keyword、mealType query、blocking recovery 與查無結果狀態於 CardPicker2/Pages/Cards/Index.cshtml.cs
+- [X] T044 [P] [US2] 建立卡牌詳情 PageModel，處理 Guid route、blocking recovery 與找不到卡牌 404 於 CardPicker2/Pages/Cards/Details.cshtml.cs
+- [X] T045 [US2] 建立卡牌列表 Razor Page，顯示搜尋表單、餐點名稱、餐別、詳情入口與查無結果訊息於 CardPicker2/Pages/Cards/Index.cshtml
+- [X] T046 [US2] 建立卡牌詳情 Razor Page，依 UI 契約顯示餐點名稱、餐別、完整描述與找不到訊息於 CardPicker2/Pages/Cards/Details.cshtml
+- [X] T047 [US2] 補齊列表與詳情的 Bootstrap 5 響應式樣式、空狀態與可及性樣式於 CardPicker2/wwwroot/css/site.css
+- [X] T048 [US2] 執行 US2 測試並確認 US1 不回歸於 CardPicker2.sln
 
 **Checkpoint**: User Story 1 與 User Story 2 MUST 仍可各自獨立驗證。
 
