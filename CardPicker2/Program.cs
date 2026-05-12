@@ -1,8 +1,8 @@
+using System.Security.Cryptography;
+
 using CardPicker2.Services;
 
 using Serilog;
-
-using System.Security.Cryptography;
 
 namespace CardPicker2;
 

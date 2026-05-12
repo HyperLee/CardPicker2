@@ -30,6 +30,27 @@ public sealed class ThemeModeBrowserTests : IClassFixture<ThemeBrowserFixture>
         await WaitForThemeAsync(mobilePage, "system", null, 1000);
     }
 
+    [Theory]
+    [InlineData("chromium")]
+    [InlineData("firefox")]
+    [InlineData("webkit")]
+    public async Task StoredThemeModeBootstrapsAcrossAutomatedBrowserEngines(string engineName)
+    {
+        var darkContext = await _fixture.CreateContextAsync(engineName);
+        await darkContext.AddInitScriptAsync("localStorage.setItem('cardpicker.theme.mode', 'dark');");
+        var darkPage = await darkContext.NewPageAsync();
+
+        await darkPage.GotoAsync($"{ThemeBrowserFixture.BaseUrl}/");
+        await WaitForThemeAsync(darkPage, "dark", "dark", 3000);
+
+        var lightContext = await _fixture.CreateContextAsync(engineName);
+        await lightContext.AddInitScriptAsync("localStorage.setItem('cardpicker.theme.mode', 'light');");
+        var lightPage = await lightContext.NewPageAsync();
+
+        await lightPage.GotoAsync($"{ThemeBrowserFixture.BaseUrl}/");
+        await WaitForThemeAsync(lightPage, "light", "light", 3000);
+    }
+
     [Fact]
     public async Task StoredThemeMode_AppliesBeforeSubsequentNavigationAndSelectorStaysHomeOnly()
     {
@@ -164,4 +185,5 @@ public sealed class ThemeModeBrowserTests : IClassFixture<ThemeBrowserFixture>
             new { mode, effectiveTheme },
             new PageWaitForFunctionOptions { Timeout = timeout });
     }
+
 }

@@ -182,6 +182,25 @@
 
 不得因主題功能移除 CSP 或新增不必要的外部 script 來源。
 
+**最終採用策略（2026-05-12）**:
+
+- `Program.cs` 在 production response 產生每次請求專用 nonce，存入 `HttpContext.Items["CspNonce"]`。
+- `_Layout.cshtml` 將同一 nonce 套用在主題 head bootstrap script 的 `nonce` attribute。
+- CSP 使用 `script-src 'self' 'nonce-{value}'`，移除 script `unsafe-inline`，保留 `default-src 'self'`、HSTS、`style-src 'self' 'unsafe-inline'`、`img-src 'self' data:`、`font-src 'self'`、`object-src 'none'`、`base-uri 'self'`、`form-action 'self'` 與 `frame-ancestors 'none'`。
+
+## DOM Attribute Contract
+
+Shared layout 會在 CSS 載入前於 `<html>` 設定下列 attribute：
+
+```html
+<html lang="zh-Hant" data-bs-theme="light|dark" data-theme-mode="light|dark|system">
+```
+
+- `data-theme-mode` 永遠代表使用者選取模式，僅允許 `light`、`dark`、`system`。
+- `data-bs-theme` 永遠代表 Bootstrap 有效主題，僅允許 `light` 或 `dark`。
+- 首頁主題控制項使用 `data-theme-mode-selector`，非首頁不得輸出此 attribute。
+- 主題偏好 storage key 固定為 `cardpicker.theme.mode`。
+
 ## 測試契約
 
 自動化測試至少必須驗證：

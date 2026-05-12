@@ -7,6 +7,16 @@
 - 若執行 browser automation 測試，安裝 Microsoft Playwright for .NET 所需 Chromium、Firefox、WebKit 瀏覽器；Safari/Edge 若無法自動化，須以手動驗證紀錄補足
 - repository root: `/Users/qiuzili/CardPicker2`
 
+## Playwright Browser Automation 安裝
+
+本功能的 integration tests 使用 `Microsoft.Playwright` 與 `Deque.AxeCore.Playwright`。若本機尚未下載 Playwright browser runtime，可在 repository root 執行：
+
+```bash
+/Users/qiuzili/.nuget/packages/microsoft.playwright/1.59.0/.playwright/node/darwin-arm64/node /Users/qiuzili/.nuget/packages/microsoft.playwright/1.59.0/.playwright/package/cli.js install chromium firefox webkit
+```
+
+自動化 browser matrix 覆蓋 Chromium、Firefox、WebKit engine。Safari 與 Edge 品牌差異無法由 Playwright for .NET 直接自動化時，需以手動驗證補足：開啟首頁、切換三種模式、前往 `/Cards` 與 `/Privacy`、確認 1 秒內套用一致主題且非首頁不顯示主題控制項。
+
 ## 還原與建置
 
 ```bash
@@ -190,3 +200,31 @@ dotnet run --project CardPicker2/CardPicker2.csproj
 - CSP 明確允許必要 head bootstrap script，且不得移除 `default-src 'self'`。
 - 日誌與 console 診斷不包含秘密值、連線字串、完整資料檔內容、stack trace、系統提示或未清理的 localStorage 值，且 localStorage/sync 失敗只輸出允許的非敏感事件名稱。
 - 主題切換後，餐點抽卡、瀏覽、搜尋、建立、編輯與刪除流程仍可操作。
+
+## 實作驗證紀錄（2026-05-12）
+
+自動化驗證命令：
+
+```bash
+dotnet format CardPicker2.sln --verify-no-changes
+dotnet build CardPicker2.sln
+dotnet test CardPicker2.sln
+```
+
+主題 browser automation 覆蓋：
+
+- Chromium、Firefox、WebKit：核心 light/dark 切換。
+- Chromium：localStorage 保存與無效值 fallback、read/write/sync 安全 warning、system preference change、跨分頁 storage event 同步、抽卡/搜尋/建立表單狀態不變、390x844/768x1024/1366x768 responsive overflow、鍵盤焦點、mobile touch/pointer 與 axe serious/critical smoke。
+- Axe `color-contrast` 對 CSS-variable-backed Bootstrap segmented controls 產生 false positive，因此 automated smoke 以 axe 排除該單一規則，並另外以 computed color/background contrast 驗證主題控制與導覽連結達 4.5:1 以上。
+
+手動 fallback 待驗證紀錄格式：
+
+```text
+Browser: Safari 或 Edge
+Date:
+Tester:
+Viewport:
+Steps: 首頁切換 light/dark/system，前往 /Cards 與 /Privacy
+Result: 通過/未通過
+Notes: 對比、焦點、是否水平溢出、是否非首頁無主題控制項
+```

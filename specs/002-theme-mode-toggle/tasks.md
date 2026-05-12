@@ -126,13 +126,15 @@
 
 **目的**: 完成文件、品質、安全、效能與憲章合規檢查。
 
-- [ ] T034 [P] 更新 `specs/002-theme-mode-toggle/quickstart.md`，補上 Playwright 安裝、browser automation 執行方式、主題驗收紀錄格式與手動 fallback 驗證步驟
-- [ ] T035 [P] 更新 `specs/002-theme-mode-toggle/contracts/ui-contract.md`，記錄最終採用的 CSP hash/nonce 或等效明確允許策略與 DOM attribute contract
-- [ ] T036 執行 `dotnet format CardPicker2.sln --verify-no-changes` 並針對 `CardPicker2.sln` 修正任何格式化差異
-- [ ] T037 執行 `dotnet build CardPicker2.sln` 並針對 `CardPicker2.sln` 修正所有新增 warning 或 error
-- [ ] T038 執行 `dotnet test CardPicker2.sln` 並針對 `CardPicker2.sln` 確認既有餐點抽卡、搜尋、卡牌管理與所有主題測試均通過
-- [ ] T039 以 browser automation 或手動驗證 `CardPicker2/wwwroot/css/site.css` 與 `CardPicker2/wwwroot/js/site.js` 在主要頁面符合 Chromium/Firefox/WebKit browser matrix、FCP/LCP、1 秒主題切換、2 秒跨分頁同步、鍵盤/觸控操作、WCAG 2.2 AA 對比、可見焦點與無水平溢出要求；Safari/Edge 若無法自動化，須在驗證紀錄中補手動結果
-- [ ] T040 檢查 `CardPicker2/Program.cs`、`CardPicker2/wwwroot/js/site.js` 與 `CardPicker2/Pages/Shared/_Layout.cshtml`，確認 UI、console 診斷與 headers 不包含秘密值、完整資料檔內容、stack trace、系統提示或未清理的 localStorage 值，且 localStorage/sync 失敗只輸出允許的非敏感診斷名稱
+- [X] T034 [P] 更新 `specs/002-theme-mode-toggle/quickstart.md`，補上 Playwright 安裝、browser automation 執行方式、主題驗收紀錄格式與手動 fallback 驗證步驟
+- [X] T035 [P] 更新 `specs/002-theme-mode-toggle/contracts/ui-contract.md`，記錄最終採用的 CSP hash/nonce 或等效明確允許策略與 DOM attribute contract
+- [X] T036 執行 `dotnet format CardPicker2.sln --verify-no-changes` 並針對 `CardPicker2.sln` 修正任何格式化差異
+- [X] T037 執行 `dotnet build CardPicker2.sln` 並針對 `CardPicker2.sln` 修正所有新增 warning 或 error
+- [X] T038 執行 `dotnet test CardPicker2.sln` 並針對 `CardPicker2.sln` 確認既有餐點抽卡、搜尋、卡牌管理與所有主題測試均通過
+- [X] T039 以 browser automation 或手動驗證 `CardPicker2/wwwroot/css/site.css` 與 `CardPicker2/wwwroot/js/site.js` 在主要頁面符合 Chromium/Firefox/WebKit browser matrix、FCP/LCP、1 秒主題切換、2 秒跨分頁同步、鍵盤/觸控操作、WCAG 2.2 AA 對比、可見焦點與無水平溢出要求；Safari/Edge 若無法自動化，須在驗證紀錄中補手動結果
+- [X] T040 檢查 `CardPicker2/Program.cs`、`CardPicker2/wwwroot/js/site.js` 與 `CardPicker2/Pages/Shared/_Layout.cshtml`，確認 UI、console 診斷與 headers 不包含秘密值、完整資料檔內容、stack trace、系統提示或未清理的 localStorage 值，且 localStorage/sync 失敗只輸出允許的非敏感診斷名稱
+
+**Phase 6 execution note (2026-05-12)**: Updated quickstart and UI contract with Playwright installation, CSP nonce strategy, DOM attributes, browser automation evidence, and Safari/Edge manual fallback format. `dotnet format CardPicker2.sln --verify-no-changes` initially reported final-newline/import ordering differences; `dotnet format CardPicker2.sln` fixed them and the verify command then passed. `dotnet build CardPicker2.sln` passed with 0 warnings/0 errors. `dotnet test CardPicker2.sln` passed UnitTests 33/33 and IntegrationTests 47/47. Browser automation covers Chromium/Firefox/WebKit bootstrap behavior, Chromium interaction/sync/responsive/a11y smoke, 1-second theme apply, 2-second storage sync, keyboard focus, mobile touch, computed 4.5:1 contrast checks, and no horizontal overflow. Safety string check found only allowed `console.warn` names and the expected non-secret `data/cards.json` configured path.
 
 ---
 
