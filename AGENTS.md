@@ -232,4 +232,4 @@ test(cards): cover duplicate detection rules
 fix(storage): preserve corrupted card library file
 ```
 
-Do not commit automatically unless the user asks for a commit.
+Spec Kit auto-commit hooks may run automatically when enabled in `.specify/extensions.yml` and `.specify/extensions/git/git-config.yml`, including before/after Spec Kit commands. Outside those configured hooks, do not commit automatically unless the user asks for a commit.
