@@ -56,10 +56,10 @@ branch_numbering: sequential
 # Custom commit message for git init
 init_commit_message: "[Spec Kit] Initial commit"
 
-# Auto-commit per command (all disabled by default)
-# Example: enable auto-commit after specify
+# Auto-commit per command (enabled by default in this project)
+# Example: keep auto-commit enabled after specify
 auto_commit:
-  default: false
+  default: true
   after_specify:
     enabled: true
     message: "[Spec Kit] Add specification"
