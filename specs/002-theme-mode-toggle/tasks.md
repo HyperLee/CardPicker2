@@ -77,16 +77,18 @@
 
 ### Tests for User Story 2，必須先失敗
 
-- [ ] T017 [US2] 新增 system 模式 browser behavior 測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeBrowserTests.cs`，驗證 `system` 在 light/dark browser color scheme 下推導 `data-bs-theme`
-- [ ] T018 [US2] 擴充 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeBrowserTests.cs`，驗證 system preference change event 於 2 秒內更新有效主題，且 `light`、`dark` 明確模式忽略系統變更
-- [ ] T019 [US2] 執行 `dotnet test CardPicker2.sln --filter ThemeModeBrowserTests` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US2 新增測試在實作前失敗
+- [X] T017 [US2] 新增 system 模式 browser behavior 測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeBrowserTests.cs`，驗證 `system` 在 light/dark browser color scheme 下推導 `data-bs-theme`
+- [X] T018 [US2] 擴充 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeBrowserTests.cs`，驗證 system preference change event 於 2 秒內更新有效主題，且 `light`、`dark` 明確模式忽略系統變更
+- [X] T019 [US2] 執行 `dotnet test CardPicker2.sln --filter ThemeModeBrowserTests` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US2 新增測試在實作前失敗
 
 ### Implementation for User Story 2
 
-- [ ] T020 [US2] 更新 `CardPicker2/wwwroot/js/site.js`，加入 `matchMedia('(prefers-color-scheme: dark)')` change listener、`addEventListener`/`addListener` 相容處理與 system 模式即時重新推導
-- [ ] T021 [US2] 更新 `CardPicker2/Pages/Shared/_Layout.cshtml`，讓 head bootstrap script 在 `matchMedia` 不存在或丟出例外時回到 `data-theme-mode="system"` 與 `data-bs-theme="light"`
-- [ ] T022 [US2] 更新 `CardPicker2/wwwroot/css/site.css`，補齊 `color-scheme`、dark effective theme 下的導覽、按鈕、表單、警示與 focus token
-- [ ] T023 [US2] 執行 `dotnet test CardPicker2.sln --filter ThemeModeBrowserTests` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US2 通過且 US1 不回歸
+- [X] T020 [US2] 更新 `CardPicker2/wwwroot/js/site.js`，加入 `matchMedia('(prefers-color-scheme: dark)')` change listener、`addEventListener`/`addListener` 相容處理與 system 模式即時重新推導
+- [X] T021 [US2] 更新 `CardPicker2/Pages/Shared/_Layout.cshtml`，讓 head bootstrap script 在 `matchMedia` 不存在或丟出例外時回到 `data-theme-mode="system"` 與 `data-bs-theme="light"`
+- [X] T022 [US2] 更新 `CardPicker2/wwwroot/css/site.css`，補齊 `color-scheme`、dark effective theme 下的導覽、按鈕、表單、警示與 focus token
+- [X] T023 [US2] 執行 `dotnet test CardPicker2.sln --filter ThemeModeBrowserTests` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US2 通過且 US1 不回歸
+
+**Phase 4 execution note (2026-05-12)**: Red test run for `ThemeModeBrowserTests` failed on the new system preference change case before implementation. After adding `matchMedia` change handling and dark-mode surface styling, `dotnet test CardPicker2.sln --filter ThemeModeBrowserTests` passed 6/6 integration tests.
 
 **Checkpoint**: User Story 1 與 User Story 2 均可獨立驗證。
 

@@ -5,13 +5,18 @@
   const inputs = Array.from(document.querySelectorAll('input[name="theme-mode"]'));
 
   const normalizeMode = (value) => allowedModes.has(value) ? value : 'system';
+  let currentMode = normalizeMode(root.getAttribute('data-theme-mode'));
+
+  const getSystemPreferenceQuery = () => {
+    try {
+      return window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+    } catch {
+      return null;
+    }
+  };
 
   const getSystemTheme = () => {
-    try {
-      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    } catch {
-      return 'light';
-    }
+    return getSystemPreferenceQuery()?.matches ? 'dark' : 'light';
   };
 
   const syncSelector = (mode) => {
@@ -24,6 +29,7 @@
 
   const applyThemeMode = (mode) => {
     const safeMode = normalizeMode(mode);
+    currentMode = safeMode;
     const effectiveTheme = safeMode === 'system' ? getSystemTheme() : safeMode;
     root.setAttribute('data-theme-mode', safeMode);
     root.setAttribute('data-bs-theme', effectiveTheme);
@@ -38,8 +44,7 @@
     }
   };
 
-  const initialMode = normalizeMode(root.getAttribute('data-theme-mode'));
-  applyThemeMode(initialMode);
+  applyThemeMode(currentMode);
 
   inputs.forEach((input) => {
     input.addEventListener('change', () => {
@@ -49,6 +54,19 @@
       }
     });
   });
+
+  const systemPreferenceQuery = getSystemPreferenceQuery();
+  const handleSystemPreferenceChange = () => {
+    if (currentMode === 'system') {
+      applyThemeMode('system');
+    }
+  };
+
+  if (systemPreferenceQuery?.addEventListener) {
+    systemPreferenceQuery.addEventListener('change', handleSystemPreferenceChange);
+  } else if (systemPreferenceQuery?.addListener) {
+    systemPreferenceQuery.addListener(handleSystemPreferenceChange);
+  }
 })();
 
 (() => {

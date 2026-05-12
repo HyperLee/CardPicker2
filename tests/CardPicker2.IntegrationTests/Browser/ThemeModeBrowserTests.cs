@@ -72,7 +72,47 @@ public sealed class ThemeModeBrowserTests : IClassFixture<ThemeBrowserFixture>
         await WaitForThemeAsync(systemPage, "system", "dark", 1000);
     }
 
-    private static async Task WaitForThemeAsync(IPage page, string mode, string? effectiveTheme, float timeout)
+    [Theory]
+    [InlineData("light", "light")]
+    [InlineData("dark", "dark")]
+    public async Task SystemMode_DerivesEffectiveThemeFromBrowserColorScheme(string colorScheme, string expectedTheme)
+    {
+        var context = await _fixture.CreateContextAsync("chromium", new BrowserNewContextOptions
+        {
+            ColorScheme = colorScheme == "dark" ? ColorScheme.Dark : ColorScheme.Light
+        });
+        await context.AddInitScriptAsync("localStorage.setItem('cardpicker.theme.mode', 'system');");
+        var page = await context.NewPageAsync();
+
+        await page.GotoAsync($"{ThemeBrowserFixture.BaseUrl}/");
+
+        await WaitForThemeAsync(page, "system", expectedTheme, 1000);
+    }
+
+    [Fact]
+    public async Task SystemPreferenceChanges_UpdateOnlyWhenCurrentModeIsSystem()
+    {
+        var context = await _fixture.CreateContextAsync("chromium", new BrowserNewContextOptions
+        {
+            ColorScheme = ColorScheme.Light
+        });
+        await context.AddInitScriptAsync("localStorage.setItem('cardpicker.theme.mode', 'system');");
+        var page = await context.NewPageAsync();
+
+        await page.GotoAsync($"{ThemeBrowserFixture.BaseUrl}/");
+        await WaitForThemeAsync(page, "system", "light", 1000);
+
+        await page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = ColorScheme.Dark });
+        await WaitForThemeAsync(page, "system", "dark", 2000);
+
+        await page.GetByText("亮色模式").ClickAsync();
+        await WaitForThemeAsync(page, "light", "light", 1000);
+
+        await page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = ColorScheme.Light });
+        await WaitForThemeAsync(page, "light", "light", 1000);
+    }
+
+    internal static async Task WaitForThemeAsync(IPage page, string mode, string? effectiveTheme, float timeout)
     {
         await page.WaitForFunctionAsync(
             @"expected => {
