@@ -35,6 +35,9 @@ public sealed class ThemeBrowserFixture : IAsyncLifetime
 
     public IPlaywright Playwright { get; private set; } = null!;
 
+    public string CardLibraryFilePath => _library?.FilePath
+        ?? throw new InvalidOperationException("The temporary card library has not been initialized.");
+
     public async Task InitializeAsync()
     {
         _library = TempCardLibrary.Create("cardpicker-theme-browser-tests-");
@@ -75,7 +78,9 @@ public sealed class ThemeBrowserFixture : IAsyncLifetime
     public async Task<IPage> CreateDesktopPageAsync(string engineName = "chromium")
     {
         var context = await CreateContextAsync(engineName);
-        return await context.NewPageAsync();
+        var page = await context.NewPageAsync();
+        page.SetDefaultTimeout(3000);
+        return page;
     }
 
     public async Task<IPage> CreateMobileTouchPageAsync(string engineName = "chromium")
@@ -86,7 +91,9 @@ public sealed class ThemeBrowserFixture : IAsyncLifetime
             IsMobile = true,
             HasTouch = true
         });
-        return await context.NewPageAsync();
+        var page = await context.NewPageAsync();
+        page.SetDefaultTimeout(3000);
+        return page;
     }
 
     public async Task<IBrowserContext> CreateContextAsync(

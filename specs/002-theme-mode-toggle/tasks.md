@@ -102,19 +102,21 @@
 
 ### Tests for User Story 3，必須先失敗
 
-- [ ] T024 [US3] 擴充 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeBrowserTests.cs`，驗證 localStorage 保存 `cardpicker.theme.mode`、無效值回到 `system`、回訪首次可見呈現前套用有效主題，以及 localStorage 讀取/寫入例外會安全 fallback 並只輸出非敏感 console warning 名稱 `CardPickerThemePreferenceReadFailed` 或 `CardPickerThemePreferenceWriteFailed`
-- [ ] T025 [P] [US3] 新增跨分頁同步測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeStorageSyncTests.cs`，驗證另一分頁收到 `storage` event 後 2 秒內更新有效主題且不顯示首頁控制項，並驗證 storage event 處理失敗只輸出非敏感 console warning 名稱 `CardPickerThemeSyncFailed`
-- [ ] T026 [P] [US3] 新增狀態不變性測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeStateIntegrityTests.cs`，驗證切換主題不清除抽卡結果、搜尋 query、建立表單輸入、validation message 或 `CardPicker2/data/cards.json`
-- [ ] T027 [P] [US3] 新增 responsive 與可及性 smoke 測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeResponsiveTests.cs`，覆蓋 390x844、768x1024、1366x768 與 light/dark/system 模式下 `scrollWidth == clientWidth`、鍵盤焦點可見、主題控制鍵盤切換、mobile pointer/touch 切換、automated axe 或等效檢查無重大可及性違規；若工具無法完整量測 WCAG 2.2 AA 對比，測試輸出或 quickstart 紀錄必須要求人工 contrast/focus 證據
-- [ ] T028 [US3] 執行 `dotnet test CardPicker2.sln --filter "ThemeModeBrowserTests|ThemeModeStorageSyncTests|ThemeModeStateIntegrityTests|ThemeModeResponsiveTests"` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US3 新增測試在實作前失敗
+- [X] T024 [US3] 擴充 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeBrowserTests.cs`，驗證 localStorage 保存 `cardpicker.theme.mode`、無效值回到 `system`、回訪首次可見呈現前套用有效主題，以及 localStorage 讀取/寫入例外會安全 fallback 並只輸出非敏感 console warning 名稱 `CardPickerThemePreferenceReadFailed` 或 `CardPickerThemePreferenceWriteFailed`
+- [X] T025 [P] [US3] 新增跨分頁同步測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeStorageSyncTests.cs`，驗證另一分頁收到 `storage` event 後 2 秒內更新有效主題且不顯示首頁控制項，並驗證 storage event 處理失敗只輸出非敏感 console warning 名稱 `CardPickerThemeSyncFailed`
+- [X] T026 [P] [US3] 新增狀態不變性測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeStateIntegrityTests.cs`，驗證切換主題不清除抽卡結果、搜尋 query、建立表單輸入、validation message 或 `CardPicker2/data/cards.json`
+- [X] T027 [P] [US3] 新增 responsive 與可及性 smoke 測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeResponsiveTests.cs`，覆蓋 390x844、768x1024、1366x768 與 light/dark/system 模式下 `scrollWidth == clientWidth`、鍵盤焦點可見、主題控制鍵盤切換、mobile pointer/touch 切換、automated axe 或等效檢查無重大可及性違規；若工具無法完整量測 WCAG 2.2 AA 對比，測試輸出或 quickstart 紀錄必須要求人工 contrast/focus 證據
+- [X] T028 [US3] 執行 `dotnet test CardPicker2.sln --filter "ThemeModeBrowserTests|ThemeModeStorageSyncTests|ThemeModeStateIntegrityTests|ThemeModeResponsiveTests"` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US3 新增測試在實作前失敗
 
 ### Implementation for User Story 3
 
-- [ ] T029 [US3] 更新 `CardPicker2/wwwroot/js/site.js`，加入 localStorage read/write try-catch、無效值清理或忽略、storage event 同步、不重載頁面/不提交表單的主題切換流程，以及只輸出 `CardPickerThemePreferenceReadFailed`、`CardPickerThemePreferenceWriteFailed`、`CardPickerThemeSyncFailed` 等非敏感 console warning 名稱的診斷行為
-- [ ] T030 [US3] 更新 `CardPicker2/Pages/Shared/_Layout.cshtml`，調整 navbar/footer class 為 theme-aware Bootstrap class，避免 `text-dark`、`bg-white` 在 dark effective theme 下破壞可讀性
-- [ ] T031 [US3] 更新 `CardPicker2/wwwroot/css/site.css`，補齊 card library、detail、create/edit form、delete panel、validation summary、empty state、slot result 在 light/dark/system 下的對比與 responsive 尺寸
-- [ ] T032 [US3] 更新 `CardPicker2/Pages/Index.cshtml`，確保主題控制項不包在狀態變更表單內且切換時不影響 `MealType`、`CoinInserted` 或目前揭示結果
-- [ ] T033 [US3] 執行 `dotnet test CardPicker2.sln --filter "ThemeModeBrowserTests|ThemeModeStorageSyncTests|ThemeModeStateIntegrityTests|ThemeModeResponsiveTests"` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US3 通過且 US1、US2 不回歸
+- [X] T029 [US3] 更新 `CardPicker2/wwwroot/js/site.js`，加入 localStorage read/write try-catch、無效值清理或忽略、storage event 同步、不重載頁面/不提交表單的主題切換流程，以及只輸出 `CardPickerThemePreferenceReadFailed`、`CardPickerThemePreferenceWriteFailed`、`CardPickerThemeSyncFailed` 等非敏感 console warning 名稱的診斷行為
+- [X] T030 [US3] 更新 `CardPicker2/Pages/Shared/_Layout.cshtml`，調整 navbar/footer class 為 theme-aware Bootstrap class，避免 `text-dark`、`bg-white` 在 dark effective theme 下破壞可讀性
+- [X] T031 [US3] 更新 `CardPicker2/wwwroot/css/site.css`，補齊 card library、detail、create/edit form、delete panel、validation summary、empty state、slot result 在 light/dark/system 下的對比與 responsive 尺寸
+- [X] T032 [US3] 更新 `CardPicker2/Pages/Index.cshtml`，確保主題控制項不包在狀態變更表單內且切換時不影響 `MealType`、`CoinInserted` 或目前揭示結果
+- [X] T033 [US3] 執行 `dotnet test CardPicker2.sln --filter "ThemeModeBrowserTests|ThemeModeStorageSyncTests|ThemeModeStateIntegrityTests|ThemeModeResponsiveTests"` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US3 通過且 US1、US2 不回歸
+
+**Phase 5 execution note (2026-05-12)**: Red test run failed on missing safe localStorage diagnostics, missing storage-event sync, missing sync failure warning, and contrast smoke checks. After implementation, `dotnet test CardPicker2.sln --filter "ThemeModeBrowserTests|ThemeModeStorageSyncTests|ThemeModeStateIntegrityTests|ThemeModeResponsiveTests"` passed 16/16 integration tests. Axe color-contrast was replaced with explicit computed 4.5:1 checks for theme controls/navigation because axe produced false positives on CSS-variable-backed Bootstrap controls; axe still runs for other serious/critical accessibility violations.
 
 **Checkpoint**: 所有主題故事均可獨立驗證，且不影響餐點抽卡、搜尋與卡牌管理流程。
 

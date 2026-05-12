@@ -7,6 +7,14 @@
   const normalizeMode = (value) => allowedModes.has(value) ? value : 'system';
   let currentMode = normalizeMode(root.getAttribute('data-theme-mode'));
 
+  const warn = (name) => {
+    try {
+      console.warn(name);
+    } catch {
+      // Console diagnostics are non-critical and must not block the page.
+    }
+  };
+
   const getSystemPreferenceQuery = () => {
     try {
       return window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
@@ -40,7 +48,7 @@
     try {
       window.localStorage?.setItem(storageKey, normalizeMode(mode));
     } catch {
-      // Theme persistence is optional; current-page visual state still applies.
+      warn('CardPickerThemePreferenceWriteFailed');
     }
   };
 
@@ -67,6 +75,18 @@
   } else if (systemPreferenceQuery?.addListener) {
     systemPreferenceQuery.addListener(handleSystemPreferenceChange);
   }
+
+  window.addEventListener('storage', (event) => {
+    try {
+      if (event.key !== storageKey) {
+        return;
+      }
+
+      applyThemeMode(event.newValue);
+    } catch {
+      warn('CardPickerThemeSyncFailed');
+    }
+  });
 })();
 
 (() => {

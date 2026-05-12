@@ -112,6 +112,46 @@ public sealed class ThemeModeBrowserTests : IClassFixture<ThemeBrowserFixture>
         await WaitForThemeAsync(page, "light", "light", 1000);
     }
 
+    [Fact]
+    public async Task LocalStoragePreference_HandlesInvalidValuesAndReadWriteFailuresSafely()
+    {
+        var invalidContext = await _fixture.CreateContextAsync("chromium", new BrowserNewContextOptions
+        {
+            ColorScheme = ColorScheme.Light
+        });
+        await invalidContext.AddInitScriptAsync("localStorage.setItem('cardpicker.theme.mode', 'invalid');");
+        var invalidPage = await invalidContext.NewPageAsync();
+
+        await invalidPage.GotoAsync($"{ThemeBrowserFixture.BaseUrl}/");
+
+        await WaitForThemeAsync(invalidPage, "system", "light", 1000);
+
+        var readWarnings = new List<string>();
+        var readContext = await _fixture.CreateContextAsync("chromium");
+        await readContext.AddInitScriptAsync(
+            "Storage.prototype.getItem = () => { throw new Error('blocked read'); };");
+        var readPage = await readContext.NewPageAsync();
+        readPage.Console += (_, message) => readWarnings.Add(message.Text);
+
+        await readPage.GotoAsync($"{ThemeBrowserFixture.BaseUrl}/");
+
+        await WaitForThemeAsync(readPage, "system", null, 1000);
+        Assert.Contains("CardPickerThemePreferenceReadFailed", readWarnings);
+
+        var writeWarnings = new List<string>();
+        var writeContext = await _fixture.CreateContextAsync("chromium");
+        await writeContext.AddInitScriptAsync(
+            "Storage.prototype.setItem = () => { throw new Error('blocked write'); };");
+        var writePage = await writeContext.NewPageAsync();
+        writePage.Console += (_, message) => writeWarnings.Add(message.Text);
+
+        await writePage.GotoAsync($"{ThemeBrowserFixture.BaseUrl}/");
+        await writePage.GetByText("暗黑模式").ClickAsync();
+
+        await WaitForThemeAsync(writePage, "dark", "dark", 1000);
+        Assert.Contains("CardPickerThemePreferenceWriteFailed", writeWarnings);
+    }
+
     internal static async Task WaitForThemeAsync(IPage page, string mode, string? effectiveTheme, float timeout)
     {
         await page.WaitForFunctionAsync(
