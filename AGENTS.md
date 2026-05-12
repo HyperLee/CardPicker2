@@ -24,11 +24,11 @@ If bulk deletion is required, halt the operation and request that the user perfo
 ## Current Spec Kit Source Of Truth
 
 <!-- SPECKIT START -->
-Current Spec Kit plan: `specs/001-casino-meal-picker/plan.md`.
+Current Spec Kit plan: `specs/002-theme-mode-toggle/plan.md`.
 
 For additional context about technologies to be used, project structure,
 shell commands, contracts, data model, and validation expectations, read
-the current plan and its sibling artifacts in `specs/001-casino-meal-picker/`.
+the current plan and its sibling artifacts in `specs/002-theme-mode-toggle/`.
 <!-- SPECKIT END -->
 
 Before making architecture, behavior, UI, persistence, security, or testing changes, read these files:
