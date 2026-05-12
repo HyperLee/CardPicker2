@@ -24,25 +24,25 @@ If bulk deletion is required, halt the operation and request that the user perfo
 ## Current Spec Kit Source Of Truth
 
 <!-- SPECKIT START -->
-For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+For the current feature context, technologies, project structure, shell commands,
+and other important information, read `specs/003-bilingual-language-toggle/plan.md`.
 <!-- SPECKIT END -->
 
 Before making architecture, behavior, UI, persistence, security, or testing changes, read these files:
 
 - `.specify/memory/constitution.md`
-- `specs/001-casino-meal-picker/spec.md`
-- `specs/001-casino-meal-picker/plan.md`
-- `specs/001-casino-meal-picker/research.md`
-- `specs/001-casino-meal-picker/data-model.md`
-- `specs/001-casino-meal-picker/quickstart.md`
-- `specs/001-casino-meal-picker/contracts/ui-contract.md`
+- `specs/003-bilingual-language-toggle/spec.md`
+- `specs/003-bilingual-language-toggle/plan.md`
+- `specs/003-bilingual-language-toggle/research.md`
+- `specs/003-bilingual-language-toggle/data-model.md`
+- `specs/003-bilingual-language-toggle/quickstart.md`
+- `specs/003-bilingual-language-toggle/contracts/ui-contract.md`
 
 The constitution has the highest project authority. If implementation notes, tasks, or local preferences conflict with it, follow the constitution unless the user explicitly updates governance.
 
 ## Repository State
 
-This repository currently contains a default ASP.NET Core Razor Pages app plus Spec Kit artifacts for feature `001-casino-meal-picker`.
+This repository contains an ASP.NET Core Razor Pages app with implemented meal-picker and theme-mode functionality plus Spec Kit artifacts for current feature `003-bilingual-language-toggle`.
 
 Current implemented app state:
 
@@ -51,10 +51,10 @@ Current implemented app state:
 - Target framework: `net10.0`
 - Nullable reference types and implicit usings are enabled.
 - Entry point: `CardPicker2/Program.cs`
-- Existing pages are still mostly template pages under `CardPicker2/Pages/`.
+- Existing pages include the meal draw, card library, card management, privacy, error, and shared layout surfaces under `CardPicker2/Pages/`.
 - Static resources are under `CardPicker2/wwwroot/`.
 - `.editorconfig` is present and governs C# formatting and naming.
-- `Models/`, `Services/`, `data/cards.json`, `/Cards` Razor Pages, and `tests/` are planned by the Spec Kit plan but are not present yet.
+- `Models/`, `Services/`, `data/cards.json`, `/Cards` Razor Pages, and `tests/` are present from prior feature work and must be evolved carefully for bilingual support.
 
 Do not assume planned files already exist. Create them only when the current task requires implementation.
 
@@ -70,7 +70,7 @@ Core behavior:
 - The app supports browsing, searching, viewing, creating, editing, and deleting meal cards.
 - The card library persists across restarts in a single local JSON file.
 
-All user-facing documents, UI copy, validation messages, and recovery messages must use Traditional Chinese (`zh-TW`). Code identifiers may remain English.
+Project documents must use Traditional Chinese (`zh-TW`). Runtime UI copy, validation messages, recovery messages, and meal content default to `zh-TW` and may render in English when the bilingual-language feature's approved culture preference is active. Code identifiers may remain English.
 
 ## Target Architecture
 
@@ -214,7 +214,7 @@ Use the current Spec Kit workflow:
 6. Verify with unit tests, integration tests, build, and required manual checks.
 7. Include test evidence and constitution compliance notes in PR or handoff summaries.
 
-`specs/001-casino-meal-picker/tasks.md` is referenced by the plan but is not present yet. Generate it before treating the feature as ready for task-by-task implementation.
+Generate or update `specs/003-bilingual-language-toggle/tasks.md` before treating the current feature as ready for task-by-task implementation.
 
 ## Git And Commit Messages
 
