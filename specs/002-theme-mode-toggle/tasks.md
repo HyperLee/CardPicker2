@@ -31,9 +31,11 @@
 
 **CRITICAL**: 此階段完成前不得開始任何使用者故事實作。
 
-- [ ] T004 [P] 建立共用暫存卡牌庫 fixture 於 `tests/CardPicker2.IntegrationTests/Infrastructure/TempCardLibrary.cs`，供主題測試驗證不污染 `CardPicker2/data/cards.json`
-- [ ] T005 [P] 建立主要頁面測試資料於 `tests/CardPicker2.IntegrationTests/Pages/ThemeControlledSurfaceData.cs`，列出 `/`、`/Privacy`、`/Error`、`/Cards`、`/Cards/11111111-1111-1111-1111-111111111111`、`/Cards/Create`、`/Cards/Edit/11111111-1111-1111-1111-111111111111`
-- [ ] T006 更新 `tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs` 的 CSP assertion helper，準備驗證 production HSTS、`default-src 'self'` 與主題 bootstrap script 明確允許策略
+- [X] T004 [P] 建立共用暫存卡牌庫 fixture 於 `tests/CardPicker2.IntegrationTests/Infrastructure/TempCardLibrary.cs`，供主題測試驗證不污染 `CardPicker2/data/cards.json`
+- [X] T005 [P] 建立主要頁面測試資料於 `tests/CardPicker2.IntegrationTests/Pages/ThemeControlledSurfaceData.cs`，列出 `/`、`/Privacy`、`/Error`、`/Cards`、`/Cards/11111111-1111-1111-1111-111111111111`、`/Cards/Create`、`/Cards/Edit/11111111-1111-1111-1111-111111111111`
+- [X] T006 更新 `tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs` 的 CSP assertion helper，準備驗證 production HSTS、`default-src 'self'` 與主題 bootstrap script 明確允許策略
+
+**Phase 2 execution note (2026-05-12)**: Added reusable temp card-library isolation, shared controlled-surface test data, wired browser fixture tests to the isolated card library, and extracted production security-header helpers for HSTS, `default-src 'self'`, and audited theme script allowances.
 
 **Checkpoint**: Browser 測試 fixture、頁面測試資料與安全標頭 assertion 可被後續故事重用。
 

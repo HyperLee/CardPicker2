@@ -1,6 +1,10 @@
 using System.Net.Http.Headers;
 
+using CardPicker2.IntegrationTests.Infrastructure;
+
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Playwright;
 
 namespace CardPicker2.IntegrationTests.Browser;
@@ -25,6 +29,7 @@ public sealed class ThemeBrowserFixture : IAsyncLifetime
     private readonly Dictionary<string, IBrowser> _browsers = [];
     private readonly List<IBrowserContext> _contexts = [];
 
+    private TempCardLibrary? _library;
     private WebApplicationFactory<Program>? _factory;
     private HttpClient? _serverClient;
 
@@ -32,7 +37,15 @@ public sealed class ThemeBrowserFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        _factory = new WebApplicationFactory<Program>();
+        _library = TempCardLibrary.Create("cardpicker-theme-browser-tests-");
+        _factory = new WebApplicationFactory<Program>()
+            .WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureTestServices(services =>
+                {
+                    _library.Configure(services);
+                });
+            });
         _serverClient = _factory.CreateClient(new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false,
@@ -56,6 +69,7 @@ public sealed class ThemeBrowserFixture : IAsyncLifetime
         Playwright.Dispose();
         _serverClient?.Dispose();
         await (_factory?.DisposeAsync() ?? ValueTask.CompletedTask);
+        _library?.Dispose();
     }
 
     public async Task<IPage> CreateDesktopPageAsync(string engineName = "chromium")
