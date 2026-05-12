@@ -3,226 +3,249 @@
 description: "Task list template for feature implementation"
 ---
 
-# 任務清單: [FEATURE NAME]
+# Tasks: [FEATURE NAME]
 
-**輸入**: `/specs/[###-feature-name]/` 的設計文件
-**前置文件**: plan.md（必要）、spec.md（使用者故事必要）、research.md、data-model.md、contracts/
+**Input**: Design documents from `/specs/[###-feature-name]/`
+**Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-**測試**: 依 CardPicker2 憲章，任何行為、資料規則、驗證邏輯或使用者流程變更
-MUST 先建立失敗測試。若測試被豁免，tasks.md MUST 引用 plan.md 的豁免理由。
+**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
 
-**組織方式**: 任務依使用者故事分組，確保每個故事可獨立實作與測試。
+**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
-## 格式: `[ID] [P?] [Story] Description`
+## Format: `[ID] [P?] [Story] Description`
 
-- **[P]**: 可平行執行，必須是不同檔案且無相依衝突
-- **[Story]**: 任務所屬使用者故事，例如 US1、US2、US3
-- Description MUST 包含精確檔案路徑
-- 使用者面向文件與任務描述 MUST 使用繁體中文 zh-TW
+- **[P]**: Can run in parallel (different files, no dependencies)
+- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
+- Include exact file paths in descriptions
 
-## 路徑慣例
+## Path Conventions
 
-- **Web app**: `CardPicker2/` 為 Razor Pages 應用程式
-- **頁面**: `CardPicker2/Pages/`
-- **模型**: `CardPicker2/Models/`
-- **服務**: `CardPicker2/Services/`
-- **靜態資源**: `CardPicker2/wwwroot/`
-- **測試**: `tests/CardPicker2.UnitTests/` 與 `tests/CardPicker2.IntegrationTests/`
+- **Single project**: `src/`, `tests/` at repository root
+- **Web app**: `backend/src/`, `frontend/src/`
+- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
+- Paths shown below assume single project - adjust based on plan.md structure
 
-<!--
+<!-- 
   ============================================================================
-  IMPORTANT: 下列任務是示例，/speckit-tasks MUST 以 spec.md、plan.md、
-  data-model.md 與 contracts/ 的真實內容取代。
-
-  產出的 tasks.md MUST:
-  - 依 P1、P2、P3 使用者故事分組
-  - 在每個故事的實作前列出測試任務
-  - 包含輸入驗證、資料完整性、安全、可觀察性與文件工作
-  - 不得保留示例任務
+  IMPORTANT: The tasks below are SAMPLE TASKS for illustration purposes only.
+  
+  The /speckit-tasks command MUST replace these with actual tasks based on:
+  - User stories from spec.md (with their priorities P1, P2, P3...)
+  - Feature requirements from plan.md
+  - Entities from data-model.md
+  - Endpoints from contracts/
+  
+  Tasks MUST be organized by user story so each story can be:
+  - Implemented independently
+  - Tested independently
+  - Delivered as an MVP increment
+  
+  DO NOT keep these sample tasks in the generated tasks.md file.
   ============================================================================
 -->
 
-## Phase 1: Setup，共用基礎
+## Phase 1: Setup (Shared Infrastructure)
 
-**目的**: 建立功能所需的專案與測試基礎。
+**Purpose**: Project initialization and basic structure
 
-- [ ] T001 確認或建立功能所需目錄結構
-- [ ] T002 確認測試專案與 WebApplicationFactory 設定
-- [ ] T003 [P] 設定或更新 linting、formatting 與測試執行指令
-
----
-
-## Phase 2: Foundational，阻塞性前置工作
-
-**目的**: 完成所有使用者故事共用且會阻塞後續工作的基礎。
-
-**CRITICAL**: 此階段完成前不得開始任何使用者故事實作。
-
-- [ ] T004 建立共用模型或輸入 DTO
-- [ ] T005 [P] 建立共用驗證規則與錯誤訊息資源
-- [ ] T006 [P] 設定結構化日誌與錯誤處理
-- [ ] T007 建立資料完整性不變量與狀態轉換輔助元件
-- [ ] T008 設定安全基礎，包含 Anti-Forgery、秘密管理與 CSP 需求
-
-**Checkpoint**: 基礎完成後，使用者故事可依優先級或團隊容量平行展開。
+- [ ] T001 Create project structure per implementation plan
+- [ ] T002 Initialize [language] project with [framework] dependencies
+- [ ] T003 [P] Configure linting and formatting tools
 
 ---
 
-## Phase 3: User Story 1 - [Title] (Priority: P1) MVP
+## Phase 2: Foundational (Blocking Prerequisites)
 
-**Goal**: [描述此故事交付的使用者價值]
+**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
 
-**Independent Test**: [描述如何獨立驗證此故事]
+**⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-### Tests for User Story 1，必須先失敗
+Examples of foundational tasks (adjust based on your project):
 
-- [ ] T009 [P] [US1] 新增單元測試於 tests/CardPicker2.UnitTests/[path]
-- [ ] T010 [P] [US1] 新增整合測試於 tests/CardPicker2.IntegrationTests/[path]
-- [ ] T011 [US1] 執行新增測試並確認在實作前失敗
+- [ ] T004 Setup database schema and migrations framework
+- [ ] T005 [P] Implement authentication/authorization framework
+- [ ] T006 [P] Setup API routing and middleware structure
+- [ ] T007 Create base models/entities that all stories depend on
+- [ ] T008 Configure error handling and logging infrastructure
+- [ ] T009 Setup environment configuration management
+
+**Checkpoint**: Foundation ready - user story implementation can now begin in parallel
+
+---
+
+## Phase 3: User Story 1 - [Title] (Priority: P1) 🎯 MVP
+
+**Goal**: [Brief description of what this story delivers]
+
+**Independent Test**: [How to verify this story works on its own]
+
+### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
+
+> **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
+
+- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
+- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] 建立或更新模型於 CardPicker2/Models/[file].cs
-- [ ] T013 [P] [US1] 建立或更新服務於 CardPicker2/Services/[file].cs
-- [ ] T014 [US1] 更新 Razor Page 或 PageModel 於 CardPicker2/Pages/[file]
-- [ ] T015 [US1] 加入輸入驗證、資料完整性檢查與繁中錯誤訊息
-- [ ] T016 [US1] 加入安全控制與 Anti-Forgery 保護
-- [ ] T017 [US1] 加入關鍵事件與失敗路徑的結構化日誌
-- [ ] T018 [US1] 執行 US1 測試並確認通過
+- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
+- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
+- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
+- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] T016 [US1] Add validation and error handling
+- [ ] T017 [US1] Add logging for user story 1 operations
 
-**Checkpoint**: User Story 1 MUST 可獨立展示、測試與交付。
+**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
 ---
 
 ## Phase 4: User Story 2 - [Title] (Priority: P2)
 
-**Goal**: [描述此故事交付的使用者價值]
+**Goal**: [Brief description of what this story delivers]
 
-**Independent Test**: [描述如何獨立驗證此故事]
+**Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 2，必須先失敗
+### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T019 [P] [US2] 新增單元測試於 tests/CardPicker2.UnitTests/[path]
-- [ ] T020 [P] [US2] 新增整合測試於 tests/CardPicker2.IntegrationTests/[path]
-- [ ] T021 [US2] 執行新增測試並確認在實作前失敗
+- [ ] T018 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
+- [ ] T019 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 2
 
-- [ ] T022 [P] [US2] 建立或更新模型於 CardPicker2/Models/[file].cs
-- [ ] T023 [US2] 建立或更新服務於 CardPicker2/Services/[file].cs
-- [ ] T024 [US2] 更新 Razor Page 或 PageModel 於 CardPicker2/Pages/[file]
-- [ ] T025 [US2] 補齊驗證、安全、日誌與資料完整性處理
-- [ ] T026 [US2] 執行 US2 測試並確認 US1 仍通過
+- [ ] T020 [P] [US2] Create [Entity] model in src/models/[entity].py
+- [ ] T021 [US2] Implement [Service] in src/services/[service].py
+- [ ] T022 [US2] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] T023 [US2] Integrate with User Story 1 components (if needed)
 
-**Checkpoint**: User Story 1 與 User Story 2 MUST 仍可各自獨立驗證。
+**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
 ---
 
 ## Phase 5: User Story 3 - [Title] (Priority: P3)
 
-**Goal**: [描述此故事交付的使用者價值]
+**Goal**: [Brief description of what this story delivers]
 
-**Independent Test**: [描述如何獨立驗證此故事]
+**Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 3，必須先失敗
+### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T027 [P] [US3] 新增單元測試於 tests/CardPicker2.UnitTests/[path]
-- [ ] T028 [P] [US3] 新增整合測試於 tests/CardPicker2.IntegrationTests/[path]
-- [ ] T029 [US3] 執行新增測試並確認在實作前失敗
+- [ ] T024 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
+- [ ] T025 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 3
 
-- [ ] T030 [P] [US3] 建立或更新模型於 CardPicker2/Models/[file].cs
-- [ ] T031 [US3] 建立或更新服務於 CardPicker2/Services/[file].cs
-- [ ] T032 [US3] 更新 Razor Page 或 PageModel 於 CardPicker2/Pages/[file]
-- [ ] T033 [US3] 補齊驗證、安全、日誌與資料完整性處理
-- [ ] T034 [US3] 執行 US3 測試並確認 US1、US2 仍通過
+- [ ] T026 [P] [US3] Create [Entity] model in src/models/[entity].py
+- [ ] T027 [US3] Implement [Service] in src/services/[service].py
+- [ ] T028 [US3] Implement [endpoint/feature] in src/[location]/[file].py
 
-**Checkpoint**: 所有已選使用者故事 MUST 獨立可用且整體不回歸。
+**Checkpoint**: All user stories should now be independently functional
 
 ---
 
-[依需要加入更多使用者故事階段，維持相同結構]
+[Add more user story phases as needed, following the same pattern]
 
 ---
 
-## Phase N: Polish 與跨切面工作
+## Phase N: Polish & Cross-Cutting Concerns
 
-**目的**: 完成跨故事品質要求與交付檢查。
+**Purpose**: Improvements that affect multiple user stories
 
-- [ ] TXXX [P] 更新 zh-TW 文件於 specs/[###-feature-name]/ 或 docs/
-- [ ] TXXX 執行程式碼清理與重構
-- [ ] TXXX 驗證效能預算或記錄替代量測結果
-- [ ] TXXX [P] 補充關鍵業務邏輯測試覆蓋
-- [ ] TXXX 執行安全檢查與秘密掃描
-- [ ] TXXX 驗證 quickstart.md
-- [ ] TXXX 確認憲章檢查的例外均已關閉或有追蹤項目
+- [ ] TXXX [P] Documentation updates in docs/
+- [ ] TXXX Code cleanup and refactoring
+- [ ] TXXX Performance optimization across all stories
+- [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
+- [ ] TXXX Security hardening
+- [ ] TXXX Run quickstart.md validation
 
 ---
 
-## 相依性與執行順序
+## Dependencies & Execution Order
 
 ### Phase Dependencies
 
-- **Setup (Phase 1)**: 無相依性，可立即開始
-- **Foundational (Phase 2)**: 依賴 Setup，會阻塞所有使用者故事
-- **User Stories (Phase 3+)**: 依賴 Foundational；可依優先級或容量平行
-- **Polish (Final Phase)**: 依賴所有選定使用者故事完成
+- **Setup (Phase 1)**: No dependencies - can start immediately
+- **Foundational (Phase 2)**: Depends on Setup completion - BLOCKS all user stories
+- **User Stories (Phase 3+)**: All depend on Foundational phase completion
+  - User stories can then proceed in parallel (if staffed)
+  - Or sequentially in priority order (P1 → P2 → P3)
+- **Polish (Final Phase)**: Depends on all desired user stories being complete
 
 ### User Story Dependencies
 
-- **User Story 1 (P1)**: Foundational 完成後可開始，不依賴其他故事
-- **User Story 2 (P2)**: Foundational 完成後可開始，若整合 US1 仍 MUST 可獨立測試
-- **User Story 3 (P3)**: Foundational 完成後可開始，若整合 US1/US2 仍 MUST 可獨立測試
+- **User Story 1 (P1)**: Can start after Foundational (Phase 2) - No dependencies on other stories
+- **User Story 2 (P2)**: Can start after Foundational (Phase 2) - May integrate with US1 but should be independently testable
+- **User Story 3 (P3)**: Can start after Foundational (Phase 2) - May integrate with US1/US2 but should be independently testable
 
 ### Within Each User Story
 
-- 測試 MUST 先寫並先失敗
-- 模型先於服務
-- 服務先於頁面或端點
-- 核心實作先於整合
-- 每個故事完成後 MUST 獨立驗證
+- Tests (if included) MUST be written and FAIL before implementation
+- Models before services
+- Services before endpoints
+- Core implementation before integration
+- Story complete before moving to next priority
 
 ### Parallel Opportunities
 
-- 標記 [P] 的 Setup 任務可平行
-- 標記 [P] 的 Foundational 任務可平行
-- Foundational 完成後，不同使用者故事可由不同人平行處理
-- 同一故事內不同檔案的測試或模型任務可平行
+- All Setup tasks marked [P] can run in parallel
+- All Foundational tasks marked [P] can run in parallel (within Phase 2)
+- Once Foundational phase completes, all user stories can start in parallel (if team capacity allows)
+- All tests for a user story marked [P] can run in parallel
+- Models within a story marked [P] can run in parallel
+- Different user stories can be worked on in parallel by different team members
 
 ---
 
-## 實作策略
+## Parallel Example: User Story 1
 
-### MVP First，只完成 User Story 1
+```bash
+# Launch all tests for User Story 1 together (if tests requested):
+Task: "Contract test for [endpoint] in tests/contract/test_[name].py"
+Task: "Integration test for [user journey] in tests/integration/test_[name].py"
 
-1. 完成 Phase 1: Setup
-2. 完成 Phase 2: Foundational
-3. 先撰寫並確認 US1 測試失敗
-4. 完成 US1 實作
-5. 停下來驗證 US1 可獨立交付
+# Launch all models for User Story 1 together:
+Task: "Create [Entity1] model in src/models/[entity1].py"
+Task: "Create [Entity2] model in src/models/[entity2].py"
+```
+
+---
+
+## Implementation Strategy
+
+### MVP First (User Story 1 Only)
+
+1. Complete Phase 1: Setup
+2. Complete Phase 2: Foundational (CRITICAL - blocks all stories)
+3. Complete Phase 3: User Story 1
+4. **STOP and VALIDATE**: Test User Story 1 independently
+5. Deploy/demo if ready
 
 ### Incremental Delivery
 
-1. 完成 Setup 與 Foundational
-2. 完成 US1，測試並展示 MVP
-3. 完成 US2，確認 US1 不回歸
-4. 完成 US3，確認既有故事不回歸
-5. 每個故事都以可展示、可測試的增量交付
+1. Complete Setup + Foundational → Foundation ready
+2. Add User Story 1 → Test independently → Deploy/Demo (MVP!)
+3. Add User Story 2 → Test independently → Deploy/Demo
+4. Add User Story 3 → Test independently → Deploy/Demo
+5. Each story adds value without breaking previous stories
 
 ### Parallel Team Strategy
 
-1. 團隊共同完成 Setup 與 Foundational
-2. Foundational 完成後分工處理不同使用者故事
-3. 每個故事在整合前 MUST 通過自己的測試與憲章檢查
+With multiple developers:
+
+1. Team completes Setup + Foundational together
+2. Once Foundational is done:
+   - Developer A: User Story 1
+   - Developer B: User Story 2
+   - Developer C: User Story 3
+3. Stories complete and integrate independently
 
 ---
 
 ## Notes
 
-- [P] 任務必須是不同檔案且無相依衝突
-- [Story] 標籤用於追蹤任務與使用者故事
-- 每個使用者故事 MUST 可獨立完成與測試
-- 實作前 MUST 確認新增測試失敗
-- 每個 checkpoint 都 MUST 驗證故事仍可獨立運作
-- 避免模糊任務、同檔案衝突與破壞故事獨立性的跨故事相依
+- [P] tasks = different files, no dependencies
+- [Story] label maps task to specific user story for traceability
+- Each user story should be independently completable and testable
+- Verify tests fail before implementing
+- Commit after each task or logical group
+- Stop at any checkpoint to validate story independently
+- Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence

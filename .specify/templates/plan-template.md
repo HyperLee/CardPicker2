@@ -1,94 +1,104 @@
-# 實作計畫: [FEATURE]
+# Implementation Plan: [FEATURE]
 
-**分支**: `[###-feature-name]` | **日期**: [DATE] | **規格**: [link]
-**輸入**: 來自 `/specs/[###-feature-name]/spec.md` 的功能規格
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
 **Note**: This template is filled in by the `/speckit-plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
-## 摘要
+## Summary
 
-[從功能規格萃取主要需求、使用者價值與技術方向。內容 MUST 使用繁體中文 zh-TW。]
+[Extract from feature spec: primary requirement + technical approach from research]
 
-## 技術背景
+## Technical Context
 
 <!--
-  ACTION REQUIRED: 以本專案的實際技術內容取代下列提示。
-  未確定項目 MUST 標示 NEEDS CLARIFICATION，並在研究階段解決。
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
 -->
 
-**語言/版本**: ASP.NET Core 10.0 / C# 14 或 NEEDS CLARIFICATION
-**主要相依性**: Razor Pages, Bootstrap 5, jQuery, jQuery Validation 或 NEEDS CLARIFICATION
-**儲存方式**: [N/A、檔案、資料庫或 NEEDS CLARIFICATION]
-**測試**: xUnit、Moq、WebApplicationFactory 或 NEEDS CLARIFICATION
-**目標平台**: ASP.NET Core Web App 或 NEEDS CLARIFICATION
-**專案類型**: Razor Pages web application
-**效能目標**: FCP < 1.5 秒、LCP < 2.5 秒，或記錄替代量測方式
-**限制條件**: zh-TW 文件、TDD、輸入驗證、資料完整性、安全與可觀察性
-**規模/範圍**: [使用者數、頁面數、資料量、卡牌集合大小或 NEEDS CLARIFICATION]
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
-## 憲章檢查
+## Constitution Check
 
-*GATE: Phase 0 research 前 MUST 通過；Phase 1 design 後 MUST 重新檢查。*
+*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-| Gate | 憲章要求 | 狀態 | 證據或例外理由 |
-|------|----------|------|----------------|
-| 文件語言 | 使用者面向文件 MUST 使用繁體中文 zh-TW | [PASS/FAIL] | [spec/plan/tasks evidence] |
-| 程式碼品質 | 設計 MUST 符合 `.editorconfig`、C# 14 與可維護性要求 | [PASS/FAIL] | [files/patterns] |
-| 測試優先 | 行為變更 MUST 先定義失敗測試 | [PASS/FAIL/WAIVED] | [test plan or waiver] |
-| UX 一致性 | 使用 Bootstrap 5、`site.css`、RWD、可操作錯誤回饋與 WCAG 2.1 AA 目標 | [PASS/FAIL] | [UI approach] |
-| 效能 | 主要頁面與互動 MUST 有效能預算與量測方式 | [PASS/FAIL] | [budget/measurement] |
-| 可觀察性 | 關鍵事件、驗證失敗與錯誤 MUST 有結構化日誌 | [PASS/FAIL] | [logging plan] |
-| 安全 | 輸入驗證、Anti-Forgery、秘密管理、HTTPS/HSTS/CSP MUST 被處理 | [PASS/FAIL] | [security controls] |
-| 資料完整性 | 卡牌數量、範圍、狀態轉換與結果一致性 MUST 可驗證 | [PASS/FAIL] | [invariants/tests] |
+[Gates determined based on constitution file]
 
-**Complexity Review**: 任何 FAIL 或 WAIVED MUST 在「複雜度追蹤」中記錄理由、
-替代方案與補救計畫。
+## Project Structure
 
-## 專案結構
-
-### 文件，本功能
+### Documentation (this feature)
 
 ```text
 specs/[###-feature]/
-├── plan.md              # 本檔案，由 /speckit-plan 產生
-├── research.md          # Phase 0 輸出
-├── data-model.md        # Phase 1 輸出
-├── quickstart.md        # Phase 1 輸出
-├── contracts/           # Phase 1 輸出，若適用
-└── tasks.md             # Phase 2 輸出，由 /speckit-tasks 產生
+├── plan.md              # This file (/speckit-plan command output)
+├── research.md          # Phase 0 output (/speckit-plan command)
+├── data-model.md        # Phase 1 output (/speckit-plan command)
+├── quickstart.md        # Phase 1 output (/speckit-plan command)
+├── contracts/           # Phase 1 output (/speckit-plan command)
+└── tasks.md             # Phase 2 output (/speckit-tasks command - NOT created by /speckit-plan)
 ```
 
-### 原始碼，repository root
-
+### Source Code (repository root)
 <!--
-  ACTION REQUIRED: 依功能實際影響範圍調整下列樹狀結構。
-  產出的 plan.md MUST 保留真實路徑，不得保留未使用的占位選項。
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
 -->
 
 ```text
-CardPicker2/
-├── Program.cs
-├── Pages/
-│   ├── Shared/
-│   └── [feature].cshtml
-├── Models/
-├── Services/
-└── wwwroot/
-    ├── css/
-    ├── js/
-    └── lib/
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+src/
+├── models/
+├── services/
+├── cli/
+└── lib/
 
 tests/
-├── CardPicker2.UnitTests/
-└── CardPicker2.IntegrationTests/
+├── contract/
+├── integration/
+└── unit/
+
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+backend/
+├── src/
+│   ├── models/
+│   ├── services/
+│   └── api/
+└── tests/
+
+frontend/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   └── services/
+└── tests/
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-**結構決策**: [記錄本功能採用的實際目錄與理由]
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
 
-## 複雜度追蹤
+## Complexity Tracking
 
-> **僅在憲章檢查有 FAIL 或 WAIVED 時填寫**
+> **Fill ONLY if Constitution Check has violations that must be justified**
 
-| 違反或例外 | 為何需要 | 被拒絕的較簡方案與原因 | 補救計畫 |
-|------------|----------|------------------------|----------|
-| [例如：延後整合測試] | [目前限制] | [為何不可先做] | [何時補上] |
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
