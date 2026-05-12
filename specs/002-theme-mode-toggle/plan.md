@@ -18,8 +18,8 @@
 **語言/版本**: C# 14 / .NET 10.0，目標框架 `net10.0`，ASP.NET Core Razor Pages
 **主要相依性**: ASP.NET Core Razor Pages、Bootstrap 5.3.3、jQuery、jQuery Validation、System.Text.Json、Serilog.AspNetCore、Serilog.Sinks.Console、Serilog.Sinks.File、瀏覽器 `localStorage`、`matchMedia('(prefers-color-scheme: dark)')` 與 `storage` event
 **儲存方式**: 主題偏好僅保存於同一瀏覽器與裝置的 `localStorage` key `cardpicker.theme.mode`，值僅能為 `light`、`dark` 或 `system`；餐點卡牌仍使用既有 `{ContentRootPath}/data/cards.json`
-**測試**: xUnit + Moq 作為單元測試；`Microsoft.AspNetCore.Mvc.Testing` / `WebApplicationFactory<Program>` 作為 Razor Pages 整合測試；主題首次套用、跨分頁同步與系統偏好變更使用 browser automation 驗證，優先以 Microsoft Playwright for .NET 放在整合測試專案
-**目標平台**: 單機桌面與行動瀏覽器，支援 Chrome、Firefox、Safari、Edge
+**測試**: xUnit + Moq 作為單元測試；`Microsoft.AspNetCore.Mvc.Testing` / `WebApplicationFactory<Program>` 作為 Razor Pages 整合測試；主題首次套用、跨分頁同步、鍵盤/觸控操作、WCAG smoke 與系統偏好變更使用 browser automation 驗證，優先以 Microsoft Playwright for .NET 在 Chromium、Firefox、WebKit 執行；Safari/Edge 若無法自動化則以 quickstart 手動驗證紀錄補足
+**目標平台**: 單機桌面與行動瀏覽器，支援 Chrome、Firefox、Safari、Edge；自動化以 Chromium、Firefox、WebKit 覆蓋主要 engine，Safari/Edge 以手動驗證補足瀏覽器品牌差異
 **專案類型**: ASP.NET Core Razor Pages web application
 **效能目標**: Page handler/API p95 < 200ms；FCP < 1.5 秒；LCP < 2.5 秒；主題切換後 1 秒內呈現一致有效主題；同站已開啟分頁 2 秒內同步；首頁首次可見呈現前套用有效主題
 **限制條件**: 單一請求記憶體 < 100MB；單機單人本機使用；不使用專案資料庫軟體；所有使用者面向文件與訊息採繁體中文；正式環境 HTTPS Only + HSTS + CSP；所有公開 API 補齊 XML 文件註解，含需要示例的 `<example>` 或 `<code>`；靜態資源沿用 `MapStaticAssets` / `WithStaticAssets`

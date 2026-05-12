@@ -4,7 +4,7 @@
 
 - .NET 10 SDK
 - 可執行本機 ASP.NET Core Razor Pages 專案的瀏覽器，建議 Chrome、Firefox、Safari 或 Edge
-- 若執行 browser automation 測試，安裝 Microsoft Playwright for .NET 所需瀏覽器
+- 若執行 browser automation 測試，安裝 Microsoft Playwright for .NET 所需 Chromium、Firefox、WebKit 瀏覽器；Safari/Edge 若無法自動化，須以手動驗證紀錄補足
 - repository root: `/Users/qiuzili/CardPicker2`
 
 ## 還原與建置
@@ -34,6 +34,7 @@ dotnet test CardPicker2.sln --filter ThemeMode
 - Layout 在 stylesheet 前具有初始主題套用機制。
 - production CSP/HSTS 仍存在。
 - 無效 theme mode 會回到 `system`。
+- localStorage 讀取、寫入與 storage event 失敗會安全 fallback，且 console 診斷只包含允許的非敏感事件名稱。
 - 切換主題不清除抽卡結果、搜尋條件或未送出表單。
 
 Browser automation 測試應覆蓋：
@@ -41,9 +42,11 @@ Browser automation 測試應覆蓋：
 - localStorage 無值時預設 `data-theme-mode="system"`。
 - localStorage 為 `dark` 時首次可見呈現前套用 `data-bs-theme="dark"`。
 - 選擇 light/dark/system 後 1 秒內更新目前頁面。
+- 首頁主題控制可用鍵盤與 mobile pointer/touch 完成選擇。
 - system 模式跟隨 browser color scheme。
 - system preference 或另一分頁變更後 2 秒內同步。
-- 手機、平板與桌面寬度在三種模式下無水平溢出，焦點狀態可見。
+- 手機、平板與桌面寬度在三種模式下無水平溢出，焦點狀態可見，automated axe 或等效可及性 smoke 檢查無重大違規。
+- Chromium、Firefox、WebKit 均執行核心主題行為測試；Safari/Edge 若無法自動化，須記錄手動驗證結果。
 
 ## 執行網站
 
@@ -62,6 +65,7 @@ dotnet run --project CardPicker2/CardPicker2.csproj
 5. 預期每次切換後，首頁 1 秒內套用一致有效主題。
 6. 預期目前選取模式有清楚可見狀態。
 7. 預期餐別選擇、投幣確認、拉桿按鈕與老虎機視覺區仍可操作。
+8. 預期鍵盤焦點指示在亮色與暗黑有效主題下都清楚可見，且 mobile viewport 可用 pointer/touch 操作切換。
 
 ## 全站套用驗證
 
@@ -88,6 +92,12 @@ dotnet run --project CardPicker2/CardPicker2.csproj
 2. 重新整理網站。
 3. 預期選取模式回到「跟隨系統」，頁面不中斷。
 
+localStorage 例外驗證：
+
+1. 使用 browser automation 模擬 `localStorage.getItem` 或 `setItem` 丟出例外。
+2. 預期頁面不中斷，當前頁面使用安全預設或使用者剛選擇的外觀。
+3. 若 console 有診斷，僅允許 `CardPickerThemePreferenceReadFailed` 或 `CardPickerThemePreferenceWriteFailed` 等事件名稱，不得包含原始偏好值、完整例外、stack trace、秘密值或系統提示。
+
 ## 跟隨系統驗證
 
 1. 在首頁選擇「跟隨系統」。
@@ -108,6 +118,7 @@ dotnet run --project CardPicker2/CardPicker2.csproj
 5. 在分頁 A 改選「亮色模式」。
 6. 預期分頁 B 在 2 秒內同步為亮色外觀。
 7. 若分頁 B 有搜尋條件、表單輸入或可見抽卡結果，預期同步後仍保留。
+8. 若 storage event 處理失敗且 console 有診斷，僅允許 `CardPickerThemeSyncFailed` 等非敏感事件名稱。
 
 ## 資料完整性驗證
 
@@ -138,8 +149,10 @@ rm "CardPicker2/data/cards.json"
 - 無文字、按鈕、卡牌、表單或老虎機元素重疊。
 - `document.documentElement.scrollWidth == document.documentElement.clientWidth`。
 - 導覽、主題控制、餐別選擇、投幣、拉桿、搜尋、建立、編輯、刪除確認都可用鍵盤操作。
+- 主題控制在 mobile viewport 可用 pointer/touch 操作。
 - 焦點指示在 light/dark 有效主題下都可見。
 - 文字與互動元件對比符合 WCAG 2.2 AA。
+- automated axe 或等效可及性 smoke 檢查沒有重大違規；若工具無法完整量測對比，驗收紀錄必須包含人工 contrast/focus 檢查結果。
 
 ## 自動化測試
 
@@ -168,11 +181,12 @@ dotnet run --project CardPicker2/CardPicker2.csproj
 - 主題切換後 1 秒內套用一致有效主題。
 - 同站已開啟分頁 2 秒內同步。
 - 目標瀏覽器環境中，回訪 dark preference 時不出現可見 light-to-dark 閃爍。
+- Chromium、Firefox、WebKit 核心主題行為測試通過；Safari/Edge 若無法自動化，手動驗證紀錄已補齊。
 
 品質檢查：
 
 - 使用者可見文字皆為繁體中文。
 - production 環境保留 HSTS 與 CSP。
 - CSP 明確允許必要 head bootstrap script，且不得移除 `default-src 'self'`。
-- 日誌與 console 診斷不包含秘密值、連線字串、完整資料檔內容、stack trace 或系統提示。
+- 日誌與 console 診斷不包含秘密值、連線字串、完整資料檔內容、stack trace、系統提示或未清理的 localStorage 值，且 localStorage/sync 失敗只輸出允許的非敏感事件名稱。
 - 主題切換後，餐點抽卡、瀏覽、搜尋、建立、編輯與刪除流程仍可操作。

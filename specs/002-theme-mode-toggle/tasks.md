@@ -17,8 +17,8 @@
 
 **目的**: 建立主題功能所需的 browser automation 與測試輔助基礎。
 
-- [ ] T001 更新 `tests/CardPicker2.IntegrationTests/CardPicker2.IntegrationTests.csproj` 加入 Microsoft.Playwright 套件與 browser automation 測試設定
-- [ ] T002 [P] 建立 Playwright 測試 fixture 於 `tests/CardPicker2.IntegrationTests/Browser/ThemeBrowserFixture.cs`，負責啟動 WebApplicationFactory、建立瀏覽器 context 與共用 base URL
+- [ ] T001 更新 `tests/CardPicker2.IntegrationTests/CardPicker2.IntegrationTests.csproj` 加入 Microsoft.Playwright、可及性 smoke 測試所需套件與 browser automation 測試設定，至少設定 Chromium、Firefox、WebKit；Safari/Edge 無法自動化時須記錄手動驗證步驟
+- [ ] T002 [P] 建立 Playwright 測試 fixture 於 `tests/CardPicker2.IntegrationTests/Browser/ThemeBrowserFixture.cs`，負責啟動 WebApplicationFactory、建立 Chromium/Firefox/WebKit browser context、mobile touch/pointer context 與共用 base URL
 - [ ] T003 [P] 建立主題 HTML assertion helper 於 `tests/CardPicker2.IntegrationTests/Pages/ThemeModeHtmlAssertions.cs`，封裝首頁主題控制項與非首頁無控制項檢查
 
 ---
@@ -48,7 +48,7 @@
 - [ ] T007 [US1] 新增 Razor HTML contract 測試於 `tests/CardPicker2.IntegrationTests/Pages/ThemeModePageTests.cs`，驗證首頁輸出「亮色模式」、「暗黑模式」、「跟隨系統」與 value `light`、`dark`、`system`
 - [ ] T008 [P] [US1] 新增非首頁無主題控制項測試於 `tests/CardPicker2.IntegrationTests/Pages/ThemeModeNonHomePageTests.cs`，覆蓋 `/Privacy`、`/Error`、`/Cards`、詳情、建立與編輯頁
 - [ ] T009 [P] [US1] 更新 production CSP 測試於 `tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs`，驗證主題 head script 以 hash、nonce 或等效明確策略允許且不移除 HSTS
-- [ ] T010 [US1] 執行 `dotnet test CardPicker2.sln --filter ThemeModePageTests` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US1 新增測試在實作前失敗
+- [ ] T010 [US1] 新增首頁主題 browser behavior 測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeBrowserTests.cs` 並執行 `dotnet test CardPicker2.sln --filter "ThemeModePageTests|ThemeModeNonHomePageTests|SecurityHeadersTests|ThemeModeBrowserTests"`，驗證滑鼠、鍵盤與 mobile pointer/touch 選擇 `light`、`dark`、`system` 後 1 秒內更新 `data-bs-theme`/`data-theme-mode`、後續瀏覽 `/Cards` 或 `/Privacy` 沿用同一選取模式、`localStorage` 為 `dark` 或 `system` 時首次可見呈現前已由 head bootstrap script 套用有效主題，且依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US1 新增測試在實作前失敗
 
 ### Implementation for User Story 1
 
@@ -57,7 +57,7 @@
 - [ ] T013 [US1] 更新 `CardPicker2/wwwroot/js/site.js`，加入主題模式白名單驗證、目前頁面立即套用、localStorage 寫入與首頁 radio checked state 同步
 - [ ] T014 [US1] 更新 `CardPicker2/wwwroot/css/site.css`，加入 light/dark CSS custom properties、首頁主題控制項樣式、可見焦點與既有 slot/card/form surface 的基礎主題色
 - [ ] T015 [US1] 更新 `CardPicker2/Program.cs`，讓 production CSP 明確允許 `_Layout.cshtml` 的主題 bootstrap script 並保留 `default-src 'self'`、HSTS 與現有本機靜態資源限制
-- [ ] T016 [US1] 執行 `dotnet test CardPicker2.sln --filter "ThemeModePageTests|ThemeModeNonHomePageTests|SecurityHeadersTests"` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US1 測試通過
+- [ ] T016 [US1] 執行 `dotnet test CardPicker2.sln --filter "ThemeModePageTests|ThemeModeNonHomePageTests|SecurityHeadersTests|ThemeModeBrowserTests"` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US1 測試通過
 
 **Checkpoint**: User Story 1 可獨立展示為 MVP。
 
@@ -94,15 +94,15 @@
 
 ### Tests for User Story 3，必須先失敗
 
-- [ ] T024 [US3] 擴充 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeBrowserTests.cs`，驗證 localStorage 保存 `cardpicker.theme.mode`、無效值回到 `system`、回訪首次可見呈現前套用有效主題
-- [ ] T025 [P] [US3] 新增跨分頁同步測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeStorageSyncTests.cs`，驗證另一分頁收到 `storage` event 後 2 秒內更新有效主題且不顯示首頁控制項
+- [ ] T024 [US3] 擴充 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeBrowserTests.cs`，驗證 localStorage 保存 `cardpicker.theme.mode`、無效值回到 `system`、回訪首次可見呈現前套用有效主題，以及 localStorage 讀取/寫入例外會安全 fallback 並只輸出非敏感 console warning 名稱 `CardPickerThemePreferenceReadFailed` 或 `CardPickerThemePreferenceWriteFailed`
+- [ ] T025 [P] [US3] 新增跨分頁同步測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeStorageSyncTests.cs`，驗證另一分頁收到 `storage` event 後 2 秒內更新有效主題且不顯示首頁控制項，並驗證 storage event 處理失敗只輸出非敏感 console warning 名稱 `CardPickerThemeSyncFailed`
 - [ ] T026 [P] [US3] 新增狀態不變性測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeStateIntegrityTests.cs`，驗證切換主題不清除抽卡結果、搜尋 query、建立表單輸入、validation message 或 `CardPicker2/data/cards.json`
-- [ ] T027 [P] [US3] 新增 responsive 與可及性 smoke 測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeResponsiveTests.cs`，覆蓋 390x844、768x1024、1366x768 與 light/dark/system 模式下 `scrollWidth == clientWidth`
+- [ ] T027 [P] [US3] 新增 responsive 與可及性 smoke 測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeResponsiveTests.cs`，覆蓋 390x844、768x1024、1366x768 與 light/dark/system 模式下 `scrollWidth == clientWidth`、鍵盤焦點可見、主題控制鍵盤切換、mobile pointer/touch 切換、automated axe 或等效檢查無重大可及性違規；若工具無法完整量測 WCAG 2.2 AA 對比，測試輸出或 quickstart 紀錄必須要求人工 contrast/focus 證據
 - [ ] T028 [US3] 執行 `dotnet test CardPicker2.sln --filter "ThemeModeBrowserTests|ThemeModeStorageSyncTests|ThemeModeStateIntegrityTests|ThemeModeResponsiveTests"` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US3 新增測試在實作前失敗
 
 ### Implementation for User Story 3
 
-- [ ] T029 [US3] 更新 `CardPicker2/wwwroot/js/site.js`，加入 localStorage read/write try-catch、無效值清理或忽略、storage event 同步與不重載頁面/不提交表單的主題切換流程
+- [ ] T029 [US3] 更新 `CardPicker2/wwwroot/js/site.js`，加入 localStorage read/write try-catch、無效值清理或忽略、storage event 同步、不重載頁面/不提交表單的主題切換流程，以及只輸出 `CardPickerThemePreferenceReadFailed`、`CardPickerThemePreferenceWriteFailed`、`CardPickerThemeSyncFailed` 等非敏感 console warning 名稱的診斷行為
 - [ ] T030 [US3] 更新 `CardPicker2/Pages/Shared/_Layout.cshtml`，調整 navbar/footer class 為 theme-aware Bootstrap class，避免 `text-dark`、`bg-white` 在 dark effective theme 下破壞可讀性
 - [ ] T031 [US3] 更新 `CardPicker2/wwwroot/css/site.css`，補齊 card library、detail、create/edit form、delete panel、validation summary、empty state、slot result 在 light/dark/system 下的對比與 responsive 尺寸
 - [ ] T032 [US3] 更新 `CardPicker2/Pages/Index.cshtml`，確保主題控制項不包在狀態變更表單內且切換時不影響 `MealType`、`CoinInserted` 或目前揭示結果
@@ -121,8 +121,8 @@
 - [ ] T036 執行 `dotnet format CardPicker2.sln --verify-no-changes` 並針對 `CardPicker2.sln` 修正任何格式化差異
 - [ ] T037 執行 `dotnet build CardPicker2.sln` 並針對 `CardPicker2.sln` 修正所有新增 warning 或 error
 - [ ] T038 執行 `dotnet test CardPicker2.sln` 並針對 `CardPicker2.sln` 確認既有餐點抽卡、搜尋、卡牌管理與所有主題測試均通過
-- [ ] T039 以 browser automation 或手動驗證 `CardPicker2/wwwroot/css/site.css` 與 `CardPicker2/wwwroot/js/site.js` 在主要頁面符合 FCP/LCP、1 秒主題切換、2 秒跨分頁同步與無水平溢出要求
-- [ ] T040 檢查 `CardPicker2/Program.cs`、`CardPicker2/wwwroot/js/site.js` 與 `CardPicker2/Pages/Shared/_Layout.cshtml`，確認 UI、console 診斷與 headers 不包含秘密值、完整資料檔內容、stack trace 或系統提示
+- [ ] T039 以 browser automation 或手動驗證 `CardPicker2/wwwroot/css/site.css` 與 `CardPicker2/wwwroot/js/site.js` 在主要頁面符合 Chromium/Firefox/WebKit browser matrix、FCP/LCP、1 秒主題切換、2 秒跨分頁同步、鍵盤/觸控操作、WCAG 2.2 AA 對比、可見焦點與無水平溢出要求；Safari/Edge 若無法自動化，須在驗證紀錄中補手動結果
+- [ ] T040 檢查 `CardPicker2/Program.cs`、`CardPicker2/wwwroot/js/site.js` 與 `CardPicker2/Pages/Shared/_Layout.cshtml`，確認 UI、console 診斷與 headers 不包含秘密值、完整資料檔內容、stack trace、系統提示或未清理的 localStorage 值，且 localStorage/sync 失敗只輸出允許的非敏感診斷名稱
 
 ---
 
@@ -155,7 +155,7 @@
 
 - **Setup**: T002 與 T003 可平行
 - **Foundational**: T004 與 T005 可平行
-- **US1**: T007、T008、T009 可由不同人平行撰寫；實作時 T011/T012/T013/T014 需按整合順序合併
+- **US1**: T007、T008、T009、T010 可由不同人平行撰寫；實作時 T011/T012/T013/T014 需按整合順序合併，且 T010 的 browser behavior 測試必須先失敗後才能修改 `_Layout.cshtml`、`Index.cshtml`、`site.js` 或 `site.css`
 - **US2**: T017 與 T018 修改同檔案不可平行；T020、T021、T022 分別修改不同檔案但需以測試結果協調
 - **US3**: T025、T026、T027 可平行；T029、T030、T031、T032 涉及不同檔案但 `site.js`/`site.css` 需避免與 US2 同時衝突
 - **Polish**: T034 與 T035 可平行，T036-T040 應在所有實作合併後序列執行
@@ -169,7 +169,7 @@
 1. 完成 Phase 1 與 Phase 2。
 2. 撰寫 T007-T010 並確認 US1 測試失敗。
 3. 完成 T011-T015。
-4. 執行 T016，確認首頁三模式控制、整站套用、非首頁無控制項與 production CSP/HSTS 通過。
+4. 執行 T016，確認首頁三模式控制、browser behavior、整站套用、非首頁無控制項與 production CSP/HSTS 通過。
 
 ### Incremental Delivery
 

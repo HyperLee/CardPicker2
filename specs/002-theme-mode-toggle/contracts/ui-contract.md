@@ -12,7 +12,8 @@
 - 只有首頁 `/` 可以顯示主題模式選擇控制項。
 - 主題切換不得重新載入頁面、提交抽卡或卡牌表單、清除搜尋條件、清除未送出欄位、清除驗證訊息或移除已揭示抽卡結果。
 - 無效 localStorage 值、localStorage 不可用或 system preference 不可判斷時，不得中斷頁面；回到 `system` 與 light 安全預設。
-- 錯誤訊息、console 診斷與日誌不得包含秘密值、連線字串、完整資料檔內容、stack trace 或系統提示。
+- 錯誤訊息、console 診斷與日誌不得包含秘密值、連線字串、完整資料檔內容、stack trace、系統提示或未清理的 localStorage 值。
+- localStorage 讀取、寫入或跨分頁同步失敗時，若實作輸出診斷，必須使用非敏感且可測試的 console warning 名稱：`CardPickerThemePreferenceReadFailed`、`CardPickerThemePreferenceWriteFailed` 或 `CardPickerThemeSyncFailed`；診斷內容不得包含例外堆疊或原始偏好值。
 
 ## Layout 初始主題套用
 
@@ -72,6 +73,7 @@
 - 成功寫入 localStorage 時，後續站內頁面與回訪沿用該選取模式。
 - 寫入 localStorage 失敗時，當前頁面仍立即套用使用者剛選擇的模式，但後續回訪可回到安全預設。
 - 切換主題不得改變 `MealType`、`CoinInserted`、validation summary、目前揭示的抽卡結果或任何卡牌資料。
+- localStorage 寫入失敗時，若輸出 console 診斷，僅能輸出 `CardPickerThemePreferenceWriteFailed` 或等效非敏感事件名稱，不得輸出使用者輸入、完整例外或 stack trace。
 
 ## 非首頁頁面
 
@@ -112,12 +114,14 @@
 - 缺失或空字串視為 `system`。
 - 無效值視為 `system`。
 - 讀取例外不得中斷頁面。
+- 讀取例外若輸出 console 診斷，僅能輸出 `CardPickerThemePreferenceReadFailed` 或等效非敏感事件名稱，不得輸出原始儲存值、完整例外或 stack trace。
 
 **寫入規則**:
 
 - 使用者在首頁選擇模式時寫入完整模式值。
 - 寫入例外不得阻止當前頁面套用新外觀。
 - 寫入失敗不得建立其他 fallback key。
+- 寫入例外不得留下無法辨識的偏好狀態；下一次載入必須能回到 `system` 或 light 安全預設。
 
 ## System 模式契約
 
@@ -141,6 +145,7 @@
 - 新值無效或 null 時視為 `system`。
 - 已開啟同站分頁必須在 2 秒內套用最新有效主題。
 - 同步不得重載頁面或清除使用者目前頁面的表單、搜尋條件、驗證訊息或抽卡結果。
+- storage event 處理失敗若輸出 console 診斷，僅能輸出 `CardPickerThemeSyncFailed` 或等效非敏感事件名稱，不得輸出原始事件值、完整例外或 stack trace。
 
 ## CSS 與視覺契約
 
@@ -158,6 +163,7 @@
 
 - light/dark 有效主題下，文字與互動元件對比符合 WCAG 2.2 AA。
 - 焦點指示在所有主要背景上可見。
+- 主題控制必須可用鍵盤完成選取，且 mobile viewport 必須以觸控或等效 pointer event 驗證可操作。
 - 手機、平板與桌面寬度下不得有文字、按鈕、卡牌、表單或老虎機元素重疊或水平溢出。
 - 不得以色彩作為唯一狀態提示；目前選取模式需有 checked/active 語意。
 
@@ -187,5 +193,8 @@
 - `light` 與 `dark` 選擇會保存並立即套用。
 - `system` 模式會依 browser color scheme 推導有效主題。
 - system preference 變更與跨分頁 storage event 在 2 秒內更新有效主題。
+- 首頁主題控制可用鍵盤與 mobile pointer/touch 操作切換，並在 1 秒內更新 `data-bs-theme` 與 `data-theme-mode`。
+- localStorage 讀取、寫入與 storage event 失敗情境會安全 fallback，且 console 診斷不包含秘密值、原始偏好值、完整例外或 stack trace。
+- 主要頁面在 light/dark/system 模式與手機、平板、桌面 viewport 下通過 automated axe 或等效可及性 smoke 檢查；若自動化工具無法完整量測 WCAG 2.2 AA 對比，必須記錄人工 contrast/focus 驗證證據。
 - 主題切換不改變抽卡結果、搜尋條件、未送出表單輸入或餐點資料檔。
 - production CSP 與 HSTS 測試仍通過。
