@@ -17,9 +17,11 @@
 
 **目的**: 建立主題功能所需的 browser automation 與測試輔助基礎。
 
-- [ ] T001 更新 `tests/CardPicker2.IntegrationTests/CardPicker2.IntegrationTests.csproj` 加入 Microsoft.Playwright、可及性 smoke 測試所需套件與 browser automation 測試設定，至少設定 Chromium、Firefox、WebKit；Safari/Edge 無法自動化時須記錄手動驗證步驟
-- [ ] T002 [P] 建立 Playwright 測試 fixture 於 `tests/CardPicker2.IntegrationTests/Browser/ThemeBrowserFixture.cs`，負責啟動 WebApplicationFactory、建立 Chromium/Firefox/WebKit browser context、mobile touch/pointer context 與共用 base URL
-- [ ] T003 [P] 建立主題 HTML assertion helper 於 `tests/CardPicker2.IntegrationTests/Pages/ThemeModeHtmlAssertions.cs`，封裝首頁主題控制項與非首頁無控制項檢查
+- [X] T001 更新 `tests/CardPicker2.IntegrationTests/CardPicker2.IntegrationTests.csproj` 加入 Microsoft.Playwright、可及性 smoke 測試所需套件與 browser automation 測試設定，至少設定 Chromium、Firefox、WebKit；Safari/Edge 無法自動化時須記錄手動驗證步驟
+- [X] T002 [P] 建立 Playwright 測試 fixture 於 `tests/CardPicker2.IntegrationTests/Browser/ThemeBrowserFixture.cs`，負責啟動 WebApplicationFactory、建立 Chromium/Firefox/WebKit browser context、mobile touch/pointer context 與共用 base URL
+- [X] T003 [P] 建立主題 HTML assertion helper 於 `tests/CardPicker2.IntegrationTests/Pages/ThemeModeHtmlAssertions.cs`，封裝首頁主題控制項與非首頁無控制項檢查
+
+**Phase 1 execution note (2026-05-12)**: Added `Microsoft.Playwright` 1.59.0 and `Deque.AxeCore.Playwright` 4.11.3 to the integration test project, configured Chromium/Firefox/WebKit browser fixture coverage, recorded Safari/Edge as manual fallback coverage, and added reusable HTML assertions for home/non-home theme selector contracts.
 
 ---
 
