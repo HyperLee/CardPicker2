@@ -2,6 +2,8 @@ using CardPicker2.Services;
 
 using Serilog;
 
+using System.Security.Cryptography;
+
 namespace CardPicker2;
 
 public class Program
@@ -41,8 +43,15 @@ public class Program
             app.UseHsts();
             app.Use(async (context, next) =>
             {
-                context.Response.Headers.ContentSecurityPolicy =
-                    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'";
+                var nonce = Convert.ToBase64String(RandomNumberGenerator.GetBytes(16));
+                context.Items["CspNonce"] = nonce;
+                context.Response.OnStarting(() =>
+                {
+                    context.Response.Headers.ContentSecurityPolicy =
+                        $"default-src 'self'; script-src 'self' 'nonce-{nonce}'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'";
+                    return Task.CompletedTask;
+                });
+
                 await next();
             });
         }

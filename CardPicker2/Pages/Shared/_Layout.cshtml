@@ -1,9 +1,35 @@
-﻿<!DOCTYPE html>
-<html lang="zh-Hant">
+﻿@{
+    var cspNonce = Context.Items["CspNonce"] as string;
+}
+<!DOCTYPE html>
+<html lang="zh-Hant" data-bs-theme="light" data-theme-mode="system">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - 餐點抽卡機</title>
+    <script nonce="@cspNonce">
+        (() => {
+            const storageKey = 'cardpicker.theme.mode';
+            const allowedModes = new Set(['light', 'dark', 'system']);
+            const normalizeMode = (value) => allowedModes.has(value) ? value : 'system';
+            const getSystemTheme = () => {
+                try {
+                    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                } catch {
+                    return 'light';
+                }
+            };
+            let mode = 'system';
+            try {
+                mode = normalizeMode(window.localStorage?.getItem(storageKey));
+            } catch {
+                mode = 'system';
+            }
+            const effectiveTheme = mode === 'system' ? getSystemTheme() : mode;
+            document.documentElement.setAttribute('data-theme-mode', mode);
+            document.documentElement.setAttribute('data-bs-theme', effectiveTheme);
+        })();
+    </script>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />

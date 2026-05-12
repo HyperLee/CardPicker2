@@ -11,6 +11,22 @@
         <h1 id="draw-title">餐點抽卡機</h1>
     </div>
 
+    <section class="theme-mode-panel" data-theme-mode-selector aria-labelledby="theme-mode-title">
+        <fieldset class="theme-mode-fieldset">
+            <legend id="theme-mode-title">網站主題</legend>
+            <div class="theme-mode-options" role="radiogroup" aria-label="網站主題">
+                <input class="btn-check theme-mode-input" type="radio" name="theme-mode" id="theme-mode-light" value="light" autocomplete="off" />
+                <label class="btn theme-mode-option" for="theme-mode-light">亮色模式</label>
+
+                <input class="btn-check theme-mode-input" type="radio" name="theme-mode" id="theme-mode-dark" value="dark" autocomplete="off" />
+                <label class="btn theme-mode-option" for="theme-mode-dark">暗黑模式</label>
+
+                <input class="btn-check theme-mode-input" type="radio" name="theme-mode" id="theme-mode-system" value="system" autocomplete="off" checked />
+                <label class="btn theme-mode-option" for="theme-mode-system">跟隨系統</label>
+            </div>
+        </fieldset>
+    </section>
+
     @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
     {
         var alertClass = Model.OperationState == CardPicker2.Models.DrawOperationState.Blocked ? "alert-danger" : "alert-info";

@@ -49,19 +49,21 @@
 
 ### Tests for User Story 1，必須先失敗
 
-- [ ] T007 [US1] 新增 Razor HTML contract 測試於 `tests/CardPicker2.IntegrationTests/Pages/ThemeModePageTests.cs`，驗證首頁輸出「亮色模式」、「暗黑模式」、「跟隨系統」與 value `light`、`dark`、`system`
-- [ ] T008 [P] [US1] 新增非首頁無主題控制項測試於 `tests/CardPicker2.IntegrationTests/Pages/ThemeModeNonHomePageTests.cs`，覆蓋 `/Privacy`、`/Error`、`/Cards`、詳情、建立與編輯頁
-- [ ] T009 [P] [US1] 更新 production CSP 測試於 `tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs`，驗證主題 head script 以 hash、nonce 或等效明確策略允許且不移除 HSTS
-- [ ] T010 [US1] 新增首頁主題 browser behavior 測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeBrowserTests.cs` 並執行 `dotnet test CardPicker2.sln --filter "ThemeModePageTests|ThemeModeNonHomePageTests|SecurityHeadersTests|ThemeModeBrowserTests"`，驗證滑鼠、鍵盤與 mobile pointer/touch 選擇 `light`、`dark`、`system` 後 1 秒內更新 `data-bs-theme`/`data-theme-mode`、後續瀏覽 `/Cards` 或 `/Privacy` 沿用同一選取模式、`localStorage` 為 `dark` 或 `system` 時首次可見呈現前已由 head bootstrap script 套用有效主題，且依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US1 新增測試在實作前失敗
+- [X] T007 [US1] 新增 Razor HTML contract 測試於 `tests/CardPicker2.IntegrationTests/Pages/ThemeModePageTests.cs`，驗證首頁輸出「亮色模式」、「暗黑模式」、「跟隨系統」與 value `light`、`dark`、`system`
+- [X] T008 [P] [US1] 新增非首頁無主題控制項測試於 `tests/CardPicker2.IntegrationTests/Pages/ThemeModeNonHomePageTests.cs`，覆蓋 `/Privacy`、`/Error`、`/Cards`、詳情、建立與編輯頁
+- [X] T009 [P] [US1] 更新 production CSP 測試於 `tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs`，驗證主題 head script 以 hash、nonce 或等效明確策略允許且不移除 HSTS
+- [X] T010 [US1] 新增首頁主題 browser behavior 測試於 `tests/CardPicker2.IntegrationTests/Browser/ThemeModeBrowserTests.cs` 並執行 `dotnet test CardPicker2.sln --filter "ThemeModePageTests|ThemeModeNonHomePageTests|SecurityHeadersTests|ThemeModeBrowserTests"`，驗證滑鼠、鍵盤與 mobile pointer/touch 選擇 `light`、`dark`、`system` 後 1 秒內更新 `data-bs-theme`/`data-theme-mode`、後續瀏覽 `/Cards` 或 `/Privacy` 沿用同一選取模式、`localStorage` 為 `dark` 或 `system` 時首次可見呈現前已由 head bootstrap script 套用有效主題，且依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US1 新增測試在實作前失敗
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] 更新 `CardPicker2/Pages/Shared/_Layout.cshtml`，在 Bootstrap 與 `site.css` 前加入最小 head bootstrap script 並設定 `data-bs-theme`、`data-theme-mode`
-- [ ] T012 [US1] 更新 `CardPicker2/Pages/Index.cshtml`，新增首頁唯一的主題模式 fieldset/radio segmented control 並使用繁體中文標示
-- [ ] T013 [US1] 更新 `CardPicker2/wwwroot/js/site.js`，加入主題模式白名單驗證、目前頁面立即套用、localStorage 寫入與首頁 radio checked state 同步
-- [ ] T014 [US1] 更新 `CardPicker2/wwwroot/css/site.css`，加入 light/dark CSS custom properties、首頁主題控制項樣式、可見焦點與既有 slot/card/form surface 的基礎主題色
-- [ ] T015 [US1] 更新 `CardPicker2/Program.cs`，讓 production CSP 明確允許 `_Layout.cshtml` 的主題 bootstrap script 並保留 `default-src 'self'`、HSTS 與現有本機靜態資源限制
-- [ ] T016 [US1] 執行 `dotnet test CardPicker2.sln --filter "ThemeModePageTests|ThemeModeNonHomePageTests|SecurityHeadersTests|ThemeModeBrowserTests"` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US1 測試通過
+- [X] T011 [US1] 更新 `CardPicker2/Pages/Shared/_Layout.cshtml`，在 Bootstrap 與 `site.css` 前加入最小 head bootstrap script 並設定 `data-bs-theme`、`data-theme-mode`
+- [X] T012 [US1] 更新 `CardPicker2/Pages/Index.cshtml`，新增首頁唯一的主題模式 fieldset/radio segmented control 並使用繁體中文標示
+- [X] T013 [US1] 更新 `CardPicker2/wwwroot/js/site.js`，加入主題模式白名單驗證、目前頁面立即套用、localStorage 寫入與首頁 radio checked state 同步
+- [X] T014 [US1] 更新 `CardPicker2/wwwroot/css/site.css`，加入 light/dark CSS custom properties、首頁主題控制項樣式、可見焦點與既有 slot/card/form surface 的基礎主題色
+- [X] T015 [US1] 更新 `CardPicker2/Program.cs`，讓 production CSP 明確允許 `_Layout.cshtml` 的主題 bootstrap script 並保留 `default-src 'self'`、HSTS 與現有本機靜態資源限制
+- [X] T016 [US1] 執行 `dotnet test CardPicker2.sln --filter "ThemeModePageTests|ThemeModeNonHomePageTests|SecurityHeadersTests|ThemeModeBrowserTests"` 並依 `specs/002-theme-mode-toggle/quickstart.md` 確認 US1 測試通過
+
+**Phase 3 execution note (2026-05-12)**: Red test run failed before implementation with missing home selector, unsafe inline script CSP, and missing `data-bs-theme`/`data-theme-mode` bootstrap behavior. After implementation, `dotnet test CardPicker2.sln --filter "ThemeModePageTests|ThemeModeNonHomePageTests|SecurityHeadersTests|ThemeModeBrowserTests"` passed 12/12 integration tests.
 
 **Checkpoint**: User Story 1 可獨立展示為 MVP。
 

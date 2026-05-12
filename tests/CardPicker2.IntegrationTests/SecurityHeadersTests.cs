@@ -21,6 +21,23 @@ public sealed class SecurityHeadersTests
         AssertContentSecurityPolicyAllowsThemeBootstrap(GetContentSecurityPolicy(response));
     }
 
+    [Fact]
+    public async Task ProductionContentSecurityPolicy_UsesExplicitThemeBootstrapScriptAllowance()
+    {
+        await using var factory = new WebApplicationFactory<Program>()
+            .WithWebHostBuilder(builder => builder.UseEnvironment("Production"));
+        var client = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            BaseAddress = new Uri("https://localhost")
+        });
+
+        var response = await client.GetAsync("/");
+        var contentSecurityPolicy = GetContentSecurityPolicy(response);
+
+        Assert.DoesNotContain("script-src 'self' 'unsafe-inline'", contentSecurityPolicy);
+        Assert.Matches(@"script-src[^;]*('sha256-|nonce-)", contentSecurityPolicy);
+    }
+
     internal static string GetContentSecurityPolicy(HttpResponseMessage response)
     {
         Assert.True(response.Headers.Contains("Content-Security-Policy"));

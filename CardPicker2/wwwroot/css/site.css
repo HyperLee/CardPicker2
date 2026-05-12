@@ -2,6 +2,49 @@ html {
   font-size: 14px;
 }
 
+:root,
+[data-bs-theme="light"] {
+  color-scheme: light;
+  --cp-bg: #f7f5ef;
+  --cp-surface: #fffdf6;
+  --cp-surface-strong: #fffaf0;
+  --cp-surface-plain: #fff;
+  --cp-text: #24201c;
+  --cp-muted: #5c5145;
+  --cp-border: #d5b75c;
+  --cp-border-soft: #dfd2ad;
+  --cp-accent: #b52821;
+  --cp-accent-text: #fff;
+  --cp-success: #2f7d54;
+  --cp-success-surface: #f1fff6;
+  --cp-slot-shell: #32271f;
+  --cp-slot-reel: #fff7dc;
+  --cp-focus: #258cfb;
+  --cp-danger-surface: #fff7f7;
+  --cp-danger-border: #d7a1a1;
+}
+
+[data-bs-theme="dark"] {
+  color-scheme: dark;
+  --cp-bg: #121416;
+  --cp-surface: #1d2226;
+  --cp-surface-strong: #181c20;
+  --cp-surface-plain: #20262b;
+  --cp-text: #f3f0e8;
+  --cp-muted: #c8c0b2;
+  --cp-border: #b99c45;
+  --cp-border-soft: #65583a;
+  --cp-accent: #ff6b61;
+  --cp-accent-text: #1b1110;
+  --cp-success: #74d7a2;
+  --cp-success-surface: #10281c;
+  --cp-slot-shell: #090b0e;
+  --cp-slot-reel: #20262b;
+  --cp-focus: #8fc7ff;
+  --cp-danger-surface: #33191c;
+  --cp-danger-border: #b75d64;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -9,7 +52,7 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+  box-shadow: 0 0 0 0.1rem var(--cp-surface-plain), 0 0 0 0.25rem var(--cp-focus);
 }
 
 html {
@@ -19,8 +62,8 @@ html {
 
 body {
   margin-bottom: 60px;
-  background: #f7f5ef;
-  color: #24201c;
+  background: var(--cp-bg);
+  color: var(--cp-text);
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -51,8 +94,52 @@ body {
 
 .slot-kicker {
   margin: 0 0 0.25rem;
-  color: #8d241f;
+  color: var(--cp-accent);
   font-weight: 700;
+}
+
+.theme-mode-panel {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border: 1px solid var(--cp-border-soft);
+  border-radius: 8px;
+  background: var(--cp-surface);
+}
+
+.theme-mode-fieldset {
+  min-width: 0;
+}
+
+.theme-mode-fieldset legend {
+  float: none;
+  width: auto;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.theme-mode-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.theme-mode-option {
+  width: 100%;
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--cp-border);
+  background: var(--cp-surface-plain);
+  color: var(--cp-text);
+  font-weight: 800;
+}
+
+.btn-check:checked + .theme-mode-option {
+  border-color: var(--cp-accent);
+  background: var(--cp-accent);
+  color: var(--cp-accent-text);
 }
 
 .slot-console {
@@ -60,9 +147,9 @@ body {
   display: grid;
   gap: 1.25rem;
   padding: 1.25rem;
-  border: 2px solid #3b3028;
+  border: 2px solid var(--cp-border);
   border-radius: 8px;
-  background: #fffaf0;
+  background: var(--cp-surface-strong);
   box-shadow: 0 16px 40px rgba(53, 38, 26, 0.15);
 }
 
@@ -90,16 +177,16 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #9e8f71;
-  background: #fffdf6;
-  color: #24201c;
+  border: 1px solid var(--cp-border);
+  background: var(--cp-surface-plain);
+  color: var(--cp-text);
   font-weight: 700;
 }
 
 .btn-check:checked + .meal-option {
-  border-color: #b52821;
-  background: #b52821;
-  color: #fff;
+  border-color: var(--cp-accent);
+  background: var(--cp-accent);
+  color: var(--cp-accent-text);
 }
 
 .slot-machine {
@@ -111,7 +198,7 @@ body {
   gap: 0.75rem;
   padding: 0.75rem;
   border-radius: 8px;
-  background: #32271f;
+  background: var(--cp-slot-shell);
   min-height: 8rem;
 }
 
@@ -121,10 +208,10 @@ body {
   display: grid;
   grid-template-rows: repeat(3, 1fr);
   overflow: hidden;
-  border: 2px solid #d5b75c;
+  border: 2px solid var(--cp-border);
   border-radius: 6px;
-  background: #fff7dc;
-  color: #2b211a;
+  background: var(--cp-slot-reel);
+  color: var(--cp-text);
   font-size: 2rem;
   font-weight: 800;
   text-align: center;
@@ -154,9 +241,9 @@ body {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1rem;
-  border: 1px solid #d5b75c;
+  border: 1px solid var(--cp-border);
   border-radius: 8px;
-  background: #fffdf6;
+  background: var(--cp-surface);
   font-weight: 700;
 }
 
@@ -169,9 +256,9 @@ body {
 .draw-result {
   margin-top: 1.25rem;
   padding: 1.25rem;
-  border-left: 6px solid #2f7d54;
+  border-left: 6px solid var(--cp-success);
   border-radius: 8px;
-  background: #f1fff6;
+  background: var(--cp-success-surface);
 }
 
 .draw-result h2 {
@@ -185,8 +272,8 @@ body {
   margin: 0 0 0.75rem;
   padding: 0.25rem 0.65rem;
   border-radius: 999px;
-  background: #2f7d54;
-  color: #fff;
+  background: var(--cp-success);
+  color: var(--cp-accent-text);
   font-weight: 700;
 }
 
@@ -216,9 +303,9 @@ body {
   align-items: end;
   margin-bottom: 1.25rem;
   padding: 1rem;
-  border: 1px solid #d5b75c;
+  border: 1px solid var(--cp-border);
   border-radius: 8px;
-  background: #fffdf6;
+  background: var(--cp-surface);
 }
 
 .search-actions {
@@ -238,9 +325,9 @@ body {
   gap: 1rem;
   align-items: center;
   padding: 1rem;
-  border: 1px solid #dfd2ad;
+  border: 1px solid var(--cp-border-soft);
   border-radius: 8px;
-  background: #fff;
+  background: var(--cp-surface-plain);
 }
 
 .meal-card-item h2 {
@@ -252,10 +339,10 @@ body {
 
 .empty-state {
   padding: 1rem;
-  border: 1px dashed #9e8f71;
+  border: 1px dashed var(--cp-border);
   border-radius: 8px;
-  background: #fffdf6;
-  color: #5c5145;
+  background: var(--cp-surface);
+  color: var(--cp-muted);
 }
 
 .card-description {
@@ -286,17 +373,17 @@ body {
 
 .card-form {
   padding: 1rem;
-  border: 1px solid #d5b75c;
+  border: 1px solid var(--cp-border);
   border-radius: 8px;
-  background: #fffdf6;
+  background: var(--cp-surface);
 }
 
 .delete-panel {
   margin-top: 1.5rem;
   padding: 1rem;
-  border: 1px solid #d7a1a1;
+  border: 1px solid var(--cp-danger-border);
   border-radius: 8px;
-  background: #fff7f7;
+  background: var(--cp-danger-surface);
 }
 
 @keyframes slotPulse {
@@ -334,6 +421,7 @@ body {
   }
 
   .meal-options,
+  .theme-mode-options,
   .draw-controls {
     grid-template-columns: 1fr;
   }
