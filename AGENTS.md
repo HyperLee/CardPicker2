@@ -25,18 +25,20 @@ If bulk deletion is required, halt the operation and request that the user perfo
 
 <!-- SPECKIT START -->
 For the current feature context, technologies, project structure, shell commands,
-and other important information, read `specs/004-draw-mode-statistics/plan.md`.
+and other important information, read `specs/005-card-metadata-filtered-draw/plan.md`.
 <!-- SPECKIT END -->
 
 Before making architecture, behavior, UI, persistence, security, or testing changes, read these files:
 
 - `.specify/memory/constitution.md`
-- `specs/004-draw-mode-statistics/spec.md`
-- `specs/004-draw-mode-statistics/plan.md`
-- `specs/004-draw-mode-statistics/research.md`
-- `specs/004-draw-mode-statistics/data-model.md`
-- `specs/004-draw-mode-statistics/quickstart.md`
-- `specs/004-draw-mode-statistics/contracts/ui-contract.md`
+- `specs/005-card-metadata-filtered-draw/spec.md`
+- `specs/005-card-metadata-filtered-draw/plan.md`
+- `specs/005-card-metadata-filtered-draw/research.md`
+- `specs/005-card-metadata-filtered-draw/data-model.md`
+- `specs/005-card-metadata-filtered-draw/quickstart.md`
+- `specs/005-card-metadata-filtered-draw/contracts/ui-contract.md`
+
+Because the current feature builds on draw modes, draw history, statistics, and deleted-card retention, also read the `specs/004-draw-mode-statistics/` artifacts as baseline context.
 
 If a change touches localization, bilingual card content, language persistence, or runtime UI language behavior, also read the `specs/003-bilingual-language-toggle/` artifacts because that feature is implemented baseline context.
 
@@ -44,7 +46,7 @@ The constitution has the highest project authority. If implementation notes, tas
 
 ## Repository State
 
-This repository contains an ASP.NET Core Razor Pages app with implemented meal-picker, theme-mode, and bilingual-language functionality plus Spec Kit artifacts for current feature `004-draw-mode-statistics`.
+This repository contains an ASP.NET Core Razor Pages app with implemented meal-picker, theme-mode, bilingual-language, draw-mode, and statistics functionality plus Spec Kit artifacts for current feature `005-card-metadata-filtered-draw`.
 
 Current implemented app state:
 
