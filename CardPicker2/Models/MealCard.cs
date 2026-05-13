@@ -5,6 +5,14 @@ namespace CardPicker2.Models;
 /// <summary>
 /// Represents one persisted meal option that can be browsed, searched, edited, deleted, or drawn.
 /// </summary>
+/// <example>
+/// <code>
+/// var card = new MealCard(id, MealType.Lunch, localizations)
+/// {
+///     Status = CardStatus.Active
+/// };
+/// </code>
+/// </example>
 public sealed class MealCard
 {
     /// <summary>

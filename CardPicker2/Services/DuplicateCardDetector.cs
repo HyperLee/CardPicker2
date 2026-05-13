@@ -28,7 +28,7 @@ public sealed class DuplicateCardDetector
         }
 
         return cards
-            .Where(card => card.Id != ignoredCardId && card.MealType == mealType)
+            .Where(card => card.IsActive && card.Id != ignoredCardId && card.MealType == mealType)
             .SelectMany(CreateCandidates)
             .Any(existing => inputCandidates.Any(inputCandidate => IsSamePair(existing, inputCandidate)));
     }
@@ -43,7 +43,7 @@ public sealed class DuplicateCardDetector
     public bool HasDuplicate(IEnumerable<MealCard> cards, MealCard card, Guid? ignoredCardId = null)
     {
         return cards
-            .Where(existing => existing.Id != (ignoredCardId ?? card.Id) && existing.MealType == card.MealType)
+            .Where(existing => existing.IsActive && existing.Id != (ignoredCardId ?? card.Id) && existing.MealType == card.MealType)
             .SelectMany(CreateCandidates)
             .Any(existing => CreateCandidates(card).Any(candidate => IsSamePair(existing, candidate)));
     }

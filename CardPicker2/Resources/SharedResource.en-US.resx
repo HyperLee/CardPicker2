@@ -147,6 +147,12 @@
   <data name="Statistics.Status.Deleted" xml:space="preserve">
     <value>Deleted</value>
   </data>
+  <data name="Cards.Delete.RetainedSuccess" xml:space="preserve">
+    <value>The meal card was deleted and its history was retained.</value>
+  </data>
+  <data name="Home.ReducedMotion.StaticReveal" xml:space="preserve">
+    <value>The result was revealed statically because reduced motion is preferred.</value>
+  </data>
   <data name="Cards.Kicker" xml:space="preserve">
     <value>Card library</value>
   </data>

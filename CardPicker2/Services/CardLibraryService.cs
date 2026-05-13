@@ -333,7 +333,7 @@ public sealed class CardLibraryService : ICardLibraryService
             return Array.Empty<MealCard>();
         }
 
-        var query = loadResult.Document.Cards.AsEnumerable();
+        var query = loadResult.Document.Cards.Where(card => card.IsActive);
         var keyword = criteria.NormalizedKeyword;
         if (!string.IsNullOrEmpty(keyword))
         {
@@ -362,7 +362,7 @@ public sealed class CardLibraryService : ICardLibraryService
             return null;
         }
 
-        return loadResult.Document.Cards.FirstOrDefault(card => card.Id == id);
+        return loadResult.Document.Cards.FirstOrDefault(card => card.Id == id && card.IsActive);
     }
 
     private async Task<CardLibraryMutationResult> CreateCoreAsync(MealCardInputModel input, CancellationToken cancellationToken)
@@ -411,7 +411,7 @@ public sealed class CardLibraryService : ICardLibraryService
                 return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.Blocked, loadResult.UserMessage);
             }
 
-            var existing = loadResult.Document.Cards.FirstOrDefault(card => card.Id == id);
+            var existing = loadResult.Document.Cards.FirstOrDefault(card => card.Id == id && card.IsActive);
             if (existing is null)
             {
                 return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.NotFound, "找不到餐點卡牌。");
@@ -456,21 +456,37 @@ public sealed class CardLibraryService : ICardLibraryService
                 return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.Blocked, loadResult.UserMessage);
             }
 
-            var existing = loadResult.Document.Cards.FirstOrDefault(card => card.Id == id);
+            var existing = loadResult.Document.Cards.FirstOrDefault(card => card.Id == id && card.IsActive);
             if (existing is null)
             {
                 return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.NotFound, "找不到餐點卡牌。");
             }
 
+            var hasHistory = loadResult.Document.DrawHistory.Any(history => history.CardId == id);
+            var cards = hasHistory
+                ? loadResult.Document.Cards
+                    .Select(card => card.Id == id
+                        ? new MealCard(
+                            card.Id,
+                            card.MealType,
+                            card.Localizations,
+                            CardStatus.Deleted,
+                            DateTimeOffset.UtcNow)
+                        : card)
+                    .ToList()
+                : loadResult.Document.Cards.Where(card => card.Id != id).ToList();
             var updatedDocument = new CardLibraryDocument
             {
                 SchemaVersion = CardLibraryDocument.CurrentSchemaVersion,
-                Cards = loadResult.Document.Cards.Where(card => card.Id != id).ToList(),
+                Cards = cards,
                 DrawHistory = loadResult.Document.DrawHistory
             };
 
             var writeResult = await TryWriteDocumentAsync(updatedDocument, innerCancellationToken);
-            return writeResult ?? CardLibraryMutationResult.Success(existing, "已刪除餐點卡牌。");
+            var message = hasHistory
+                ? "已刪除餐點卡牌，歷史統計已保留。"
+                : "已刪除餐點卡牌。";
+            return writeResult ?? CardLibraryMutationResult.Success(existing, message);
         }, cancellationToken);
     }
 

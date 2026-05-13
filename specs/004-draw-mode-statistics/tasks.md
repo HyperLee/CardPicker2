@@ -125,28 +125,28 @@
 
 > 先撰寫這些測試，確認在實作前失敗。
 
-- [ ] T049 [P] [US3] 新增卡牌刪除保留失敗測試於 `tests/CardPicker2.UnitTests/Services/CardDeletionRetentionTests.cs`，覆蓋無歷史 hard delete、有歷史 retained deleted、deleted card 排除候選池、search/edit/detail 排除 deleted、duplicate detection 忽略 deleted。
-- [ ] T050 [P] [US3] 新增 deleted 統計頁整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/DeletedCardStatisticsPageTests.cs`，覆蓋曾抽中 deleted card 仍顯示統計列與 deleted badge，且不出現在未來 draw result。
-- [ ] T051 [P] [US3] 新增語系不變性整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/DrawModeLocalizationInvariantTests.cs`，覆蓋 `zh-TW`/`en-US` 切換只改變文字，不改變 operation ID、card ID、draw count、probability 或 card status。
-- [ ] T052 [P] [US3] 新增 RWD/reduced-motion/可及性 browser 失敗測試於 `tests/CardPicker2.IntegrationTests/Browser/DrawModeResponsiveAccessibilityTests.cs`，覆蓋 390x844、768x1024、1366x768、`prefers-reduced-motion: reduce`、鍵盤操作與 axe 基本檢查。
-- [ ] T053 [P] [US3] 新增文案邊界失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCopyBoundaryTests.cs`，掃描 `CardPicker2/Resources/SharedResource.zh-TW.resx` 與 `CardPicker2/Resources/SharedResource.en-US.resx` 不含保底、下一次機率更高、連抽加成、付費或價值分級暗示。
-- [ ] T054 [US3] 執行 `dotnet test CardPicker2.sln --filter "CardDeletionRetention|DeletedCardStatistics|DrawModeLocalizationInvariant|DrawModeResponsiveAccessibility|DrawCopyBoundary"`，確認 `CardPicker2.sln` 的 US3 新測試在實作前失敗。
+- [X] T049 [P] [US3] 新增卡牌刪除保留失敗測試於 `tests/CardPicker2.UnitTests/Services/CardDeletionRetentionTests.cs`，覆蓋無歷史 hard delete、有歷史 retained deleted、deleted card 排除候選池、search/edit/detail 排除 deleted、duplicate detection 忽略 deleted。
+- [X] T050 [P] [US3] 新增 deleted 統計頁整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/DeletedCardStatisticsPageTests.cs`，覆蓋曾抽中 deleted card 仍顯示統計列與 deleted badge，且不出現在未來 draw result。
+- [X] T051 [P] [US3] 新增語系不變性整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/DrawModeLocalizationInvariantTests.cs`，覆蓋 `zh-TW`/`en-US` 切換只改變文字，不改變 operation ID、card ID、draw count、probability 或 card status。
+- [X] T052 [P] [US3] 新增 RWD/reduced-motion/可及性 browser 失敗測試於 `tests/CardPicker2.IntegrationTests/Browser/DrawModeResponsiveAccessibilityTests.cs`，覆蓋 390x844、768x1024、1366x768、`prefers-reduced-motion: reduce`、鍵盤操作與 axe 基本檢查。
+- [X] T053 [P] [US3] 新增文案邊界失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCopyBoundaryTests.cs`，掃描 `CardPicker2/Resources/SharedResource.zh-TW.resx` 與 `CardPicker2/Resources/SharedResource.en-US.resx` 不含保底、下一次機率更高、連抽加成、付費或價值分級暗示。
+- [X] T054 [US3] 執行 `dotnet test CardPicker2.sln --filter "CardDeletionRetention|DeletedCardStatistics|DrawModeLocalizationInvariant|DrawModeResponsiveAccessibility|DrawCopyBoundary"`，確認 `CardPicker2.sln` 的 US3 新測試在實作前失敗。
 
 ### 使用者故事 3 的實作
 
-- [ ] T055 [US3] 更新卡牌模型生命週期於 `CardPicker2/Models/MealCard.cs`，新增 `Status`、`DeletedAtUtc`、active/deleted helper、normalize preserving lifecycle，並補 XML 文件註解含 `<example>`/`<code>`。
-- [ ] T056 [US3] 更新重複偵測於 `CardPicker2/Services/DuplicateCardDetector.cs`，只比對 active cards，讓 retained deleted card 不阻擋新增同餐別同內容的新 active card。
-- [ ] T057 [US3] 更新 card mutation/search/draw 流程於 `CardPicker2/Services/CardLibraryService.cs`，search/find/update 預設排除 deleted，delete 依 history hard delete 或 retained deleted，candidate pool 永遠只取 active。
-- [ ] T058 [US3] 更新卡牌列表 PageModel 與 Razor UI 於 `CardPicker2/Pages/Cards/Index.cshtml.cs` 與 `CardPicker2/Pages/Cards/Index.cshtml`，確保一般 browsing/search 只顯示 active cards 並保留 blocked recovery 行為。
-- [ ] T059 [US3] 更新卡牌 details/edit/delete PageModels 於 `CardPicker2/Pages/Cards/Details.cshtml.cs`、`CardPicker2/Pages/Cards/Edit.cshtml.cs`、`CardPicker2/Pages/Cards/Delete.cshtml.cs`，讓 deleted 或不存在目標回傳 not found/recovery message，不重新啟用 deleted card。
-- [ ] T060 [US3] 更新卡牌 details/edit/delete Razor UI 於 `CardPicker2/Pages/Cards/Details.cshtml`、`CardPicker2/Pages/Cards/Edit.cshtml`、`CardPicker2/Pages/Cards/Delete.cshtml`，讓刪除成功/失敗與 recovery 訊息依目前語系呈現且不泄漏內部資料。
-- [ ] T061 [US3] 更新 localized projection 於 `CardPicker2/Models/LocalizedMealCardView.cs` 與 `CardPicker2/Services/MealCardLocalizationService.cs`，加入 card status display/fallback 資訊供結果與統計列使用。
-- [ ] T062 [US3] 更新首頁 result restore 於 `CardPicker2/Pages/Index.cshtml.cs`，依 operation/history/card ID 重顯既有成功結果，若對應 card retained deleted 則仍可顯示並標示狀態，不重新 randomize。
-- [ ] T063 [P] [US3] 更新繁中文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，加入 deleted status、retained delete 成功/失敗、reduced motion 靜態揭示與不誤導機率的鼓勵文案。
-- [ ] T064 [P] [US3] 更新英文文案於 `CardPicker2/Resources/SharedResource.en-US.resx`，加入 US3 對應文字並避免賭博式或機率提升暗示。
-- [ ] T065 [P] [US3] 更新 reduced motion 與 responsive 樣式於 `CardPicker2/wwwroot/css/site.css`，確保 slot visual、結果卡、統計表與 deleted badge 在指定 viewport 不重疊。
-- [ ] T066 [P] [US3] 更新 reduced motion 與互動輔助於 `CardPicker2/wwwroot/js/site.js`，在 `prefers-reduced-motion: reduce` 時跳過連續旋轉但不改變 submit payload 或結果身分。
-- [ ] T067 [US3] 執行 `dotnet test CardPicker2.sln --filter "CardDeletionRetention|DeletedCardStatistics|DrawModeLocalizationInvariant|DrawModeResponsiveAccessibility|DrawCopyBoundary"`，確認 `CardPicker2.sln` 的 US3 測試通過。
+- [X] T055 [US3] 更新卡牌模型生命週期於 `CardPicker2/Models/MealCard.cs`，新增 `Status`、`DeletedAtUtc`、active/deleted helper、normalize preserving lifecycle，並補 XML 文件註解含 `<example>`/`<code>`。
+- [X] T056 [US3] 更新重複偵測於 `CardPicker2/Services/DuplicateCardDetector.cs`，只比對 active cards，讓 retained deleted card 不阻擋新增同餐別同內容的新 active card。
+- [X] T057 [US3] 更新 card mutation/search/draw 流程於 `CardPicker2/Services/CardLibraryService.cs`，search/find/update 預設排除 deleted，delete 依 history hard delete 或 retained deleted，candidate pool 永遠只取 active。
+- [X] T058 [US3] 更新卡牌列表 PageModel 與 Razor UI 於 `CardPicker2/Pages/Cards/Index.cshtml.cs` 與 `CardPicker2/Pages/Cards/Index.cshtml`，確保一般 browsing/search 只顯示 active cards 並保留 blocked recovery 行為。
+- [X] T059 [US3] 更新卡牌 details/edit/delete PageModels 於 `CardPicker2/Pages/Cards/Details.cshtml.cs`、`CardPicker2/Pages/Cards/Edit.cshtml.cs`、`CardPicker2/Pages/Cards/Delete.cshtml.cs`，讓 deleted 或不存在目標回傳 not found/recovery message，不重新啟用 deleted card。
+- [X] T060 [US3] 更新卡牌 details/edit/delete Razor UI 於 `CardPicker2/Pages/Cards/Details.cshtml`、`CardPicker2/Pages/Cards/Edit.cshtml`、`CardPicker2/Pages/Cards/Delete.cshtml`，讓刪除成功/失敗與 recovery 訊息依目前語系呈現且不泄漏內部資料。
+- [X] T061 [US3] 更新 localized projection 於 `CardPicker2/Models/LocalizedMealCardView.cs` 與 `CardPicker2/Services/MealCardLocalizationService.cs`，加入 card status display/fallback 資訊供結果與統計列使用。
+- [X] T062 [US3] 更新首頁 result restore 於 `CardPicker2/Pages/Index.cshtml.cs`，依 operation/history/card ID 重顯既有成功結果，若對應 card retained deleted 則仍可顯示並標示狀態，不重新 randomize。
+- [X] T063 [P] [US3] 更新繁中文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，加入 deleted status、retained delete 成功/失敗、reduced motion 靜態揭示與不誤導機率的鼓勵文案。
+- [X] T064 [P] [US3] 更新英文文案於 `CardPicker2/Resources/SharedResource.en-US.resx`，加入 US3 對應文字並避免賭博式或機率提升暗示。
+- [X] T065 [P] [US3] 更新 reduced motion 與 responsive 樣式於 `CardPicker2/wwwroot/css/site.css`，確保 slot visual、結果卡、統計表與 deleted badge 在指定 viewport 不重疊。
+- [X] T066 [P] [US3] 更新 reduced motion 與互動輔助於 `CardPicker2/wwwroot/js/site.js`，在 `prefers-reduced-motion: reduce` 時跳過連續旋轉但不改變 submit payload 或結果身分。
+- [X] T067 [US3] 執行 `dotnet test CardPicker2.sln --filter "CardDeletionRetention|DeletedCardStatistics|DrawModeLocalizationInvariant|DrawModeResponsiveAccessibility|DrawCopyBoundary"`，確認 `CardPicker2.sln` 的 US3 測試通過。
 
 **檢查點**: 所有使用者故事均可獨立驗證，且卡牌生命週期、語系與呈現層不影響抽卡公平性或統計。
 

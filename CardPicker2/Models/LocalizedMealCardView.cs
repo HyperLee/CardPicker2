@@ -11,6 +11,8 @@ namespace CardPicker2.Models;
 /// <param name="CultureName">The requested language for this projection.</param>
 /// <param name="IsFallback">Whether the visible content uses a fallback locale.</param>
 /// <param name="MissingTranslationCultures">The cultures missing complete localized content.</param>
+/// <param name="Status">The card lifecycle status.</param>
+/// <param name="DeletedAtUtc">The UTC deletion time when retained as deleted.</param>
 public sealed record LocalizedMealCardView(
     Guid CardId,
     MealType MealType,
@@ -19,4 +21,6 @@ public sealed record LocalizedMealCardView(
     string DisplayDescription,
     SupportedLanguage CultureName,
     bool IsFallback,
-    IReadOnlyList<string> MissingTranslationCultures);
+    IReadOnlyList<string> MissingTranslationCultures,
+    CardStatus Status = CardStatus.Active,
+    DateTimeOffset? DeletedAtUtc = null);

@@ -27,7 +27,9 @@ public sealed class MealCardLocalizationService
             content.Description,
             language,
             isFallback,
-            normalized.GetMissingTranslationCultures());
+            normalized.GetMissingTranslationCultures(),
+            normalized.Status,
+            normalized.DeletedAtUtc);
     }
 
     /// <summary>
