@@ -116,17 +116,19 @@ dotnet run --project CardPicker2/CardPicker2.csproj
 5. 套用 metadata filters 時，舊卡因缺欄位不符合。
 6. 任一次成功 create/edit/delete/draw 寫入後，預期 document 以 `schemaVersion = 4` 保存。
 
-## 語系與狀態保留驗證
+## 語系、主題與狀態保留驗證
 
 對 `zh-TW` 與 `en-US` 都執行：
 
 1. 在首頁套用多個 metadata filters。
 2. 切換語系。
 3. 預期 filter state 與已揭示 result card ID 保留，只改變 labels、options、metadata summary 語言。
-4. 在 `/Cards` 使用 query filters 後切換語系。
-5. 預期 query/filter state 保留，結果依目前語系投影。
-6. 在 create/edit 表單輸入 metadata 但不送出時切換語系。
-7. 預期未送出欄位盡可能保留，validation message 使用新語系。
+4. 切換主題。
+5. 預期 filters、result card ID、operation ID、候選池語意、draw history 與 statistics 不改變。
+6. 在 `/Cards` 使用 query filters 後切換語系與主題。
+7. 預期 query/filter state 保留，結果依目前語系投影。
+8. 在 create/edit 表單輸入 metadata 但不送出時切換語系或主題。
+9. 預期未送出欄位盡可能保留，validation message 使用目前語系。
 
 ## Reduced Motion 與 RWD 驗證
 
@@ -143,6 +145,22 @@ dotnet run --project CardPicker2/CardPicker2.csproj
 - `prefers-reduced-motion: reduce` 時不播放連續旋轉，仍揭示有效靜態結果。
 - 鍵盤可操作模式、餐別、metadata filters、coin、start、search、clear filters 與 card management。
 - 目前 filter、辣度、deleted status 與 validation state 不只依賴顏色。
+
+## 效能、coverage 與可用性 smoke 驗證
+
+```bash
+dotnet test CardPicker2.sln --filter "MetadataFilterPerformance|WebVitals"
+dotnet test CardPicker2.sln --collect:"XPlat Code Coverage"
+```
+
+預期：
+
+- 以至少 150 張 active cards 與 1,000 筆 draw history 的本機 JSON fixture 驗證首頁 GET、filtered draw POST、`/Cards` filtered search 與 metadata projection p95 < 200ms。
+- 主要內容在使用者觸發篩選或抽卡後 1 秒內更新。
+- browser automation 或手動紀錄顯示 FCP < 1.5 秒、LCP < 2.5 秒。
+- coverage report 中本功能涉及的 critical business logic，包含 `CardPicker2/Models/` 與 `CardPicker2/Services/` 的 metadata/filter/draw/search/persistence 路徑，覆蓋率達 80% 以上；若未達標，必須在 `plan.md` 記錄例外、風險與補救計畫。
+- 首頁可用性 smoke checklist 至少 10 次預設情境操作中有 9 次以上能在 30 秒內套用至少一個條件並完成有效抽卡或看到可理解的空候選池提示。
+- 卡牌庫可用性 smoke checklist 至少 10 次預設情境操作中有 9 次以上能在 30 秒內使用 metadata filters 找到符合條件的卡牌或看到可理解的無結果提示。
 
 ## 安全與觀察性驗證
 
@@ -179,5 +197,5 @@ dotnet run --project CardPicker2/CardPicker2.csproj
 - 規格、計畫、研究、資料模型、快速入門與任務文件皆為繁體中文。
 - behavior changes 的測試先於實作存在。
 - 無新增 build warning。
-- 所有新增或變更的公開 API 都有 XML 文件註解，且每個公開 API 註解都包含 `<example>` 與 `<code>`。
+- 所有新增或變更的 public C# model/service API 都有 XML 文件註解，且每個註解都包含 `<example>` 與 `<code>`。
 - runtime UI 在 `zh-TW` 與 `en-US` 下不混用未核准語系或未翻譯 key。

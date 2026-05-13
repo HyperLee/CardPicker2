@@ -73,7 +73,7 @@
 - [ ] T030 [P] [US1] 新增 filtered draw 服務失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryFilteredDrawTests.cs`，覆蓋 price/time/diet/spice/tags filters、empty filtered pool 不新增 `DrawHistory`、statistics 不變、write failure 不宣告成功。
 - [ ] T031 [P] [US1] 擴充 idempotency 失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawIdempotencyTests.cs`，覆蓋同一 `DrawOperationId` replay 原 card ID，且不得因目前提交的新 filters 重新抽卡。
 - [ ] T032 [P] [US1] 新增首頁 filtered draw 整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/FilteredDrawPageTests.cs`，覆蓋 GET 顯示 filter controls、POST Normal/Random filters、empty pool message、Anti-Forgery 與 blocked state disable draw。
-- [ ] T033 [P] [US1] 新增首頁 filter 狀態語系切換失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/FilterLocalizationStateTests.cs`，覆蓋 `zh-TW`/`en-US` 切換保留 filters、result card ID、operation ID 與 statistics。
+- [ ] T033 [P] [US1] 新增首頁 filter 狀態語系與主題切換失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/FilterLocalizationStateTests.cs`，覆蓋 `zh-TW`/`en-US` 切換與 theme toggle 後保留 filters、result card ID、operation ID、候選池語意與 statistics。
 - [ ] T034 [US1] 執行 `dotnet test CardPicker2.sln --filter "DrawCandidatePoolFilter|CardLibraryFilteredDraw|DrawIdempotency|FilteredDrawPage|FilterLocalizationState"`，確認 `CardPicker2.sln` 的 US1 新測試在實作前失敗。
 
 ### 使用者故事 1 的實作
@@ -167,21 +167,22 @@
 
 ## 階段 6: 潤飾與跨領域關注點
 
-**目的**: 補齊安全、可觀察性、效能、RWD/可及性、公開介面邊界、公開 API 文件註解、完整驗證與 quickstart 手動檢查。
+**目的**: 補齊安全、可觀察性、效能、RWD/可及性、公開介面邊界、公開 C# model/service API 文件註解、coverage evidence、完整驗證與 quickstart 手動檢查。
 
 - [ ] T081 [P] 擴充安全標頭與 Anti-Forgery 測試於 `tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs`，覆蓋 filtered draw、create/edit metadata forms、production HSTS/CSP 與不新增外部來源。
 - [ ] T082 [P] 擴充 metadata/filter 結構化日誌測試於 `tests/CardPicker2.UnitTests/Services/DrawLoggingTests.cs`，覆蓋 schema v4 migration、metadata validation failure、empty filtered pool、filtered draw success、filtered search count、write failure 且不記錄完整 JSON 或未清理 tag 原文。
-- [ ] T083 [P] 擴充公開 API 文件測試於 `tests/CardPicker2.UnitTests/Documentation/PublicApiDocumentationTests.cs`，要求本功能新增或變更的 public models/services XML docs 包含 `<summary>`、`<example>` 與 `<code>`。
+- [ ] T083 [P] 擴充公開 C# model/service API 文件測試於 `tests/CardPicker2.UnitTests/Documentation/PublicApiDocumentationTests.cs`，要求本功能新增或變更的 public models/services XML docs 包含 `<summary>`、`<example>` 與 `<code>`。
 - [ ] T084 [P] 擴充公開介面邊界測試於 `tests/CardPicker2.IntegrationTests/RouteSurfaceTests.cs`，確認本功能未新增外部 JSON/API endpoint，公開介面維持 Razor Pages、表單、query strings、page handlers 與狀態碼。
-- [ ] T085 [P] 新增 metadata filter 效能驗證於 `tests/CardPicker2.IntegrationTests/Performance/MetadataFilterPerformanceTests.cs`，覆蓋首頁 GET、filtered draw POST、`/Cards` filtered search 與 metadata projection 在本機 JSON fixture 下 p95 < 200ms。
-- [ ] T086 [P] 新增 RWD/reduced-motion/可及性 browser 測試於 `tests/CardPicker2.IntegrationTests/Browser/MetadataFilterResponsiveAccessibilityTests.cs`，覆蓋 390x844、768x1024、1366x768、`zh-TW`/`en-US`、`prefers-reduced-motion: reduce`、鍵盤操作與 axe smoke check。
+- [ ] T085 [P] 新增 metadata filter 效能與 web-vitals 驗證於 `tests/CardPicker2.IntegrationTests/Performance/MetadataFilterPerformanceTests.cs`，覆蓋首頁 GET、filtered draw POST、`/Cards` filtered search、metadata projection 在至少 150 張 active cards + 1,000 筆 draw history 本機 JSON fixture 下 p95 < 200ms、主要內容 1 秒內更新、FCP < 1.5 秒與 LCP < 2.5 秒。
+- [ ] T086 [P] 新增 RWD/reduced-motion/可及性 browser 測試於 `tests/CardPicker2.IntegrationTests/Browser/MetadataFilterResponsiveAccessibilityTests.cs`，覆蓋 390x844、768x1024、1366x768、`zh-TW`/`en-US`、theme toggle 後 filter state 保留、`prefers-reduced-motion: reduce`、鍵盤操作與 axe smoke check。
 - [ ] T087 更新安全與 DI wiring 於 `CardPicker2/Program.cs`，確認 production CSP/HSTS 保留、filter services lifetime 正確、Serilog 設定不輸出敏感內容。
-- [ ] T088 更新新增公開模型 XML 文件註解於 `CardPicker2/Models/PriceRange.cs`、`CardPicker2/Models/PreparationTimeRange.cs`、`CardPicker2/Models/DietaryPreference.cs`、`CardPicker2/Models/SpiceLevel.cs`、`CardPicker2/Models/MealCardDecisionMetadata.cs`、`CardPicker2/Models/CardFilterCriteria.cs`、`CardPicker2/Models/FilterSummary.cs`。
-- [ ] T089 更新新增或變更服務 XML 文件註解於 `CardPicker2/Services/ICardLibraryService.cs`、`CardPicker2/Services/CardLibraryService.cs`、`CardPicker2/Services/MealCardMetadataValidator.cs`、`CardPicker2/Services/MealCardFilterService.cs`、`CardPicker2/Services/DrawCandidatePoolBuilder.cs`、`CardPicker2/Services/MealCardLocalizationService.cs`。
-- [ ] T090 執行 `dotnet test CardPicker2.sln --filter "Metadata|CardFilter|FilteredDraw|FilteredSearch|SchemaV4|SecurityHeaders|AntiForgery|Logging|RouteSurface|MetadataFilterPerformance|MetadataFilterResponsiveAccessibility"`，確認 `CardPicker2.sln` 的 cross-cutting 測試通過。
+- [ ] T088 更新新增 public C# model XML 文件註解於 `CardPicker2/Models/PriceRange.cs`、`CardPicker2/Models/PreparationTimeRange.cs`、`CardPicker2/Models/DietaryPreference.cs`、`CardPicker2/Models/SpiceLevel.cs`、`CardPicker2/Models/MealCardDecisionMetadata.cs`、`CardPicker2/Models/CardFilterCriteria.cs`、`CardPicker2/Models/FilterSummary.cs`。
+- [ ] T089 更新新增或變更 public C# service XML 文件註解於 `CardPicker2/Services/ICardLibraryService.cs`、`CardPicker2/Services/CardLibraryService.cs`、`CardPicker2/Services/MealCardMetadataValidator.cs`、`CardPicker2/Services/MealCardFilterService.cs`、`CardPicker2/Services/DrawCandidatePoolBuilder.cs`、`CardPicker2/Services/MealCardLocalizationService.cs`。
+- [ ] T090 執行 `dotnet test CardPicker2.sln --filter "Metadata|CardFilter|FilteredDraw|FilteredSearch|SchemaV4|SecurityHeaders|AntiForgery|Logging|RouteSurface|MetadataFilterPerformance|WebVitals|MetadataFilterResponsiveAccessibility"`，確認 `CardPicker2.sln` 的 cross-cutting 測試通過。
 - [ ] T091 執行 `dotnet build CardPicker2.sln`，確認 `CardPicker2.sln` 無新增 build warning、formatting 或 naming 違規。
 - [ ] T092 執行 `dotnet test CardPicker2.sln`，確認 `CardPicker2.sln` 全部單元、整合、browser/security/performance/route-surface tests 通過。
-- [ ] T093 依 `specs/005-card-metadata-filtered-draw/quickstart.md` 完成手動或 browser automation 驗證，覆蓋首頁 filtered draw、Random mode filters、empty pool、卡牌庫篩選、metadata create/edit/details、schema v4、語系狀態保留、reduced motion、RWD、安全與觀察性。
+- [ ] T093 執行 `dotnet test CardPicker2.sln --collect:"XPlat Code Coverage"`，檢查 coverage report 中本功能涉及的 critical business logic（`CardPicker2/Models/` 與 `CardPicker2/Services/` 的 metadata/filter/draw/search/persistence 路徑）覆蓋率達 80% 以上；若未達標，必須在 `plan.md` 記錄例外、風險與補救計畫後才可交付。
+- [ ] T094 依 `specs/005-card-metadata-filtered-draw/quickstart.md` 完成手動或 browser automation 驗證，覆蓋首頁 filtered draw、Random mode filters、empty pool、卡牌庫篩選、metadata create/edit/details、schema v4、語系與主題狀態保留、reduced motion、RWD、安全、觀察性，以及首頁/卡牌庫各至少 10 次 smoke checklist 中 9 次以上於 30 秒內完成或看到可理解提示。
 
 ---
 
@@ -308,9 +309,10 @@
 - 每個 behavior task 的測試先於 implementation。
 - `dotnet test CardPicker2.sln --filter ...` 在每個 story checkpoint 通過。
 - 最終 `dotnet build CardPicker2.sln` 與 `dotnet test CardPicker2.sln` 通過。
+- `dotnet test CardPicker2.sln --collect:"XPlat Code Coverage"` 產出覆蓋率證據，critical business logic 覆蓋率達 80% 以上，或 `plan.md` 明確記錄例外、風險與補救計畫。
 - 所有使用者可見 runtime UI 在 `zh-TW` 與 `en-US` 不顯示未翻譯 key。
 - `CardPicker2/data/cards.json` corrupted/unsupported 時原檔保留，且 create/edit/delete/draw/search/statistics 都進入 blocked recovery。
-- production HSTS/CSP、Anti-Forgery、效能預算、公開介面邊界、結構化日誌與敏感資訊禁止輸出皆有測試證據。
+- production HSTS/CSP、Anti-Forgery、效能與 web-vitals 預算、公開介面邊界、結構化日誌與敏感資訊禁止輸出皆有測試證據。
 
 ---
 
@@ -326,12 +328,12 @@ MVP 範圍為階段 1、階段 2、階段 3，也就是 US1「依當下條件篩
 
 ## 任務統計與格式驗證
 
-- **總任務數**: 93
+- **總任務數**: 94
 - **US1 任務數**: 19
 - **US2 任務數**: 14
 - **US3 任務數**: 19
 - **Setup 任務數**: 5
 - **Foundational 任務數**: 23
-- **Polish 任務數**: 13
+- **Polish 任務數**: 14
 - **平行機會**: 測試 fixture、foundation tests、enum/model files、resource files、CSS/JS、cross-cutting tests 可平行處理。
 - **格式驗證**: 全部任務均使用 `- [ ] T### [P?] [US?] 任務描述含檔案路徑` 格式；Setup、Foundational、Polish 任務不含 story label；US1/US2/US3 任務均含對應 story label。

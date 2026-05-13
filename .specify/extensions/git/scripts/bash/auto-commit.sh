@@ -42,6 +42,16 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     exit 0
 fi
 
+_current_branch=$(git branch --show-current 2>/dev/null || true)
+if [ "$_current_branch" = "main" ] || [ "$_current_branch" = "master" ]; then
+    case "$EVENT_NAME" in
+        before_clarify|before_plan|before_tasks|before_implement|before_checklist|before_analyze|before_taskstoissues|after_specify|after_clarify|after_plan|after_tasks|after_implement|after_checklist|after_analyze|after_taskstoissues)
+            echo "[specify] Error: Refusing auto-commit for $EVENT_NAME on protected branch '$_current_branch'. Switch to the active feature branch first." >&2
+            exit 1
+            ;;
+    esac
+fi
+
 # Read per-command config from git-config.yml
 _config_file="$REPO_ROOT/.specify/extensions/git/git-config.yml"
 _enabled=false
