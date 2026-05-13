@@ -25,12 +25,12 @@
         <a class="btn btn-danger" asp-page="/Cards/Create">@Localizer["Cards.Create"]</a>
     </div>
 
-    <form method="get" class="search-panel" role="search">
-        <div>
+    <form method="get" class="search-panel card-search-panel" role="search" data-language-preserve-form="cards-search">
+        <div class="filter-field">
             <label asp-for="Keyword" class="form-label">@Localizer["Cards.KeywordLabel"]</label>
             <input asp-for="Keyword" class="form-control" placeholder="@Localizer["Cards.KeywordPlaceholder"]" />
         </div>
-        <div>
+        <div class="filter-field">
             <label asp-for="MealType" class="form-label">@Localizer["Cards.MealTypeLabel"]</label>
             <select asp-for="MealType" class="form-select">
                 <option value="">@Localizer["Cards.AllMealTypes"]</option>
@@ -40,15 +40,89 @@
                 }
             </select>
         </div>
+        <div class="filter-field">
+            <label asp-for="PriceRange" class="form-label">@Localizer["Metadata.Label.PriceRange"]</label>
+            <select asp-for="PriceRange" class="form-select">
+                <option value="">@Localizer["Metadata.Option.NotSet"]</option>
+                @foreach (var priceRange in Model.PriceRangeOptions)
+                {
+                    <option value="@priceRange">@Model.DisplayPriceRange(priceRange)</option>
+                }
+            </select>
+        </div>
+        <div class="filter-field">
+            <label asp-for="PreparationTimeRange" class="form-label">@Localizer["Metadata.Label.PreparationTimeRange"]</label>
+            <select asp-for="PreparationTimeRange" class="form-select">
+                <option value="">@Localizer["Metadata.Option.NotSet"]</option>
+                @foreach (var preparationTimeRange in Model.PreparationTimeRangeOptions)
+                {
+                    <option value="@preparationTimeRange">@Model.DisplayPreparationTimeRange(preparationTimeRange)</option>
+                }
+            </select>
+        </div>
+        <div class="filter-field">
+            <label asp-for="MaxSpiceLevel" class="form-label">@Localizer["Metadata.Label.SpiceLevel"]</label>
+            <select asp-for="MaxSpiceLevel" class="form-select">
+                <option value="">@Localizer["Metadata.Option.NotSet"]</option>
+                @foreach (var spiceLevel in Model.SpiceLevelOptions)
+                {
+                    <option value="@spiceLevel">@Model.DisplaySpiceLevel(spiceLevel)</option>
+                }
+            </select>
+        </div>
+        <div class="filter-field filter-field-wide">
+            <label asp-for="Tags" class="form-label">@Localizer["Metadata.Label.Tags"]</label>
+            <input class="form-control"
+                   id="Tags"
+                   name="Tags"
+                   value="@string.Join(", ", Model.Tags)"
+                   placeholder="@Localizer["Home.Filters.TagsPlaceholder"]" />
+        </div>
+        <div class="filter-field filter-field-wide">
+            <p class="form-label mb-2">@Localizer["Metadata.Label.DietaryPreferences"]</p>
+            <div class="metadata-checkbox-grid">
+                @foreach (var preference in Model.DietaryPreferenceOptions)
+                {
+                    var preferenceId = $"cards-diet-{preference}";
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="@preferenceId"
+                               name="DietaryPreferences"
+                               value="@preference"
+                               checked="@(Model.DietaryPreferences.Contains(preference) ? "checked" : null)" />
+                        <label class="form-check-label" for="@preferenceId">@Model.DisplayDietaryPreference(preference)</label>
+                    </div>
+                }
+            </div>
+        </div>
         <div class="search-actions">
             <button class="btn btn-danger" type="submit" disabled="@Model.IsBlocked">@Localizer["Cards.Search"]</button>
             <a class="btn btn-outline-secondary" asp-page="/Cards/Index">@Localizer["Cards.Clear"]</a>
         </div>
     </form>
 
+    @if (!Model.IsBlocked && !Model.CurrentFilterSummary.IsEmpty)
+    {
+        <div class="active-filter-summary" data-filter-summary>
+            <span>@Localizer["Metadata.Filter.Summary", string.Join(" / ", Model.CurrentFilterSummary.Items)]</span>
+            <div class="filter-chip-list" aria-label="@Localizer["Home.Filters.ActiveConditions"]">
+                @foreach (var item in Model.CurrentFilterSummary.Items)
+                {
+                    <span class="filter-chip" data-tag-chip>@item</span>
+                }
+            </div>
+        </div>
+    }
+
+    @if (!Model.IsBlocked)
+    {
+        <p class="cards-result-count" role="status">@Localizer["Cards.ResultCount", Model.Cards.Count]</p>
+    }
+
     @if (!Model.IsBlocked && Model.Cards.Count == 0)
     {
-        <div class="empty-state" role="status">@Localizer["Cards.Empty"]</div>
+        <div class="empty-state" role="status">@Model.EmptyStateMessage</div>
     }
     else if (!Model.IsBlocked)
     {
@@ -62,6 +136,15 @@
                         @if (card.IsFallback)
                         {
                             <p class="fallback-badge">@Localizer["Card.NeedsEnglishTranslation"]</p>
+                        }
+                        @if (card.MetadataBadges?.Count > 0)
+                        {
+                            <div class="metadata-badge-list" aria-label="@Localizer["Home.Result.MetadataSummary"]">
+                                @foreach (var badge in card.MetadataBadges)
+                                {
+                                    <span class="metadata-badge" data-metadata-badge>@badge</span>
+                                }
+                            </div>
                         }
                     </div>
                     <div class="card-actions">

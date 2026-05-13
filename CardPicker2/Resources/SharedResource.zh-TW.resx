@@ -183,6 +183,9 @@
   <data name="Cards.Empty" xml:space="preserve">
     <value>查無符合條件的餐點卡牌。</value>
   </data>
+  <data name="Cards.ResultCount" xml:space="preserve">
+    <value>共 {0} 張</value>
+  </data>
   <data name="Cards.ListAria" xml:space="preserve">
     <value>餐點卡牌列表</value>
   </data>

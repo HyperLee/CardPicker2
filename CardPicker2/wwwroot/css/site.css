@@ -642,10 +642,24 @@ body .footer a {
   background: var(--cp-surface);
 }
 
+.card-search-panel {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.card-search-panel .search-actions {
+  grid-column: span 3;
+}
+
 .search-actions {
   display: flex;
   gap: 0.5rem;
   align-items: center;
+}
+
+.cards-result-count {
+  margin: 0 0 0.75rem;
+  color: var(--cp-muted);
+  font-weight: 800;
 }
 
 .meal-card-list {
@@ -819,6 +833,10 @@ body .footer a {
   .meal-card-item,
   .bilingual-card-fields {
     grid-template-columns: 1fr;
+  }
+
+  .card-search-panel .search-actions {
+    grid-column: span 1;
   }
 
   .search-actions {

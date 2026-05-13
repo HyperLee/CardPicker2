@@ -21,6 +21,11 @@ public sealed class SearchCriteria
     public SupportedLanguage CurrentLanguage { get; set; } = SupportedLanguage.ZhTw;
 
     /// <summary>
+    /// Gets or sets optional decision-metadata filters.
+    /// </summary>
+    public CardFilterCriteria? Filters { get; set; }
+
+    /// <summary>
     /// Gets the trimmed keyword, or <see langword="null"/> when empty.
     /// </summary>
     public string? NormalizedKeyword

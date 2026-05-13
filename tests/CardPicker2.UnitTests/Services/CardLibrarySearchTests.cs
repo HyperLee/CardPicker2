@@ -70,6 +70,60 @@ public sealed class CardLibrarySearchTests
         Assert.Empty(results);
     }
 
+    [Fact]
+    public async Task SearchAsync_WithMetadataFilters_RequiresAllSelectedConditions()
+    {
+        using var library = await SearchLibrary.CreateWithSchemaV4Async();
+        var service = CreateService(library.FilePath);
+
+        var results = await service.SearchAsync(new SearchCriteria
+        {
+            MealType = MealType.Lunch,
+            Filters = new CardFilterCriteria
+            {
+                PriceRange = PriceRange.Medium,
+                PreparationTimeRange = PreparationTimeRange.Quick,
+                DietaryPreferences = new[] { DietaryPreference.Vegetarian, DietaryPreference.TakeoutFriendly },
+                MaxSpiceLevel = SpiceLevel.Mild,
+                Tags = new[] { "便當", "蔬食" }
+            }
+        });
+
+        var card = Assert.Single(results);
+        Assert.Equal(DrawFeatureTestData.VegetarianLunchCardId, card.Id);
+    }
+
+    [Fact]
+    public async Task SearchAsync_WithMetadataFilters_ExcludesDeletedAndMissingMetadata()
+    {
+        using var library = await SearchLibrary.CreateWithSchemaV4Async();
+        var service = CreateService(library.FilePath);
+
+        var results = await service.SearchAsync(new SearchCriteria
+        {
+            Filters = new CardFilterCriteria
+            {
+                PriceRange = PriceRange.Low,
+                Tags = new[] { "外帶" }
+            }
+        });
+
+        Assert.DoesNotContain(results, card => card.Id == DrawFeatureTestData.DeletedCardId);
+        Assert.DoesNotContain(results, card => card.Id == DrawFeatureTestData.MetadataMissingDinnerCardId);
+        Assert.Contains(results, card => card.Id == DrawFeatureTestData.LowPriceLunchCardId);
+    }
+
+    [Fact]
+    public async Task SearchAsync_WithoutMetadataFilters_IncludesCardsMissingMetadata()
+    {
+        using var library = await SearchLibrary.CreateWithSchemaV4Async();
+        var service = CreateService(library.FilePath);
+
+        var results = await service.SearchAsync(new SearchCriteria { MealType = MealType.Dinner });
+
+        Assert.Contains(results, card => card.Id == DrawFeatureTestData.MetadataMissingDinnerCardId);
+    }
+
     private static CardLibraryService CreateService(string filePath)
     {
         return new CardLibraryService(
@@ -125,6 +179,15 @@ public sealed class CardLibrarySearchTests
                   ]
                 }
                 """);
+            return library;
+        }
+
+        public static async Task<SearchLibrary> CreateWithSchemaV4Async()
+        {
+            var library = new SearchLibrary(Directory.CreateTempSubdirectory("cardpicker-search-metadata-tests-").FullName);
+            await File.WriteAllTextAsync(
+                library.FilePath,
+                DrawFeatureTestData.Serialize(DrawFeatureTestData.SchemaV4Document()));
             return library;
         }
 

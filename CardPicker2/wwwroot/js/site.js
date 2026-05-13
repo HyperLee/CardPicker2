@@ -19,8 +19,19 @@
         return;
       }
 
-      if (field instanceof HTMLInputElement && (field.type === 'checkbox' || field.type === 'radio')) {
-        values[field.name] = field.checked ? field.value : '';
+      if (field instanceof HTMLInputElement && field.type === 'checkbox') {
+        const existing = Array.isArray(values[field.name]) ? values[field.name] : [];
+        if (field.checked) {
+          existing.push(field.value);
+        }
+        values[field.name] = existing;
+        return;
+      }
+
+      if (field instanceof HTMLInputElement && field.type === 'radio') {
+        if (field.checked) {
+          values[field.name] = field.value;
+        }
         return;
       }
 
@@ -42,7 +53,10 @@
         Object.entries(values).forEach(([name, value]) => {
           const fields = Array.from(form.querySelectorAll(`[name="${CSS.escape(name)}"]`));
           fields.forEach((field) => {
-            if (field instanceof HTMLInputElement && (field.type === 'checkbox' || field.type === 'radio')) {
+            if (field instanceof HTMLInputElement && field.type === 'checkbox') {
+              const selectedValues = Array.isArray(value) ? value : [value];
+              field.checked = selectedValues.includes(field.value);
+            } else if (field instanceof HTMLInputElement && field.type === 'radio') {
               field.checked = field.value === value;
             } else if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement) {
               field.value = value;

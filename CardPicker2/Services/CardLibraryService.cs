@@ -32,6 +32,7 @@ public sealed class CardLibraryService : ICardLibraryService
     private readonly DrawCandidatePoolBuilder _candidatePoolBuilder;
     private readonly DrawStatisticsService _statisticsService;
     private readonly MealCardMetadataValidator _metadataValidator;
+    private readonly MealCardFilterService _filterService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CardLibraryService"/> class.
@@ -54,7 +55,8 @@ public sealed class CardLibraryService : ICardLibraryService
         CardLibraryFileCoordinator? fileCoordinator = null,
         DrawCandidatePoolBuilder? candidatePoolBuilder = null,
         DrawStatisticsService? statisticsService = null,
-        MealCardMetadataValidator? metadataValidator = null)
+        MealCardMetadataValidator? metadataValidator = null,
+        MealCardFilterService? filterService = null)
     {
         _options = options.Value;
         _randomizer = randomizer;
@@ -65,6 +67,7 @@ public sealed class CardLibraryService : ICardLibraryService
         _candidatePoolBuilder = candidatePoolBuilder ?? new DrawCandidatePoolBuilder();
         _statisticsService = statisticsService ?? new DrawStatisticsService(_localizationService);
         _metadataValidator = metadataValidator ?? new MealCardMetadataValidator();
+        _filterService = filterService ?? new MealCardFilterService();
     }
 
     /// <inheritdoc />
@@ -480,7 +483,15 @@ public sealed class CardLibraryService : ICardLibraryService
             query = query.Where(card => card.MealType == criteria.MealType.Value);
         }
 
-        return query
+        var filterCriteria = (criteria.Filters ?? new CardFilterCriteria())
+            .Normalize();
+        var filtered = _filterService.Apply(query, filterCriteria);
+        _logger.LogInformation(
+            "Card search returned {SearchResultCount} active cards with metadata filter active: {MetadataFilterActive}",
+            filtered.Count,
+            filterCriteria.HasActiveMetadataFilters);
+
+        return filtered
             .OrderBy(card => card.MealType)
             .ThenBy(card => _localizationService.Project(card, criteria.CurrentLanguage).DisplayName, StringComparer.OrdinalIgnoreCase)
             .ToList();

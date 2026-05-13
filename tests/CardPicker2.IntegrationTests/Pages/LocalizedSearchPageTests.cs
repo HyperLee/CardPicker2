@@ -2,6 +2,7 @@ using System.Net;
 using System.Text.Json;
 
 using CardPicker2.IntegrationTests.Infrastructure;
+using CardPicker2.Models;
 using CardPicker2.Services;
 
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -65,6 +66,28 @@ public sealed class LocalizedSearchPageTests : IDisposable
 
         Assert.Contains("早餐卡", html);
         Assert.Contains("Needs English translation", html);
+    }
+
+    [Fact]
+    public async Task CardsIndex_WithEnglishCookie_RendersMetadataFiltersAndBadgesInEnglish()
+    {
+        await File.WriteAllTextAsync(
+            _library.FilePath,
+            JsonSerializer.Serialize(MetadataFilterTestData.SchemaV4Document()));
+        var client = _factory.CreateClient();
+        client.AddCultureCookie("en-US");
+        var path = DrawFeatureWebApplicationFactory.CreateCardsPathWithFilters(
+            mealType: nameof(MealType.Lunch),
+            dietaryPreferences: new[] { nameof(DietaryPreference.TakeoutFriendly) },
+            tags: new[] { "Bento" });
+
+        var html = WebUtility.HtmlDecode(await client.GetStringAsync(path));
+
+        Assert.Contains("Price range", html);
+        Assert.Contains("Takeout friendly", html);
+        Assert.Contains("Mushroom Vegetable Bento", html);
+        Assert.Contains("Bento", html);
+        MetadataFilterHtmlAssertions.AssertNoUntranslatedMetadataKeys(html);
     }
 
     public void Dispose()

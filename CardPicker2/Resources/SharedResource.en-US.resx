@@ -183,6 +183,9 @@
   <data name="Cards.Empty" xml:space="preserve">
     <value>No meal cards match your filters.</value>
   </data>
+  <data name="Cards.ResultCount" xml:space="preserve">
+    <value>{0} cards</value>
+  </data>
   <data name="Cards.ListAria" xml:space="preserve">
     <value>Meal card list</value>
   </data>

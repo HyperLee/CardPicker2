@@ -106,23 +106,23 @@
 
 > 先撰寫這些測試，確認在實作前失敗。
 
-- [ ] T048 [P] [US2] 擴充卡牌搜尋失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibrarySearchTests.cs`，覆蓋 keyword、meal type、price/time/diet/spice/tags 交集、deleted cards 排除與 missing metadata semantics。
-- [ ] T049 [P] [US2] 新增卡牌庫 filtered search 整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/FilteredCardLibraryPageTests.cs`，覆蓋 query binding、active filter summary、clear filters、result count、無結果狀態與 blocked state。
-- [ ] T050 [P] [US2] 擴充 localized search 頁面失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/LocalizedSearchPageTests.cs`，覆蓋英文語系 metadata labels/options/badges、fallback card name、無未翻譯 key。
-- [ ] T051 [US2] 執行 `dotnet test CardPicker2.sln --filter "CardLibrarySearch|FilteredCardLibraryPage|LocalizedSearchPage"`，確認 `CardPicker2.sln` 的 US2 新測試在實作前失敗。
+- [X] T048 [P] [US2] 擴充卡牌搜尋失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibrarySearchTests.cs`，覆蓋 keyword、meal type、price/time/diet/spice/tags 交集、deleted cards 排除與 missing metadata semantics。
+- [X] T049 [P] [US2] 新增卡牌庫 filtered search 整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/FilteredCardLibraryPageTests.cs`，覆蓋 query binding、active filter summary、clear filters、result count、無結果狀態與 blocked state。
+- [X] T050 [P] [US2] 擴充 localized search 頁面失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/LocalizedSearchPageTests.cs`，覆蓋英文語系 metadata labels/options/badges、fallback card name、無未翻譯 key。
+- [X] T051 [US2] 執行 `dotnet test CardPicker2.sln --filter "CardLibrarySearch|FilteredCardLibraryPage|LocalizedSearchPage"`，確認 `CardPicker2.sln` 的 US2 新測試在實作前失敗。
 
 ### 使用者故事 2 的實作
 
-- [ ] T052 [US2] 更新搜尋條件模型於 `CardPicker2/Models/SearchCriteria.cs`，加入 `Filters`、normalized tags、metadata filter state 與 current-language keyword projection 規則。
-- [ ] T053 [US2] 更新搜尋服務流程於 `CardPicker2/Services/CardLibraryService.cs`，在 active-only keyword/meal type 搜尋後套用 `MealCardFilterService`，並記錄 filtered search result count。
-- [ ] T054 [US2] 更新卡牌庫 PageModel 於 `CardPicker2/Pages/Cards/Index.cshtml.cs`，bind price/time/diet/spice/tags query fields，建立 `SearchCriteria`、`FilterSummary` 與 clear filters 狀態。
-- [ ] T055 [US2] 更新卡牌庫 Razor UI 於 `CardPicker2/Pages/Cards/Index.cshtml`，新增 metadata filter controls、active filter chips、clear filters 入口、result count、no-result message 與 card metadata badges。
-- [ ] T056 [US2] 更新 card projection metadata 摘要於 `CardPicker2/Models/LocalizedMealCardView.cs` 與 `CardPicker2/Services/MealCardLocalizationService.cs`，讓卡牌庫每列可顯示 tags、price、time、diet 與 spice。
-- [ ] T057 [P] [US2] 新增或更新繁中卡牌庫篩選文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 Cards filter labels、active condition chips、result count、no-result 與 clear filters。
-- [ ] T058 [P] [US2] 新增或更新英文卡牌庫篩選文案於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保 `/Cards` filtered search 無未翻譯 key。
-- [ ] T059 [P] [US2] 更新卡牌庫 filter responsive 樣式於 `CardPicker2/wwwroot/css/site.css`，確保 filter panel、tag chips、metadata badges 與 card list 在指定 viewport 不溢出。
-- [ ] T060 [P] [US2] 更新卡牌庫 filter progressive enhancement 於 `CardPicker2/wwwroot/js/site.js`，支援 clear filters、tag input/chips 與語系/主題切換前的 transient state preservation。
-- [ ] T061 [US2] 執行 `dotnet test CardPicker2.sln --filter "CardLibrarySearch|FilteredCardLibraryPage|LocalizedSearchPage"`，確認 `CardPicker2.sln` 的 US2 測試通過。
+- [X] T052 [US2] 更新搜尋條件模型於 `CardPicker2/Models/SearchCriteria.cs`，加入 `Filters`、normalized tags、metadata filter state 與 current-language keyword projection 規則。
+- [X] T053 [US2] 更新搜尋服務流程於 `CardPicker2/Services/CardLibraryService.cs`，在 active-only keyword/meal type 搜尋後套用 `MealCardFilterService`，並記錄 filtered search result count。
+- [X] T054 [US2] 更新卡牌庫 PageModel 於 `CardPicker2/Pages/Cards/Index.cshtml.cs`，bind price/time/diet/spice/tags query fields，建立 `SearchCriteria`、`FilterSummary` 與 clear filters 狀態。
+- [X] T055 [US2] 更新卡牌庫 Razor UI 於 `CardPicker2/Pages/Cards/Index.cshtml`，新增 metadata filter controls、active filter chips、clear filters 入口、result count、no-result message 與 card metadata badges。
+- [X] T056 [US2] 更新 card projection metadata 摘要於 `CardPicker2/Models/LocalizedMealCardView.cs` 與 `CardPicker2/Services/MealCardLocalizationService.cs`，讓卡牌庫每列可顯示 tags、price、time、diet 與 spice。
+- [X] T057 [P] [US2] 新增或更新繁中卡牌庫篩選文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 Cards filter labels、active condition chips、result count、no-result 與 clear filters。
+- [X] T058 [P] [US2] 新增或更新英文卡牌庫篩選文案於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保 `/Cards` filtered search 無未翻譯 key。
+- [X] T059 [P] [US2] 更新卡牌庫 filter responsive 樣式於 `CardPicker2/wwwroot/css/site.css`，確保 filter panel、tag chips、metadata badges 與 card list 在指定 viewport 不溢出。
+- [X] T060 [P] [US2] 更新卡牌庫 filter progressive enhancement 於 `CardPicker2/wwwroot/js/site.js`，支援 clear filters、tag input/chips 與語系/主題切換前的 transient state preservation。
+- [X] T061 [US2] 執行 `dotnet test CardPicker2.sln --filter "CardLibrarySearch|FilteredCardLibraryPage|LocalizedSearchPage"`，確認 `CardPicker2.sln` 的 US2 測試通過。
 
 **檢查點**: US1 與 US2 可同時運作，首頁與卡牌庫使用同一 metadata filter semantics。
 
