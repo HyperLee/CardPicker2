@@ -16,6 +16,11 @@ namespace CardPicker2.Models;
 /// <param name="DrawMode">The mode used to build the candidate pool.</param>
 /// <param name="RequestedMealType">The submitted meal type for normal mode; random mode uses <see langword="null"/>.</param>
 /// <param name="IsReplay">Whether this result replays an existing successful operation.</param>
+/// <example>
+/// <code>
+/// var result = DrawResult.Failure(operation, "Coin required.", "Draw.CoinRequired");
+/// </code>
+/// </example>
 public sealed record DrawResult(
     bool Succeeded,
     MealType SelectedMealType,

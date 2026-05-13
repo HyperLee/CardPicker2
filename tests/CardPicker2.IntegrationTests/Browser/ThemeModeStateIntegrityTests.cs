@@ -17,18 +17,18 @@ public sealed class ThemeModeStateIntegrityTests : IClassFixture<ThemeBrowserFix
         var page = await _fixture.CreateDesktopPageAsync();
 
         await page.GotoAsync($"{ThemeBrowserFixture.BaseUrl}/");
-        var before = await File.ReadAllTextAsync(_fixture.CardLibraryFilePath);
         await page.GetByText("早餐", new PageGetByTextOptions { Exact = true }).ClickAsync();
         await page.GetByLabel("投幣確認").CheckAsync();
         await page.GetByRole(AriaRole.Button, new PageGetByRoleOptions { Name = "拉桿開始抽卡" }).ClickAsync();
         await page.GetByText("抽卡結果").WaitForAsync();
 
         var resultText = await page.Locator(".draw-result").InnerTextAsync();
+        var afterDraw = await File.ReadAllTextAsync(_fixture.CardLibraryFilePath);
         await page.GetByText("暗黑模式").ClickAsync();
 
         await ThemeModeBrowserTests.WaitForThemeAsync(page, "dark", "dark", 1000);
         Assert.Equal(resultText, await page.Locator(".draw-result").InnerTextAsync());
-        Assert.Equal(before, await File.ReadAllTextAsync(_fixture.CardLibraryFilePath));
+        Assert.Equal(afterDraw, await File.ReadAllTextAsync(_fixture.CardLibraryFilePath));
     }
 
     [Fact]

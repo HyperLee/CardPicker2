@@ -156,16 +156,16 @@
 
 **目的**: 補齊效能、公開介面邊界、安全、日誌、公開 API 文件註解、完整驗證與手動檢查。
 
-- [ ] T068 [P] 擴充安全標頭與 Anti-Forgery 測試於 `tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs`，覆蓋 production HSTS/CSP、`POST /?handler=Draw` Anti-Forgery、CSP 不新增不必要外部來源。
-- [ ] T069 [P] 新增 draw/statistics/delete 結構化日誌測試於 `tests/CardPicker2.UnitTests/Services/DrawLoggingTests.cs`，覆蓋 draw success、repeat replay、validation failure、empty pool、blocked library、write failure、retained deleted 且不記錄完整 JSON 或秘密。
-- [ ] T070 更新安全與日誌 wiring 於 `CardPicker2/Program.cs`，確認 production CSP/HSTS 保留、Serilog 設定不輸出敏感內容，且新增服務 lifetime 不造成 scoped/singleton 錯配。
-- [ ] T071 [P] 更新公開 API 文件測試於 `tests/CardPicker2.UnitTests/Documentation/PublicApiDocumentationTests.cs`，要求新增或變更的 public models/services XML docs 包含 `<summary>`、`<example>` 與 `<code>`。
-- [ ] T072 更新所有新增或變更公開 API 的 XML 文件註解，至少涵蓋 `CardPicker2/Models/DrawMode.cs`、`CardPicker2/Models/CardStatus.cs`、`CardPicker2/Models/DrawOperation.cs`、`CardPicker2/Models/DrawHistoryRecord.cs`、`CardPicker2/Models/CardDrawStatistic.cs`、`CardPicker2/Models/DrawStatisticsSummary.cs`、`CardPicker2/Models/DrawResult.cs`、`CardPicker2/Models/MealCard.cs`、`CardPicker2/Models/CardLibraryDocument.cs`、`CardPicker2/Services/ICardLibraryService.cs`、`CardPicker2/Services/CardLibraryService.cs`、`CardPicker2/Services/CardLibraryFileCoordinator.cs`、`CardPicker2/Services/DrawCandidatePoolBuilder.cs`、`CardPicker2/Services/DrawStatisticsService.cs`、`CardPicker2/Services/MealCardLocalizationService.cs`，並以 T071 測試防止漏補。
-- [ ] T073 [P] 新增效能預算驗證於 `tests/CardPicker2.IntegrationTests/Performance/DrawModePerformanceTests.cs`，覆蓋首頁 GET、draw POST 與 statistics projection 在本機 JSON fixture 下 p95 < 200ms，並以 browser automation 或手動紀錄驗證 FCP < 1.5 秒、LCP < 2.5 秒、模式切換、搜尋、抽卡提交與統計更新回應 < 1 秒。
-- [ ] T074 [P] 新增公開介面邊界測試於 `tests/CardPicker2.IntegrationTests/RouteSurfaceTests.cs`，確認本功能未新增面向外部系統的 JSON/API endpoint，公開介面維持 Razor Pages、表單、query strings、page handlers 與狀態碼。
-- [ ] T075 執行 `dotnet build CardPicker2.sln`，確認 `CardPicker2.sln` 無新增 build warning 或 formatting/naming 違規。
-- [ ] T076 執行 `dotnet test CardPicker2.sln`，確認 `CardPicker2.sln` 全部單元、整合、browser/security/performance/route-surface tests 通過。
-- [ ] T077 依 `specs/004-draw-mode-statistics/quickstart.md` 完成手動或 browser automation 驗證，覆蓋 normal mode、random mode、重複提交、統計表、刪除後歷史保留、改名/翻譯更新、缺檔/corrupted 隔離資料、reduced motion、RWD、效能、安全與觀察性。
+- [X] T068 [P] 擴充安全標頭與 Anti-Forgery 測試於 `tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs`，覆蓋 production HSTS/CSP、`POST /?handler=Draw` Anti-Forgery、CSP 不新增不必要外部來源。
+- [X] T069 [P] 新增 draw/statistics/delete 結構化日誌測試於 `tests/CardPicker2.UnitTests/Services/DrawLoggingTests.cs`，覆蓋 draw success、repeat replay、validation failure、empty pool、blocked library、write failure、retained deleted 且不記錄完整 JSON 或秘密。
+- [X] T070 更新安全與日誌 wiring 於 `CardPicker2/Program.cs`，確認 production CSP/HSTS 保留、Serilog 設定不輸出敏感內容，且新增服務 lifetime 不造成 scoped/singleton 錯配。
+- [X] T071 [P] 更新公開 API 文件測試於 `tests/CardPicker2.UnitTests/Documentation/PublicApiDocumentationTests.cs`，要求新增或變更的 public models/services XML docs 包含 `<summary>`、`<example>` 與 `<code>`。
+- [X] T072 更新所有新增或變更公開 API 的 XML 文件註解，至少涵蓋 `CardPicker2/Models/DrawMode.cs`、`CardPicker2/Models/CardStatus.cs`、`CardPicker2/Models/DrawOperation.cs`、`CardPicker2/Models/DrawHistoryRecord.cs`、`CardPicker2/Models/CardDrawStatistic.cs`、`CardPicker2/Models/DrawStatisticsSummary.cs`、`CardPicker2/Models/DrawResult.cs`、`CardPicker2/Models/MealCard.cs`、`CardPicker2/Models/CardLibraryDocument.cs`、`CardPicker2/Services/ICardLibraryService.cs`、`CardPicker2/Services/CardLibraryService.cs`、`CardPicker2/Services/CardLibraryFileCoordinator.cs`、`CardPicker2/Services/DrawCandidatePoolBuilder.cs`、`CardPicker2/Services/DrawStatisticsService.cs`、`CardPicker2/Services/MealCardLocalizationService.cs`，並以 T071 測試防止漏補。
+- [X] T073 [P] 新增效能預算驗證於 `tests/CardPicker2.IntegrationTests/Performance/DrawModePerformanceTests.cs`，覆蓋首頁 GET、draw POST 與 statistics projection 在本機 JSON fixture 下 p95 < 200ms，並以 browser automation 或手動紀錄驗證 FCP < 1.5 秒、LCP < 2.5 秒、模式切換、搜尋、抽卡提交與統計更新回應 < 1 秒。
+- [X] T074 [P] 新增公開介面邊界測試於 `tests/CardPicker2.IntegrationTests/RouteSurfaceTests.cs`，確認本功能未新增面向外部系統的 JSON/API endpoint，公開介面維持 Razor Pages、表單、query strings、page handlers 與狀態碼。
+- [X] T075 執行 `dotnet build CardPicker2.sln`，確認 `CardPicker2.sln` 無新增 build warning 或 formatting/naming 違規。
+- [X] T076 執行 `dotnet test CardPicker2.sln`，確認 `CardPicker2.sln` 全部單元、整合、browser/security/performance/route-surface tests 通過。
+- [X] T077 依 `specs/004-draw-mode-statistics/quickstart.md` 完成手動或 browser automation 驗證，覆蓋 normal mode、random mode、重複提交、統計表、刪除後歷史保留、改名/翻譯更新、缺檔/corrupted 隔離資料、reduced motion、RWD、效能、安全與觀察性。
 
 ---
 

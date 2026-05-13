@@ -5,6 +5,11 @@ namespace CardPicker2.Services;
 /// <summary>
 /// Projects persisted meal cards into the current request language.
 /// </summary>
+/// <example>
+/// <code>
+/// var view = localizationService.Project(card, SupportedLanguage.ZhTw);
+/// </code>
+/// </example>
 public sealed class MealCardLocalizationService
 {
     /// <summary>

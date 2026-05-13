@@ -226,8 +226,8 @@ body .footer a {
   --bs-btn-active-bg: var(--cp-accent);
   --bs-btn-active-border-color: var(--cp-accent);
   border-color: var(--cp-accent);
-  background-color: var(--cp-accent);
-  color: var(--cp-accent-text);
+  background-color: var(--cp-accent) !important;
+  color: var(--cp-accent-text) !important;
 }
 
 [data-bs-theme="dark"] .theme-mode-option,
@@ -335,8 +335,8 @@ body .footer a {
   --bs-btn-active-bg: var(--cp-accent);
   --bs-btn-active-border-color: var(--cp-accent);
   border-color: var(--cp-accent);
-  background-color: var(--cp-accent);
-  color: var(--cp-accent-text);
+  background-color: var(--cp-accent) !important;
+  color: var(--cp-accent-text) !important;
 }
 
 .slot-machine {

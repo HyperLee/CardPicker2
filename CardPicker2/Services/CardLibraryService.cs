@@ -10,6 +10,11 @@ namespace CardPicker2.Services;
 /// <summary>
 /// Loads, validates, and persists the local JSON card library.
 /// </summary>
+/// <example>
+/// <code>
+/// var loadResult = await service.LoadAsync(cancellationToken);
+/// </code>
+/// </example>
 public sealed class CardLibraryService : ICardLibraryService
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
@@ -167,10 +172,18 @@ public sealed class CardLibraryService : ICardLibraryService
         var loadResult = await LoadAsync(cancellationToken);
         if (loadResult.IsBlocked || loadResult.Document is null)
         {
+            _logger.LogWarning(
+                "Draw statistics blocked because card library is unavailable. Status: {LoadStatus}",
+                loadResult.Status);
             return new DrawStatisticsSummary(0, Array.Empty<CardDrawStatistic>(), loadResult.MessageKey);
         }
 
-        return _statisticsService.CreateSummary(loadResult.Document, language);
+        var summary = _statisticsService.CreateSummary(loadResult.Document, language);
+        _logger.LogInformation(
+            "Draw statistics projected with {TotalSuccessfulDraws} successful draws and {StatisticRowCount} rows",
+            summary.TotalSuccessfulDraws,
+            summary.Rows.Count);
+        return summary;
     }
 
     /// <inheritdoc />
@@ -298,7 +311,7 @@ public sealed class CardLibraryService : ICardLibraryService
                 DrawHistory = loadResult.Document.DrawHistory.Concat(new[] { history }).ToList()
             };
 
-            var writeResult = await TryWriteDocumentAsync(updatedDocument, innerCancellationToken);
+            var writeResult = await TryWriteDocumentAsync(updatedDocument, innerCancellationToken, requireCompleteEnglish: false);
             if (writeResult is not null)
             {
                 _logger.LogError(
@@ -483,16 +496,33 @@ public sealed class CardLibraryService : ICardLibraryService
             };
 
             var writeResult = await TryWriteDocumentAsync(updatedDocument, innerCancellationToken);
+            if (writeResult is not null)
+            {
+                return writeResult;
+            }
+
+            if (hasHistory)
+            {
+                _logger.LogInformation("Card {CardId} retained as deleted because it has draw history", id);
+            }
+            else
+            {
+                _logger.LogInformation("Card {CardId} deleted with no draw history", id);
+            }
+
             var message = hasHistory
                 ? "已刪除餐點卡牌，歷史統計已保留。"
                 : "已刪除餐點卡牌。";
-            return writeResult ?? CardLibraryMutationResult.Success(existing, message);
+            return CardLibraryMutationResult.Success(existing, message);
         }, cancellationToken);
     }
 
-    private async Task<CardLibraryMutationResult?> TryWriteDocumentAsync(CardLibraryDocument document, CancellationToken cancellationToken)
+    private async Task<CardLibraryMutationResult?> TryWriteDocumentAsync(
+        CardLibraryDocument document,
+        CancellationToken cancellationToken,
+        bool requireCompleteEnglish = true)
     {
-        var validationError = ValidateDocument(document, requireCompleteEnglish: true);
+        var validationError = ValidateDocument(document, requireCompleteEnglish);
         if (validationError is not null)
         {
             _logger.LogError("Card library write rejected because the new document is invalid: {ValidationError}", validationError);

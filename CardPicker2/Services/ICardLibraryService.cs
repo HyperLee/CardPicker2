@@ -5,6 +5,11 @@ namespace CardPicker2.Services;
 /// <summary>
 /// Coordinates card-library loading, lookup, draw, and mutation operations.
 /// </summary>
+/// <example>
+/// <code>
+/// var result = await cardLibraryService.DrawAsync(operation, cancellationToken);
+/// </code>
+/// </example>
 public interface ICardLibraryService
 {
     /// <summary>

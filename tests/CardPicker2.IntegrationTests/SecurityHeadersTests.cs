@@ -1,3 +1,8 @@
+using System.Net;
+
+using CardPicker2.IntegrationTests.Infrastructure;
+using CardPicker2.Models;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -36,6 +41,40 @@ public sealed class SecurityHeadersTests
 
         Assert.DoesNotContain("script-src 'self' 'unsafe-inline'", contentSecurityPolicy);
         Assert.Matches(@"script-src[^;]*('sha256-|nonce-)", contentSecurityPolicy);
+    }
+
+    [Fact]
+    public async Task ProductionContentSecurityPolicy_DoesNotAddExternalSourcesForDrawFeature()
+    {
+        await using var factory = new WebApplicationFactory<Program>()
+            .WithWebHostBuilder(builder => builder.UseEnvironment("Production"));
+        var client = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            BaseAddress = new Uri("https://localhost")
+        });
+
+        var response = await client.GetAsync("/");
+        var contentSecurityPolicy = GetContentSecurityPolicy(response);
+
+        Assert.DoesNotContain("https:", contentSecurityPolicy, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("http:", contentSecurityPolicy, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("connect-src", contentSecurityPolicy, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task PostDraw_WithoutAntiForgeryToken_ReturnsBadRequest()
+    {
+        await using var factory = new DrawFeatureWebApplicationFactory();
+        var client = factory.CreateClient();
+
+        var response = await client.PostAsync("/?handler=Draw", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["DrawMode"] = nameof(DrawMode.Random),
+            ["CoinInserted"] = "true",
+            ["DrawOperationId"] = Guid.NewGuid().ToString()
+        }));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     internal static string GetContentSecurityPolicy(HttpResponseMessage response)
