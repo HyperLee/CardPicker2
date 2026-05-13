@@ -1,131 +1,177 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "cards": [
     {
       "id": "11111111-1111-1111-1111-111111111111",
       "mealType": "Breakfast",
       "localizations": {
         "zh-TW": {
-          "name": "鮪魚蛋餅",
-          "description": "附近早餐店的鮪魚蛋餅，加一杯無糖豆漿。"
+          "name": "\u9BAA\u9B5A\u86CB\u9905",
+          "description": "\u9644\u8FD1\u65E9\u9910\u5E97\u7684\u9BAA\u9B5A\u86CB\u9905\uFF0C\u52A0\u4E00\u676F\u7121\u7CD6\u8C46\u6F3F\u3002",
+          "isComplete": true
         },
         "en-US": {
           "name": "Tuna Egg Pancake",
-          "description": "A tuna egg pancake from the nearby breakfast shop with unsweetened soy milk."
+          "description": "A tuna egg pancake from the nearby breakfast shop with unsweetened soy milk.",
+          "isComplete": true
         }
-      }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
     },
     {
       "id": "11111111-1111-1111-1111-111111111112",
       "mealType": "Breakfast",
       "localizations": {
         "zh-TW": {
-          "name": "鹹粥小菜",
-          "description": "溫熱鹹粥搭配滷蛋與青菜，適合想吃清爽早餐時。"
+          "name": "\u9E79\u7CA5\u5C0F\u83DC",
+          "description": "\u6EAB\u71B1\u9E79\u7CA5\u642D\u914D\u6EF7\u86CB\u8207\u9752\u83DC\uFF0C\u9069\u5408\u60F3\u5403\u6E05\u723D\u65E9\u9910\u6642\u3002",
+          "isComplete": true
         },
         "en-US": {
           "name": "Savory Rice Porridge",
-          "description": "Warm savory rice porridge with a braised egg and greens for a lighter breakfast."
+          "description": "Warm savory rice porridge with a braised egg and greens for a lighter breakfast.",
+          "isComplete": true
         }
-      }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
     },
     {
       "id": "11111111-1111-1111-1111-111111111113",
       "mealType": "Breakfast",
       "localizations": {
         "zh-TW": {
-          "name": "花生厚片",
-          "description": "烤到邊緣酥脆的花生厚片，搭配熱紅茶。"
+          "name": "\u82B1\u751F\u539A\u7247",
+          "description": "\u70E4\u5230\u908A\u7DE3\u9165\u8106\u7684\u82B1\u751F\u539A\u7247\uFF0C\u642D\u914D\u71B1\u7D05\u8336\u3002",
+          "isComplete": true
         },
         "en-US": {
           "name": "Peanut Thick Toast",
-          "description": "Crisp-edged thick toast with peanut spread and hot black tea."
+          "description": "Crisp-edged thick toast with peanut spread and hot black tea.",
+          "isComplete": true
         }
-      }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
     },
     {
       "id": "22222222-2222-2222-2222-222222222221",
       "mealType": "Lunch",
       "localizations": {
         "zh-TW": {
-          "name": "清燉牛肉麵",
-          "description": "湯頭清爽的牛肉麵，午餐想吃熱食時很穩定。"
+          "name": "\u6E05\u71C9\u725B\u8089\u9EB5",
+          "description": "\u6E6F\u982D\u6E05\u723D\u7684\u725B\u8089\u9EB5\uFF0C\u5348\u9910\u60F3\u5403\u71B1\u98DF\u6642\u5F88\u7A69\u5B9A\u3002",
+          "isComplete": true
         },
         "en-US": {
           "name": "Clear Broth Beef Noodle Soup",
-          "description": "A steady hot lunch with clear broth, beef, and noodles."
+          "description": "A steady hot lunch with clear broth, beef, and noodles.",
+          "isComplete": true
         }
-      }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
     },
     {
       "id": "22222222-2222-2222-2222-222222222222",
       "mealType": "Lunch",
       "localizations": {
         "zh-TW": {
-          "name": "雞腿便當",
-          "description": "烤雞腿便當搭配三樣配菜，適合需要吃飽的中午。"
+          "name": "\u96DE\u817F\u4FBF\u7576",
+          "description": "\u70E4\u96DE\u817F\u4FBF\u7576\u642D\u914D\u4E09\u6A23\u914D\u83DC\uFF0C\u9069\u5408\u9700\u8981\u5403\u98FD\u7684\u4E2D\u5348\u3002",
+          "isComplete": true
         },
         "en-US": {
           "name": "Chicken Leg Bento",
-          "description": "Roasted chicken leg bento with three sides for a filling lunch."
+          "description": "Roasted chicken leg bento with three sides for a filling lunch.",
+          "isComplete": true
         }
-      }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
     },
     {
       "id": "22222222-2222-2222-2222-222222222223",
       "mealType": "Lunch",
       "localizations": {
         "zh-TW": {
-          "name": "番茄義大利麵",
-          "description": "酸甜番茄醬汁與蔬菜，適合想換口味的午餐。"
+          "name": "\u756A\u8304\u7FA9\u5927\u5229\u9EB5",
+          "description": "\u9178\u751C\u756A\u8304\u91AC\u6C41\u8207\u852C\u83DC\uFF0C\u9069\u5408\u60F3\u63DB\u53E3\u5473\u7684\u5348\u9910\u3002",
+          "isComplete": true
         },
         "en-US": {
           "name": "Tomato Pasta",
-          "description": "Sweet-tart tomato sauce and vegetables when lunch needs a change of pace."
+          "description": "Sweet-tart tomato sauce and vegetables when lunch needs a change of pace.",
+          "isComplete": true
         }
-      }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
     },
     {
       "id": "33333333-3333-3333-3333-333333333331",
       "mealType": "Dinner",
       "localizations": {
         "zh-TW": {
-          "name": "壽喜燒鍋",
-          "description": "晚餐吃暖鍋，搭配青菜、豆腐與薄切牛肉。"
+          "name": "\u58FD\u559C\u71D2\u934B",
+          "description": "\u665A\u9910\u5403\u6696\u934B\uFF0C\u642D\u914D\u9752\u83DC\u3001\u8C46\u8150\u8207\u8584\u5207\u725B\u8089\u3002",
+          "isComplete": true
         },
         "en-US": {
           "name": "Sukiyaki Hot Pot",
-          "description": "A warm dinner pot with greens, tofu, and thinly sliced beef."
+          "description": "A warm dinner pot with greens, tofu, and thinly sliced beef.",
+          "isComplete": true
         }
-      }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
     },
     {
       "id": "33333333-3333-3333-3333-333333333332",
       "mealType": "Dinner",
       "localizations": {
         "zh-TW": {
-          "name": "蒜香雞肉飯",
-          "description": "蒜香煎雞腿配白飯與燙青菜，晚餐簡單但有份量。"
+          "name": "\u849C\u9999\u96DE\u8089\u98EF",
+          "description": "\u849C\u9999\u714E\u96DE\u817F\u914D\u767D\u98EF\u8207\u71D9\u9752\u83DC\uFF0C\u665A\u9910\u7C21\u55AE\u4F46\u6709\u4EFD\u91CF\u3002",
+          "isComplete": true
         },
         "en-US": {
           "name": "Garlic Chicken Rice",
-          "description": "Garlic pan-seared chicken with rice and blanched greens for a simple dinner."
+          "description": "Garlic pan-seared chicken with rice and blanched greens for a simple dinner.",
+          "isComplete": true
         }
-      }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
     },
     {
       "id": "33333333-3333-3333-3333-333333333333",
       "mealType": "Dinner",
       "localizations": {
         "zh-TW": {
-          "name": "蔬菜咖哩",
-          "description": "馬鈴薯、紅蘿蔔與菇類的蔬菜咖哩，適合不想吃太油時。"
+          "name": "\u852C\u83DC\u5496\u54E9",
+          "description": "\u99AC\u9234\u85AF\u3001\u7D05\u863F\u8514\u8207\u83C7\u985E\u7684\u852C\u83DC\u5496\u54E9\uFF0C\u9069\u5408\u4E0D\u60F3\u5403\u592A\u6CB9\u6642\u3002",
+          "isComplete": true
         },
         "en-US": {
           "name": "Vegetable Curry",
-          "description": "A lighter curry with potatoes, carrots, and mushrooms."
+          "description": "A lighter curry with potatoes, carrots, and mushrooms.",
+          "isComplete": true
         }
-      }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    }
+  ],
+  "drawHistory": [
+    {
+      "id": "736a81cd-66da-42a5-a78d-d9a416340966",
+      "operationId": "a9bb14f1-3b71-42df-84dc-e5d51b1e2b58",
+      "drawMode": "Random",
+      "cardId": "11111111-1111-1111-1111-111111111113",
+      "mealTypeAtDraw": "Breakfast",
+      "succeededAtUtc": "2026-05-13T14:47:51.415872+00:00"
     }
   ]
 }
