@@ -25,24 +25,26 @@ If bulk deletion is required, halt the operation and request that the user perfo
 
 <!-- SPECKIT START -->
 For the current feature context, technologies, project structure, shell commands,
-and other important information, read `specs/003-bilingual-language-toggle/plan.md`.
+and other important information, read `specs/004-draw-mode-statistics/plan.md`.
 <!-- SPECKIT END -->
 
 Before making architecture, behavior, UI, persistence, security, or testing changes, read these files:
 
 - `.specify/memory/constitution.md`
-- `specs/003-bilingual-language-toggle/spec.md`
-- `specs/003-bilingual-language-toggle/plan.md`
-- `specs/003-bilingual-language-toggle/research.md`
-- `specs/003-bilingual-language-toggle/data-model.md`
-- `specs/003-bilingual-language-toggle/quickstart.md`
-- `specs/003-bilingual-language-toggle/contracts/ui-contract.md`
+- `specs/004-draw-mode-statistics/spec.md`
+- `specs/004-draw-mode-statistics/plan.md`
+- `specs/004-draw-mode-statistics/research.md`
+- `specs/004-draw-mode-statistics/data-model.md`
+- `specs/004-draw-mode-statistics/quickstart.md`
+- `specs/004-draw-mode-statistics/contracts/ui-contract.md`
+
+If a change touches localization, bilingual card content, language persistence, or runtime UI language behavior, also read the `specs/003-bilingual-language-toggle/` artifacts because that feature is implemented baseline context.
 
 The constitution has the highest project authority. If implementation notes, tasks, or local preferences conflict with it, follow the constitution unless the user explicitly updates governance.
 
 ## Repository State
 
-This repository contains an ASP.NET Core Razor Pages app with implemented meal-picker and theme-mode functionality plus Spec Kit artifacts for current feature `003-bilingual-language-toggle`.
+This repository contains an ASP.NET Core Razor Pages app with implemented meal-picker, theme-mode, and bilingual-language functionality plus Spec Kit artifacts for current feature `004-draw-mode-statistics`.
 
 Current implemented app state:
 
@@ -54,7 +56,7 @@ Current implemented app state:
 - Existing pages include the meal draw, card library, card management, privacy, error, and shared layout surfaces under `CardPicker2/Pages/`.
 - Static resources are under `CardPicker2/wwwroot/`.
 - `.editorconfig` is present and governs C# formatting and naming.
-- `Models/`, `Services/`, `data/cards.json`, `/Cards` Razor Pages, and `tests/` are present from prior feature work and must be evolved carefully for bilingual support.
+- `Models/`, `Services/`, `data/cards.json`, `/Cards` Razor Pages, and `tests/` are present from prior feature work and must be evolved carefully for draw mode/statistics support without regressing bilingual behavior.
 
 Do not assume planned files already exist. Create them only when the current task requires implementation.
 
@@ -214,7 +216,7 @@ Use the current Spec Kit workflow:
 6. Verify with unit tests, integration tests, build, and required manual checks.
 7. Include test evidence and constitution compliance notes in PR or handoff summaries.
 
-Generate or update `specs/003-bilingual-language-toggle/tasks.md` before treating the current feature as ready for task-by-task implementation.
+Generate or update `specs/004-draw-mode-statistics/tasks.md` before treating the current feature as ready for task-by-task implementation.
 
 ## Git And Commit Messages
 
