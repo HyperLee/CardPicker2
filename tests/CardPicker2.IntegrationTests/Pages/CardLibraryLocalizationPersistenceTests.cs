@@ -29,7 +29,7 @@ public sealed partial class CardLibraryLocalizationPersistenceTests : IDisposabl
     }
 
     [Fact]
-    public async Task EditPost_FromSchemaV1Fallback_WritesSchemaV3WithEnglishContent()
+    public async Task EditPost_FromSchemaV1Fallback_WritesCurrentSchemaWithEnglishContent()
     {
         var id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
         await File.WriteAllTextAsync(_library.FilePath, JsonSerializer.Serialize(new
@@ -63,7 +63,7 @@ public sealed partial class CardLibraryLocalizationPersistenceTests : IDisposabl
         Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
         var json = await File.ReadAllTextAsync(_library.FilePath);
 
-        Assert.Contains("\"schemaVersion\": 3", json);
+        Assert.Contains($"\"schemaVersion\": {CardPicker2.Models.CardLibraryDocument.CurrentSchemaVersion}", json);
         Assert.Contains("\"drawHistory\": []", json);
         Assert.Contains("Breakfast Card", json);
         Assert.Contains("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", json);

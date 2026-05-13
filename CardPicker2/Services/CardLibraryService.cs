@@ -31,6 +31,7 @@ public sealed class CardLibraryService : ICardLibraryService
     private readonly CardLibraryFileCoordinator _fileCoordinator;
     private readonly DrawCandidatePoolBuilder _candidatePoolBuilder;
     private readonly DrawStatisticsService _statisticsService;
+    private readonly MealCardMetadataValidator _metadataValidator;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CardLibraryService"/> class.
@@ -43,6 +44,7 @@ public sealed class CardLibraryService : ICardLibraryService
     /// <param name="fileCoordinator">The same-process file coordination gate.</param>
     /// <param name="candidatePoolBuilder">The draw candidate-pool builder.</param>
     /// <param name="statisticsService">The draw statistics projection service.</param>
+    /// <param name="metadataValidator">The decision metadata validator.</param>
     public CardLibraryService(
         IOptions<CardLibraryOptions> options,
         IMealCardRandomizer randomizer,
@@ -51,7 +53,8 @@ public sealed class CardLibraryService : ICardLibraryService
         MealCardLocalizationService? localizationService = null,
         CardLibraryFileCoordinator? fileCoordinator = null,
         DrawCandidatePoolBuilder? candidatePoolBuilder = null,
-        DrawStatisticsService? statisticsService = null)
+        DrawStatisticsService? statisticsService = null,
+        MealCardMetadataValidator? metadataValidator = null)
     {
         _options = options.Value;
         _randomizer = randomizer;
@@ -61,6 +64,7 @@ public sealed class CardLibraryService : ICardLibraryService
         _fileCoordinator = fileCoordinator ?? new CardLibraryFileCoordinator();
         _candidatePoolBuilder = candidatePoolBuilder ?? new DrawCandidatePoolBuilder();
         _statisticsService = statisticsService ?? new DrawStatisticsService(_localizationService);
+        _metadataValidator = metadataValidator ?? new MealCardMetadataValidator();
     }
 
     /// <inheritdoc />
@@ -443,7 +447,13 @@ public sealed class CardLibraryService : ICardLibraryService
                 return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.Duplicate, "已有相同餐點名稱、餐別與描述的卡牌。");
             }
 
-            var updatedCard = new MealCard(id, normalized.MealType!.Value, normalized.ToLocalizations());
+            var updatedCard = new MealCard(
+                id,
+                normalized.MealType!.Value,
+                normalized.ToLocalizations(),
+                existing.Status,
+                existing.DeletedAtUtc,
+                existing.DecisionMetadata);
             var cards = loadResult.Document.Cards
                 .Select(card => card.Id == id ? updatedCard : card)
                 .ToList();
@@ -484,7 +494,8 @@ public sealed class CardLibraryService : ICardLibraryService
                             card.MealType,
                             card.Localizations,
                             CardStatus.Deleted,
-                            DateTimeOffset.UtcNow)
+                            DateTimeOffset.UtcNow,
+                            card.DecisionMetadata)
                         : card)
                     .ToList()
                 : loadResult.Document.Cards.Where(card => card.Id != id).ToList();
@@ -606,7 +617,8 @@ public sealed class CardLibraryService : ICardLibraryService
             return null;
         }
 
-        if (schemaVersion == CardLibraryDocument.CurrentSchemaVersion &&
+        if ((schemaVersion == CardLibraryDocument.CurrentSchemaVersion ||
+                schemaVersion == CardLibraryDocument.DrawHistorySchemaVersion) &&
             (!root.TryGetProperty("drawHistory", out var drawHistoryElement) ||
                 drawHistoryElement.ValueKind != JsonValueKind.Array))
         {
@@ -617,6 +629,7 @@ public sealed class CardLibraryService : ICardLibraryService
         {
             CardLibraryDocument.LegacySchemaVersion => ConvertLegacyDocument(JsonSerializer.Deserialize<LegacyCardLibraryDocument>(json, JsonOptions)),
             CardLibraryDocument.BilingualSchemaVersion => ConvertBilingualDocument(JsonSerializer.Deserialize<CardLibraryDocument>(json, JsonOptions)),
+            CardLibraryDocument.DrawHistorySchemaVersion => NormalizeCurrentDocument(JsonSerializer.Deserialize<CardLibraryDocument>(json, JsonOptions)),
             CardLibraryDocument.CurrentSchemaVersion => NormalizeCurrentDocument(JsonSerializer.Deserialize<CardLibraryDocument>(json, JsonOptions)),
             _ => new CardLibraryDocument { SchemaVersion = schemaVersion, Cards = Array.Empty<MealCard>() }
         };
@@ -681,7 +694,7 @@ public sealed class CardLibraryService : ICardLibraryService
 
         return new CardLibraryDocument
         {
-            SchemaVersion = document.SchemaVersion,
+            SchemaVersion = CardLibraryDocument.CurrentSchemaVersion,
             Cards = document.Cards.Select(card => card.Normalize()).ToList(),
             DrawHistory = document.DrawHistory.ToList()
         };
@@ -735,6 +748,12 @@ public sealed class CardLibraryService : ICardLibraryService
             if (card.Status == CardStatus.Deleted && card.DeletedAtUtc is null)
             {
                 return "Deleted card requires a deletion time.";
+            }
+
+            var metadataResult = _metadataValidator.ValidateAndNormalize(card.DecisionMetadata);
+            if (!metadataResult.Succeeded)
+            {
+                return metadataResult.MessageKey;
             }
 
             foreach (var cultureName in card.Localizations.Keys)

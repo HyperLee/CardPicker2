@@ -288,4 +288,79 @@
   <data name="Meal.Unknown" xml:space="preserve">
     <value>Unknown meal type</value>
   </data>
+  <data name="Metadata.Label.Tags" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="Metadata.Label.PriceRange" xml:space="preserve">
+    <value>Price range</value>
+  </data>
+  <data name="Metadata.Label.PreparationTimeRange" xml:space="preserve">
+    <value>Preparation or wait time</value>
+  </data>
+  <data name="Metadata.Label.DietaryPreferences" xml:space="preserve">
+    <value>Dietary preferences</value>
+  </data>
+  <data name="Metadata.Label.SpiceLevel" xml:space="preserve">
+    <value>Spice level</value>
+  </data>
+  <data name="Metadata.Option.NotSet" xml:space="preserve">
+    <value>Not set</value>
+  </data>
+  <data name="Metadata.PriceRange.Low" xml:space="preserve">
+    <value>Low</value>
+  </data>
+  <data name="Metadata.PriceRange.Medium" xml:space="preserve">
+    <value>Medium</value>
+  </data>
+  <data name="Metadata.PriceRange.High" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="Metadata.PreparationTimeRange.Quick" xml:space="preserve">
+    <value>Quick</value>
+  </data>
+  <data name="Metadata.PreparationTimeRange.Standard" xml:space="preserve">
+    <value>Standard</value>
+  </data>
+  <data name="Metadata.PreparationTimeRange.Long" xml:space="preserve">
+    <value>Long</value>
+  </data>
+  <data name="Metadata.DietaryPreference.Vegetarian" xml:space="preserve">
+    <value>Vegetarian</value>
+  </data>
+  <data name="Metadata.DietaryPreference.Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="Metadata.DietaryPreference.HeavyFlavor" xml:space="preserve">
+    <value>Heavy flavor</value>
+  </data>
+  <data name="Metadata.DietaryPreference.TakeoutFriendly" xml:space="preserve">
+    <value>Takeout friendly</value>
+  </data>
+  <data name="Metadata.SpiceLevel.None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Metadata.SpiceLevel.Mild" xml:space="preserve">
+    <value>Mild</value>
+  </data>
+  <data name="Metadata.SpiceLevel.Medium" xml:space="preserve">
+    <value>Medium</value>
+  </data>
+  <data name="Metadata.SpiceLevel.Hot" xml:space="preserve">
+    <value>Hot</value>
+  </data>
+  <data name="Metadata.Validation.InvalidEnum" xml:space="preserve">
+    <value>That decision metadata option is not supported.</value>
+  </data>
+  <data name="Metadata.Validation.InvalidTag" xml:space="preserve">
+    <value>Tags cannot be blank.</value>
+  </data>
+  <data name="Metadata.Filter.EmptyPool" xml:space="preserve">
+    <value>No meals match the current filters.</value>
+  </data>
+  <data name="Metadata.Filter.EmptySearch" xml:space="preserve">
+    <value>No meal cards match these filters.</value>
+  </data>
+  <data name="Metadata.Filter.Summary" xml:space="preserve">
+    <value>Current filters: {0}</value>
+  </data>
 </root>

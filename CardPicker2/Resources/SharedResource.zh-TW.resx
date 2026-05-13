@@ -288,4 +288,79 @@
   <data name="Meal.Unknown" xml:space="preserve">
     <value>未知餐別</value>
   </data>
+  <data name="Metadata.Label.Tags" xml:space="preserve">
+    <value>標籤</value>
+  </data>
+  <data name="Metadata.Label.PriceRange" xml:space="preserve">
+    <value>價格區間</value>
+  </data>
+  <data name="Metadata.Label.PreparationTimeRange" xml:space="preserve">
+    <value>準備或等待時間</value>
+  </data>
+  <data name="Metadata.Label.DietaryPreferences" xml:space="preserve">
+    <value>飲食偏好</value>
+  </data>
+  <data name="Metadata.Label.SpiceLevel" xml:space="preserve">
+    <value>辣度</value>
+  </data>
+  <data name="Metadata.Option.NotSet" xml:space="preserve">
+    <value>尚未填寫</value>
+  </data>
+  <data name="Metadata.PriceRange.Low" xml:space="preserve">
+    <value>低價位</value>
+  </data>
+  <data name="Metadata.PriceRange.Medium" xml:space="preserve">
+    <value>中價位</value>
+  </data>
+  <data name="Metadata.PriceRange.High" xml:space="preserve">
+    <value>高價位</value>
+  </data>
+  <data name="Metadata.PreparationTimeRange.Quick" xml:space="preserve">
+    <value>快速</value>
+  </data>
+  <data name="Metadata.PreparationTimeRange.Standard" xml:space="preserve">
+    <value>一般</value>
+  </data>
+  <data name="Metadata.PreparationTimeRange.Long" xml:space="preserve">
+    <value>較久</value>
+  </data>
+  <data name="Metadata.DietaryPreference.Vegetarian" xml:space="preserve">
+    <value>蔬食</value>
+  </data>
+  <data name="Metadata.DietaryPreference.Light" xml:space="preserve">
+    <value>清淡</value>
+  </data>
+  <data name="Metadata.DietaryPreference.HeavyFlavor" xml:space="preserve">
+    <value>重口味</value>
+  </data>
+  <data name="Metadata.DietaryPreference.TakeoutFriendly" xml:space="preserve">
+    <value>適合外帶</value>
+  </data>
+  <data name="Metadata.SpiceLevel.None" xml:space="preserve">
+    <value>不辣</value>
+  </data>
+  <data name="Metadata.SpiceLevel.Mild" xml:space="preserve">
+    <value>小辣</value>
+  </data>
+  <data name="Metadata.SpiceLevel.Medium" xml:space="preserve">
+    <value>中辣</value>
+  </data>
+  <data name="Metadata.SpiceLevel.Hot" xml:space="preserve">
+    <value>重辣</value>
+  </data>
+  <data name="Metadata.Validation.InvalidEnum" xml:space="preserve">
+    <value>決策資訊選項不支援。</value>
+  </data>
+  <data name="Metadata.Validation.InvalidTag" xml:space="preserve">
+    <value>標籤不可空白。</value>
+  </data>
+  <data name="Metadata.Filter.EmptyPool" xml:space="preserve">
+    <value>目前沒有符合條件的餐點。</value>
+  </data>
+  <data name="Metadata.Filter.EmptySearch" xml:space="preserve">
+    <value>沒有符合這些條件的餐點卡牌。</value>
+  </data>
+  <data name="Metadata.Filter.Summary" xml:space="preserve">
+    <value>目前條件：{0}</value>
+  </data>
 </root>

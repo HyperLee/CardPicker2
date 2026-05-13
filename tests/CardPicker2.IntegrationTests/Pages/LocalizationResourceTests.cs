@@ -14,6 +14,47 @@ public sealed class LocalizationResourceTests
         Assert.DoesNotContain(zhKeys, key => string.IsNullOrWhiteSpace(key));
     }
 
+    [Fact]
+    public void SharedResources_ContainMetadataFilterLabelsOptionsValidationAndEmptyStates()
+    {
+        var zhKeys = ReadKeys("CardPicker2/Resources/SharedResource.zh-TW.resx");
+        var enKeys = ReadKeys("CardPicker2/Resources/SharedResource.en-US.resx");
+        var requiredKeys = new[]
+        {
+            "Metadata.Label.Tags",
+            "Metadata.Label.PriceRange",
+            "Metadata.Label.PreparationTimeRange",
+            "Metadata.Label.DietaryPreferences",
+            "Metadata.Label.SpiceLevel",
+            "Metadata.Option.NotSet",
+            "Metadata.PriceRange.Low",
+            "Metadata.PriceRange.Medium",
+            "Metadata.PriceRange.High",
+            "Metadata.PreparationTimeRange.Quick",
+            "Metadata.PreparationTimeRange.Standard",
+            "Metadata.PreparationTimeRange.Long",
+            "Metadata.DietaryPreference.Vegetarian",
+            "Metadata.DietaryPreference.Light",
+            "Metadata.DietaryPreference.HeavyFlavor",
+            "Metadata.DietaryPreference.TakeoutFriendly",
+            "Metadata.SpiceLevel.None",
+            "Metadata.SpiceLevel.Mild",
+            "Metadata.SpiceLevel.Medium",
+            "Metadata.SpiceLevel.Hot",
+            "Metadata.Validation.InvalidEnum",
+            "Metadata.Validation.InvalidTag",
+            "Metadata.Filter.EmptyPool",
+            "Metadata.Filter.EmptySearch",
+            "Metadata.Filter.Summary"
+        };
+
+        foreach (var key in requiredKeys)
+        {
+            Assert.Contains(key, zhKeys);
+            Assert.Contains(key, enKeys);
+        }
+    }
+
     private static SortedSet<string> ReadKeys(string path)
     {
         var document = XDocument.Load(Path.Combine(GetRepositoryRoot(), path));

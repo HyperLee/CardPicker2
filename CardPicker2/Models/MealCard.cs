@@ -59,18 +59,21 @@ public sealed class MealCard
     /// <param name="localizations">The localized card content keyed by supported culture name.</param>
     /// <param name="status">The lifecycle status.</param>
     /// <param name="deletedAtUtc">The UTC deletion time when the card is retained as deleted.</param>
+    /// <param name="decisionMetadata">Optional decision metadata used for filtering.</param>
     public MealCard(
         Guid id,
         MealType mealType,
         IDictionary<string, MealCardLocalizedContent> localizations,
         CardStatus status,
-        DateTimeOffset? deletedAtUtc)
+        DateTimeOffset? deletedAtUtc,
+        MealCardDecisionMetadata? decisionMetadata = null)
     {
         Id = id;
         MealType = mealType;
         Localizations = new Dictionary<string, MealCardLocalizedContent>(localizations, StringComparer.OrdinalIgnoreCase);
         Status = status;
         DeletedAtUtc = deletedAtUtc;
+        DecisionMetadata = decisionMetadata;
     }
 
     /// <summary>
@@ -97,6 +100,11 @@ public sealed class MealCard
     /// Gets or initializes the UTC deletion time for retained deleted cards.
     /// </summary>
     public DateTimeOffset? DeletedAtUtc { get; init; }
+
+    /// <summary>
+    /// Gets or initializes optional decision metadata used for filtered draw and search.
+    /// </summary>
+    public MealCardDecisionMetadata? DecisionMetadata { get; init; }
 
     /// <summary>
     /// Gets a value indicating whether the card can be browsed, edited, deleted, and drawn.
@@ -187,7 +195,8 @@ public sealed class MealCard
                 pair => pair.Value.Normalize(),
                 StringComparer.OrdinalIgnoreCase),
             Status,
-            DeletedAtUtc);
+            DeletedAtUtc,
+            DecisionMetadata?.Normalize());
     }
 }
 

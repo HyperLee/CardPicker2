@@ -15,9 +15,9 @@ namespace CardPicker2.Models;
 public sealed class CardLibraryDocument
 {
     /// <summary>
-    /// Gets the supported schema version for draw history and statistics persistence.
+    /// Gets the supported schema version for metadata, draw history, and statistics persistence.
     /// </summary>
-    public const int CurrentSchemaVersion = 3;
+    public const int CurrentSchemaVersion = 4;
 
     /// <summary>
     /// Gets the legacy single-language schema version.
@@ -28,6 +28,11 @@ public sealed class CardLibraryDocument
     /// Gets the bilingual card-library schema version.
     /// </summary>
     public const int BilingualSchemaVersion = 2;
+
+    /// <summary>
+    /// Gets the draw-history and statistics schema version.
+    /// </summary>
+    public const int DrawHistorySchemaVersion = 3;
 
     /// <summary>
     /// Gets or initializes the persisted schema version.

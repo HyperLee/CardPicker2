@@ -40,14 +40,14 @@ public sealed class CardLibraryLocalizationTests
     }
 
     [Fact]
-    public async Task LoadAsync_WhenJsonIsMissing_CreatesSchemaV3SeedWithCompleteBilingualContent()
+    public async Task LoadAsync_WhenJsonIsMissing_CreatesCurrentSchemaSeedWithCompleteBilingualContent()
     {
         using var library = TempCardLibrary.Create();
         var service = CreateService(library.FilePath);
 
         var result = await service.LoadAsync();
 
-        Assert.Equal(3, result.Document!.SchemaVersion);
+        Assert.Equal(CardLibraryDocument.CurrentSchemaVersion, result.Document!.SchemaVersion);
         Assert.Empty(result.Document.DrawHistory);
         Assert.All(result.Document.Cards, card =>
         {

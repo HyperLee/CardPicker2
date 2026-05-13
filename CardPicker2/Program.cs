@@ -55,7 +55,9 @@ public class Program
         builder.Services.AddSingleton<DrawCandidatePoolBuilder>();
         builder.Services.AddSingleton<DrawStatisticsService>();
         builder.Services.AddSingleton<LanguagePreferenceService>();
+        builder.Services.AddSingleton<MealCardFilterService>();
         builder.Services.AddSingleton<MealCardLocalizationService>();
+        builder.Services.AddSingleton<MealCardMetadataValidator>();
         builder.Services.AddSingleton<IMealCardRandomizer, MealCardRandomizer>();
         builder.Services.AddScoped<ICardLibraryService, CardLibraryService>();
 

@@ -31,29 +31,29 @@
 
 **關鍵限制**: 未完成本階段前，不要開始 US1/US2/US3 的實作任務。
 
-- [ ] T006 [P] 新增 schema v4 與 metadata migration 失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibrarySchemaVersionTests.cs`，覆蓋 v1/v2/v3 in-memory migration、v4 validation、invalid metadata enum block、corrupted JSON preserve、missing file seed v4。
-- [ ] T007 [P] 新增 metadata 正規化失敗測試於 `tests/CardPicker2.UnitTests/Models/MealCardDecisionMetadataTests.cs`，覆蓋 tag trim、空白移除、`OrdinalIgnoreCase` 去重、保留第一次顯示文字、dietary preference 去重與 stable order。
-- [ ] T008 [P] 新增 filter criteria 失敗測試於 `tests/CardPicker2.UnitTests/Models/CardFilterCriteriaTests.cs`，覆蓋 meal type optional、price/time/diet/spice/tags normalization、random mode 忽略 meal type 的 criteria 投影。
-- [ ] T009 [P] 新增 metadata validator 失敗測試於 `tests/CardPicker2.UnitTests/Services/MealCardMetadataValidatorTests.cs`，覆蓋 unsupported enum、空白 tag、重複 tag、metadata 可缺漏但有值必須合法。
-- [ ] T010 [P] 新增 filter service 失敗測試於 `tests/CardPicker2.UnitTests/Services/MealCardFilterServiceTests.cs`，覆蓋 active-only、缺 metadata 未篩選可通過、套用欄位時缺漏不符合、diet/tags all-match、max spice `<=`。
-- [ ] T011 [P] 新增 metadata localization resource 失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/LocalizationResourceTests.cs`，覆蓋 `zh-TW` 與 `en-US` metadata labels、options、validation、empty state 與 summary keys 不缺漏。
-- [ ] T012 [P] 建立價格區間 enum 於 `CardPicker2/Models/PriceRange.cs`，定義 `Low`、`Medium`、`High` 並補 XML 文件註解含 `<example>`/`<code>`。
-- [ ] T013 [P] 建立準備時間區間 enum 於 `CardPicker2/Models/PreparationTimeRange.cs`，定義 `Quick`、`Standard`、`Long` 並補 XML 文件註解含 `<example>`/`<code>`。
-- [ ] T014 [P] 建立飲食偏好 enum 於 `CardPicker2/Models/DietaryPreference.cs`，定義 `Vegetarian`、`Light`、`HeavyFlavor`、`TakeoutFriendly` 並補 XML 文件註解含 `<example>`/`<code>`。
-- [ ] T015 [P] 建立辣度 enum 於 `CardPicker2/Models/SpiceLevel.cs`，定義 `None`、`Mild`、`Medium`、`Hot` 與排序語意，並補 XML 文件註解含 `<example>`/`<code>`。
-- [ ] T016 [P] 建立餐點決策資訊模型於 `CardPicker2/Models/MealCardDecisionMetadata.cs`，包含 `Tags`、`PriceRange`、`PreparationTimeRange`、`DietaryPreferences`、`SpiceLevel` 與 normalize helper。
-- [ ] T017 [P] 建立共用篩選條件模型於 `CardPicker2/Models/CardFilterCriteria.cs`，包含 meal type、price、time、dietary preferences、max spice、tags、current language 與 active filter 判斷。
-- [ ] T018 [P] 建立條件摘要投影模型於 `CardPicker2/Models/FilterSummary.cs`，支援首頁、卡牌庫與結果摘要顯示目前套用條件。
-- [ ] T019 更新卡牌模型於 `CardPicker2/Models/MealCard.cs`，新增 optional `DecisionMetadata`，並讓 constructors、`Normalize()`、active/deleted lifecycle 都保留 metadata。
-- [ ] T020 更新根文件模型於 `CardPicker2/Models/CardLibraryDocument.cs`，將 `CurrentSchemaVersion` 升級為 4，保留 v1/v2/v3 migration 常數並明確保留 `DrawHistory`。
-- [ ] T021 建立 metadata 驗證服務於 `CardPicker2/Services/MealCardMetadataValidator.cs`，集中處理 enum validation、tag normalization、input-to-metadata 轉換與 localized status key。
-- [ ] T022 建立 metadata 篩選服務於 `CardPicker2/Services/MealCardFilterService.cs`，實作 active cards、交集規則、missing metadata semantics、all-tags/all-diet match 與 max spice `<=`。
-- [ ] T023 更新 library load/write/validation 於 `CardPicker2/Services/CardLibraryService.cs`，支援 schema v1/v2/v3/v4 migration、v3 card `DecisionMetadata = null`、v4 metadata validation、unsupported/corrupted block 與原檔保留。
-- [ ] T024 更新種子資料於 `CardPicker2/Services/SeedMealCards.cs`，讓 missing file 建立 schema v4，且每餐別至少 3 張 active bilingual cards 含可手動驗證的完整/部分 metadata。
-- [ ] T025 更新 DI 註冊於 `CardPicker2/Program.cs`，註冊 `MealCardMetadataValidator`、`MealCardFilterService` 與本功能需要的 singleton/scoped lifetime。
-- [ ] T026 [P] 新增或更新繁中 metadata 共用文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 labels、option display names、filter summary、validation 與 not-set empty text。
-- [ ] T027 [P] 新增或更新英文 metadata 共用文案於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保 `en-US` 不顯示未翻譯 key。
-- [ ] T028 執行 `dotnet test CardPicker2.sln --filter "SchemaV4|MealCardDecisionMetadata|CardFilterCriteria|MealCardMetadataValidator|MealCardFilterService|LocalizationResource"`，確認 `CardPicker2.sln` 的 foundation 測試從失敗轉為通過。
+- [X] T006 [P] 新增 schema v4 與 metadata migration 失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibrarySchemaVersionTests.cs`，覆蓋 v1/v2/v3 in-memory migration、v4 validation、invalid metadata enum block、corrupted JSON preserve、missing file seed v4。
+- [X] T007 [P] 新增 metadata 正規化失敗測試於 `tests/CardPicker2.UnitTests/Models/MealCardDecisionMetadataTests.cs`，覆蓋 tag trim、空白移除、`OrdinalIgnoreCase` 去重、保留第一次顯示文字、dietary preference 去重與 stable order。
+- [X] T008 [P] 新增 filter criteria 失敗測試於 `tests/CardPicker2.UnitTests/Models/CardFilterCriteriaTests.cs`，覆蓋 meal type optional、price/time/diet/spice/tags normalization、random mode 忽略 meal type 的 criteria 投影。
+- [X] T009 [P] 新增 metadata validator 失敗測試於 `tests/CardPicker2.UnitTests/Services/MealCardMetadataValidatorTests.cs`，覆蓋 unsupported enum、空白 tag、重複 tag、metadata 可缺漏但有值必須合法。
+- [X] T010 [P] 新增 filter service 失敗測試於 `tests/CardPicker2.UnitTests/Services/MealCardFilterServiceTests.cs`，覆蓋 active-only、缺 metadata 未篩選可通過、套用欄位時缺漏不符合、diet/tags all-match、max spice `<=`。
+- [X] T011 [P] 新增 metadata localization resource 失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/LocalizationResourceTests.cs`，覆蓋 `zh-TW` 與 `en-US` metadata labels、options、validation、empty state 與 summary keys 不缺漏。
+- [X] T012 [P] 建立價格區間 enum 於 `CardPicker2/Models/PriceRange.cs`，定義 `Low`、`Medium`、`High` 並補 XML 文件註解含 `<example>`/`<code>`。
+- [X] T013 [P] 建立準備時間區間 enum 於 `CardPicker2/Models/PreparationTimeRange.cs`，定義 `Quick`、`Standard`、`Long` 並補 XML 文件註解含 `<example>`/`<code>`。
+- [X] T014 [P] 建立飲食偏好 enum 於 `CardPicker2/Models/DietaryPreference.cs`，定義 `Vegetarian`、`Light`、`HeavyFlavor`、`TakeoutFriendly` 並補 XML 文件註解含 `<example>`/`<code>`。
+- [X] T015 [P] 建立辣度 enum 於 `CardPicker2/Models/SpiceLevel.cs`，定義 `None`、`Mild`、`Medium`、`Hot` 與排序語意，並補 XML 文件註解含 `<example>`/`<code>`。
+- [X] T016 [P] 建立餐點決策資訊模型於 `CardPicker2/Models/MealCardDecisionMetadata.cs`，包含 `Tags`、`PriceRange`、`PreparationTimeRange`、`DietaryPreferences`、`SpiceLevel` 與 normalize helper。
+- [X] T017 [P] 建立共用篩選條件模型於 `CardPicker2/Models/CardFilterCriteria.cs`，包含 meal type、price、time、dietary preferences、max spice、tags、current language 與 active filter 判斷。
+- [X] T018 [P] 建立條件摘要投影模型於 `CardPicker2/Models/FilterSummary.cs`，支援首頁、卡牌庫與結果摘要顯示目前套用條件。
+- [X] T019 更新卡牌模型於 `CardPicker2/Models/MealCard.cs`，新增 optional `DecisionMetadata`，並讓 constructors、`Normalize()`、active/deleted lifecycle 都保留 metadata。
+- [X] T020 更新根文件模型於 `CardPicker2/Models/CardLibraryDocument.cs`，將 `CurrentSchemaVersion` 升級為 4，保留 v1/v2/v3 migration 常數並明確保留 `DrawHistory`。
+- [X] T021 建立 metadata 驗證服務於 `CardPicker2/Services/MealCardMetadataValidator.cs`，集中處理 enum validation、tag normalization、input-to-metadata 轉換與 localized status key。
+- [X] T022 建立 metadata 篩選服務於 `CardPicker2/Services/MealCardFilterService.cs`，實作 active cards、交集規則、missing metadata semantics、all-tags/all-diet match 與 max spice `<=`。
+- [X] T023 更新 library load/write/validation 於 `CardPicker2/Services/CardLibraryService.cs`，支援 schema v1/v2/v3/v4 migration、v3 card `DecisionMetadata = null`、v4 metadata validation、unsupported/corrupted block 與原檔保留。
+- [X] T024 更新種子資料於 `CardPicker2/Services/SeedMealCards.cs`，讓 missing file 建立 schema v4，且每餐別至少 3 張 active bilingual cards 含可手動驗證的完整/部分 metadata。
+- [X] T025 更新 DI 註冊於 `CardPicker2/Program.cs`，註冊 `MealCardMetadataValidator`、`MealCardFilterService` 與本功能需要的 singleton/scoped lifetime。
+- [X] T026 [P] 新增或更新繁中 metadata 共用文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 labels、option display names、filter summary、validation 與 not-set empty text。
+- [X] T027 [P] 新增或更新英文 metadata 共用文案於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保 `en-US` 不顯示未翻譯 key。
+- [X] T028 執行 `dotnet test CardPicker2.sln --filter "SchemaV4|MealCardDecisionMetadata|CardFilterCriteria|MealCardMetadataValidator|MealCardFilterService|LocalizationResource"`，確認 `CardPicker2.sln` 的 foundation 測試從失敗轉為通過。
 
 **檢查點**: schema v4、metadata model/validation/filter foundation 完成，user story implementation 可開始。
 
