@@ -56,6 +56,132 @@
       "deletedAtUtc": null
     },
     {
+      "id": "11111111-1111-1111-1111-111111111114",
+      "mealType": "Breakfast",
+      "localizations": {
+        "zh-TW": {
+          "name": "蔬菜起司蛋餅",
+          "description": "軟嫩蛋餅包入高麗菜、玉米與起司，早餐吃起來清爽有飽足感。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Vegetable Cheese Egg Pancake",
+          "description": "A soft egg pancake filled with cabbage, corn, and cheese for a fresh but filling breakfast.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111115",
+      "mealType": "Breakfast",
+      "localizations": {
+        "zh-TW": {
+          "name": "火腿蛋三明治",
+          "description": "烤吐司夾火腿、煎蛋與生菜，適合趕時間時外帶。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Ham and Egg Sandwich",
+          "description": "Toasted bread with ham, fried egg, and lettuce for an easy breakfast to go.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111116",
+      "mealType": "Breakfast",
+      "localizations": {
+        "zh-TW": {
+          "name": "飯糰豆漿",
+          "description": "紫米飯糰包油條、肉鬆與酸菜，搭配一杯溫豆漿。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Rice Roll with Soy Milk",
+          "description": "A purple rice roll with cruller, pork floss, and pickled greens served with warm soy milk.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111117",
+      "mealType": "Breakfast",
+      "localizations": {
+        "zh-TW": {
+          "name": "蘿蔔糕加蛋",
+          "description": "煎到表面微酥的蘿蔔糕加蛋，搭配蒜蓉醬油。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Turnip Cake with Egg",
+          "description": "Pan-fried turnip cake with egg and a garlic soy dipping sauce.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111118",
+      "mealType": "Breakfast",
+      "localizations": {
+        "zh-TW": {
+          "name": "燒餅油條",
+          "description": "酥香燒餅夾油條，搭配熱豆漿或米漿都合適。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Shaobing with Cruller",
+          "description": "Flaky sesame flatbread wrapped around a crisp cruller, good with hot soy or rice milk.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111119",
+      "mealType": "Breakfast",
+      "localizations": {
+        "zh-TW": {
+          "name": "地瓜優格碗",
+          "description": "蒸地瓜、原味優格、堅果與水果，適合想吃輕盈早餐時。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Sweet Potato Yogurt Bowl",
+          "description": "Steamed sweet potato with plain yogurt, nuts, and fruit for a lighter breakfast.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "11111111-1111-1111-1111-111111111120",
+      "mealType": "Breakfast",
+      "localizations": {
+        "zh-TW": {
+          "name": "雞肉蔬菜粥",
+          "description": "雞肉絲與蔬菜熬成的溫粥，早上想吃熱食時很舒服。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Chicken Vegetable Congee",
+          "description": "Warm congee with shredded chicken and vegetables for a gentle hot breakfast.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
       "id": "22222222-2222-2222-2222-222222222221",
       "mealType": "Lunch",
       "localizations": {
@@ -103,6 +229,132 @@
         "en-US": {
           "name": "Tomato Pasta",
           "description": "Sweet-tart tomato sauce and vegetables when lunch needs a change of pace.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222224",
+      "mealType": "Lunch",
+      "localizations": {
+        "zh-TW": {
+          "name": "日式豬排飯",
+          "description": "酥炸豬排鋪在白飯上，搭配高麗菜絲與味噌湯。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Japanese Pork Cutlet Rice",
+          "description": "Crisp pork cutlet over rice with shredded cabbage and miso soup.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222225",
+      "mealType": "Lunch",
+      "localizations": {
+        "zh-TW": {
+          "name": "蝦仁炒飯",
+          "description": "粒粒分明的蛋炒飯加入蝦仁與青蔥，午餐快速又有香氣。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Shrimp Fried Rice",
+          "description": "Egg fried rice with shrimp and scallions for a quick, fragrant lunch.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222226",
+      "mealType": "Lunch",
+      "localizations": {
+        "zh-TW": {
+          "name": "泰式打拋豬飯",
+          "description": "九層塔炒絞肉搭配白飯與煎蛋，口味鹹香微辣。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Thai Basil Pork Rice",
+          "description": "Savory, mildly spicy basil pork over rice with a fried egg.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222227",
+      "mealType": "Lunch",
+      "localizations": {
+        "zh-TW": {
+          "name": "越南牛肉河粉",
+          "description": "清香牛骨湯、河粉與薄牛肉片，搭配豆芽和檸檬。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Vietnamese Beef Pho",
+          "description": "Aromatic beef broth with rice noodles, thin beef slices, bean sprouts, and lime.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222228",
+      "mealType": "Lunch",
+      "localizations": {
+        "zh-TW": {
+          "name": "烤鮭魚定食",
+          "description": "烤鮭魚搭配白飯、味噌湯與小菜，午餐吃得均衡。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Grilled Salmon Set",
+          "description": "Grilled salmon with rice, miso soup, and small sides for a balanced lunch.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222229",
+      "mealType": "Lunch",
+      "localizations": {
+        "zh-TW": {
+          "name": "三杯雞飯",
+          "description": "薑片、蒜頭與九層塔炒雞肉，搭配熱白飯。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Three-Cup Chicken Rice",
+          "description": "Chicken cooked with ginger, garlic, and basil, served over hot rice.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222230",
+      "mealType": "Lunch",
+      "localizations": {
+        "zh-TW": {
+          "name": "菇菇蔬食便當",
+          "description": "杏鮑菇、青花菜與豆干搭配糙米飯，適合想吃蔬食午餐時。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Mushroom Vegetable Bento",
+          "description": "King oyster mushrooms, broccoli, tofu, and brown rice for a vegetable-forward lunch.",
           "isComplete": true
         }
       },
@@ -162,6 +414,132 @@
       },
       "status": "Active",
       "deletedAtUtc": null
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333334",
+      "mealType": "Dinner",
+      "localizations": {
+        "zh-TW": {
+          "name": "麻油雞麵線",
+          "description": "麻油香氣的雞湯搭配麵線，天氣涼時很適合。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Sesame Oil Chicken Noodles",
+          "description": "Sesame oil chicken soup with thin wheat noodles, especially comforting on cool nights.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333335",
+      "mealType": "Dinner",
+      "localizations": {
+        "zh-TW": {
+          "name": "韓式拌飯",
+          "description": "白飯鋪上蔬菜、牛肉、泡菜與半熟蛋，拌入辣醬。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Korean Bibimbap",
+          "description": "Rice topped with vegetables, beef, kimchi, and a soft egg, mixed with gochujang.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333336",
+      "mealType": "Dinner",
+      "localizations": {
+        "zh-TW": {
+          "name": "紅酒燉牛肉",
+          "description": "牛肉、紅蘿蔔與洋蔥慢燉，搭配麵包或馬鈴薯泥。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Red Wine Beef Stew",
+          "description": "Slow-braised beef with carrots and onions, served with bread or mashed potatoes.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333337",
+      "mealType": "Dinner",
+      "localizations": {
+        "zh-TW": {
+          "name": "香煎鮭魚飯",
+          "description": "鮭魚煎到表皮酥香，搭配白飯、海苔與燙青菜。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Pan-Seared Salmon Rice",
+          "description": "Crisp-skinned salmon with rice, nori, and blanched greens.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333338",
+      "mealType": "Dinner",
+      "localizations": {
+        "zh-TW": {
+          "name": "滷肉飯套餐",
+          "description": "滷肉飯搭配滷蛋、青菜與貢丸湯，晚餐簡單滿足。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Braised Pork Rice Set",
+          "description": "Braised pork rice with a soy egg, greens, and pork ball soup for a simple dinner.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333339",
+      "mealType": "Dinner",
+      "localizations": {
+        "zh-TW": {
+          "name": "蔬菜豆腐鍋",
+          "description": "豆腐、菇類與時蔬煮成清爽鍋物，適合想吃暖胃晚餐時。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Vegetable Tofu Hot Pot",
+          "description": "A light hot pot with tofu, mushrooms, and seasonal vegetables for a warming dinner.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333340",
+      "mealType": "Dinner",
+      "localizations": {
+        "zh-TW": {
+          "name": "海鮮粥",
+          "description": "白粥加入魚片、蝦仁與蛤蜊，晚餐想吃清淡時很合適。",
+          "isComplete": true
+        },
+        "en-US": {
+          "name": "Seafood Congee",
+          "description": "Rice congee with fish slices, shrimp, and clams for a lighter dinner.",
+          "isComplete": true
+        }
+      },
+      "status": "Active",
+      "deletedAtUtc": null
     }
   ],
   "drawHistory": [
@@ -172,6 +550,102 @@
       "cardId": "11111111-1111-1111-1111-111111111113",
       "mealTypeAtDraw": "Breakfast",
       "succeededAtUtc": "2026-05-13T14:47:51.415872+00:00"
+    },
+    {
+      "id": "55cab80d-32f4-44f8-9f38-7bb1f67e5492",
+      "operationId": "da46edcb-0b80-4f67-b716-ca2c6e76fdf0",
+      "drawMode": "Random",
+      "cardId": "22222222-2222-2222-2222-222222222222",
+      "mealTypeAtDraw": "Lunch",
+      "succeededAtUtc": "2026-05-13T15:22:23.690415+00:00"
+    },
+    {
+      "id": "9782125e-004b-4dbe-aea3-36b0b117ec90",
+      "operationId": "fdf89e5a-74db-4d05-9b6f-18378adadd26",
+      "drawMode": "Random",
+      "cardId": "11111111-1111-1111-1111-111111111111",
+      "mealTypeAtDraw": "Breakfast",
+      "succeededAtUtc": "2026-05-13T15:23:26.674594+00:00"
+    },
+    {
+      "id": "eface792-9ffe-4b3e-be8f-23cab38f7fa3",
+      "operationId": "7a50dcf2-fda0-43b6-b7c0-525206e95161",
+      "drawMode": "Random",
+      "cardId": "22222222-2222-2222-2222-222222222221",
+      "mealTypeAtDraw": "Lunch",
+      "succeededAtUtc": "2026-05-13T15:35:24.252995+00:00"
+    },
+    {
+      "id": "2af74721-ee12-4358-94be-efffcf52908b",
+      "operationId": "5ccb2460-e015-4609-a125-6ccfd4df0f8b",
+      "drawMode": "Random",
+      "cardId": "33333333-3333-3333-3333-333333333333",
+      "mealTypeAtDraw": "Dinner",
+      "succeededAtUtc": "2026-05-13T15:35:26.57211+00:00"
+    },
+    {
+      "id": "36198c4f-498a-4d59-9f05-6086cf529e45",
+      "operationId": "4eb196e2-9a07-425f-b247-436c5c165b2b",
+      "drawMode": "Random",
+      "cardId": "11111111-1111-1111-1111-111111111112",
+      "mealTypeAtDraw": "Breakfast",
+      "succeededAtUtc": "2026-05-13T15:35:27.988608+00:00"
+    },
+    {
+      "id": "ce8afefd-6278-4741-9d90-96c4a10cdc23",
+      "operationId": "098d992d-aaf2-42a4-a96e-24b5767014f1",
+      "drawMode": "Random",
+      "cardId": "22222222-2222-2222-2222-222222222222",
+      "mealTypeAtDraw": "Lunch",
+      "succeededAtUtc": "2026-05-13T15:35:29.690574+00:00"
+    },
+    {
+      "id": "49bce127-e3ec-47d4-896e-ad1c20a038fc",
+      "operationId": "88dea141-f400-46a4-bcca-6f3e57139c22",
+      "drawMode": "Random",
+      "cardId": "22222222-2222-2222-2222-222222222221",
+      "mealTypeAtDraw": "Lunch",
+      "succeededAtUtc": "2026-05-13T15:35:31.035312+00:00"
+    },
+    {
+      "id": "22eba1ec-5a01-418e-b6e7-89e2ae1848c4",
+      "operationId": "7e0b8008-5f64-4486-9cad-5e2469ecbd64",
+      "drawMode": "Normal",
+      "cardId": "22222222-2222-2222-2222-222222222222",
+      "mealTypeAtDraw": "Lunch",
+      "succeededAtUtc": "2026-05-13T15:35:34.647796+00:00"
+    },
+    {
+      "id": "812f3a4b-94ab-4e74-9ab2-c0d89cfaf33c",
+      "operationId": "6a0e0db8-353e-4eaf-b028-a2755bcc3415",
+      "drawMode": "Normal",
+      "cardId": "22222222-2222-2222-2222-222222222223",
+      "mealTypeAtDraw": "Lunch",
+      "succeededAtUtc": "2026-05-13T15:35:36.209542+00:00"
+    },
+    {
+      "id": "6f3e9c87-7ddb-4720-b895-3dd82766ae96",
+      "operationId": "c74e3445-ec59-45ef-b71c-735c2bd2c75c",
+      "drawMode": "Normal",
+      "cardId": "11111111-1111-1111-1111-111111111112",
+      "mealTypeAtDraw": "Breakfast",
+      "succeededAtUtc": "2026-05-13T15:35:39.488542+00:00"
+    },
+    {
+      "id": "07987d0c-c18c-463f-8c75-af9c402a88db",
+      "operationId": "079a4d24-ab7d-4b90-972a-ef5df940600e",
+      "drawMode": "Normal",
+      "cardId": "11111111-1111-1111-1111-111111111112",
+      "mealTypeAtDraw": "Breakfast",
+      "succeededAtUtc": "2026-05-13T15:35:42.973301+00:00"
+    },
+    {
+      "id": "d82e2b61-fcc9-4766-994a-9cd38d6ec561",
+      "operationId": "1cc8aa44-1a96-4f9e-a3ff-a23077a8ded1",
+      "drawMode": "Normal",
+      "cardId": "33333333-3333-3333-3333-333333333331",
+      "mealTypeAtDraw": "Dinner",
+      "succeededAtUtc": "2026-05-13T15:35:47.413724+00:00"
     }
   ]
 }

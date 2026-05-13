@@ -116,6 +116,11 @@ public class IndexModel : PageModel
         StatusMessage = Result.Succeeded
             ? (Result.IsReplay ? _localizer["Home.Status.Replay"] : _localizer["Home.Status.DrawSuccess"])
             : Result.UserMessage;
+        if (Result.Succeeded)
+        {
+            DrawOperationId = Guid.NewGuid();
+        }
+
         if (!Result.Succeeded)
         {
             if (Result.StatusKey == "Draw.InvalidMealType")

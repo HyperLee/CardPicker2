@@ -11,7 +11,7 @@ namespace CardPicker2.UnitTests.Services;
 public sealed class CardLibraryServiceTests
 {
     [Fact]
-    public async Task LoadAsync_WhenJsonIsMissing_CreatesSeedDocumentWithAtLeastThreeCardsPerMealType()
+    public async Task LoadAsync_WhenJsonIsMissing_CreatesSeedDocumentWithAtLeastTenCardsPerMealType()
     {
         using var library = TempCardLibrary.Create();
         var service = CreateService(library.FilePath);
@@ -24,7 +24,7 @@ public sealed class CardLibraryServiceTests
         Assert.NotNull(result.Document);
         Assert.All(Enum.GetValues<MealType>(), mealType =>
         {
-            Assert.True(result.Document.Cards.Count(card => card.MealType == mealType) >= 3);
+            Assert.True(result.Document.Cards.Count(card => card.MealType == mealType) >= 10);
         });
     }
 

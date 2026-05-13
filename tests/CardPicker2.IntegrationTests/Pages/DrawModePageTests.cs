@@ -68,6 +68,42 @@ public sealed partial class DrawModePageTests : IDisposable
     }
 
     [Fact]
+    public async Task PostDraw_AfterSuccessfulDraw_RendersNewOperationIdForNextDraw()
+    {
+        var client = _factory.CreateClient();
+        var token = await _factory.GetAntiForgeryTokenAsync(client);
+        var firstOperationId = Guid.NewGuid();
+
+        var firstResponse = await client.PostAsync("/?handler=Draw", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["__RequestVerificationToken"] = token,
+            ["DrawMode"] = nameof(DrawMode.Random),
+            ["CoinInserted"] = "true",
+            ["DrawOperationId"] = firstOperationId.ToString()
+        }));
+
+        var firstHtml = WebUtility.HtmlDecode(await firstResponse.Content.ReadAsStringAsync());
+        Assert.Equal(HttpStatusCode.OK, firstResponse.StatusCode);
+        Assert.Contains("抽卡結果", firstHtml);
+
+        var nextOperationId = ExtractDrawOperationId(firstHtml);
+        Assert.NotEqual(firstOperationId, nextOperationId);
+
+        var secondResponse = await client.PostAsync("/?handler=Draw", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["__RequestVerificationToken"] = token,
+            ["DrawMode"] = nameof(DrawMode.Random),
+            ["CoinInserted"] = "true",
+            ["DrawOperationId"] = nextOperationId.ToString()
+        }));
+
+        var secondHtml = WebUtility.HtmlDecode(await secondResponse.Content.ReadAsStringAsync());
+        Assert.Equal(HttpStatusCode.OK, secondResponse.StatusCode);
+        Assert.Contains("抽卡結果", secondHtml);
+        Assert.DoesNotContain("已重顯同一次抽卡結果。", secondHtml);
+    }
+
+    [Fact]
     public async Task PostDraw_WithoutAntiForgeryToken_ReturnsBadRequest()
     {
         var client = _factory.CreateClient();
@@ -102,4 +138,11 @@ public sealed partial class DrawModePageTests : IDisposable
 
     [GeneratedRegex("name=\"drawOperationId\"[^>]*value=\"(?<operationId>[0-9a-fA-F-]{36})\"")]
     private static partial Regex DrawOperationIdRegex();
+
+    private static Guid ExtractDrawOperationId(string html)
+    {
+        var match = DrawOperationIdRegex().Match(html);
+        Assert.True(match.Success, "Draw operation id should be present.");
+        return Guid.Parse(match.Groups["operationId"].Value);
+    }
 }
