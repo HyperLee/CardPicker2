@@ -17,10 +17,10 @@
 
 **目的**: 確認目前專案可還原與建置，並建立後續測試可重用的資料與 WebApplicationFactory 輔助工具。
 
-- [ ] T001 執行 `dotnet restore CardPicker2.sln`，確認 `CardPicker2.sln` 目前可還原。
-- [ ] T002 執行 `dotnet build CardPicker2.sln`，記錄 `CardPicker2.sln` 實作前 build baseline。
-- [ ] T003 [P] 建立 draw feature 單元測試資料建構器於 `tests/CardPicker2.UnitTests/Services/DrawFeatureTestData.cs`，提供 active/deleted localized cards、schema v3 documents、draw history records 與 deterministic card IDs。
-- [ ] T004 [P] 建立 draw feature 整合測試 factory 於 `tests/CardPicker2.IntegrationTests/Infrastructure/DrawFeatureWebApplicationFactory.cs`，支援 temp `cards.json`、culture cookie、Anti-Forgery token 與 production environment 切換。
+- [X] T001 執行 `dotnet restore CardPicker2.sln`，確認 `CardPicker2.sln` 目前可還原。
+- [X] T002 執行 `dotnet build CardPicker2.sln`，記錄 `CardPicker2.sln` 實作前 build baseline。
+- [X] T003 [P] 建立 draw feature 單元測試資料建構器於 `tests/CardPicker2.UnitTests/Services/DrawFeatureTestData.cs`，提供 active/deleted localized cards、schema v3 documents、draw history records 與 deterministic card IDs。
+- [X] T004 [P] 建立 draw feature 整合測試 factory 於 `tests/CardPicker2.IntegrationTests/Infrastructure/DrawFeatureWebApplicationFactory.cs`，支援 temp `cards.json`、culture cookie、Anti-Forgery token 與 production environment 切換。
 
 ---
 
