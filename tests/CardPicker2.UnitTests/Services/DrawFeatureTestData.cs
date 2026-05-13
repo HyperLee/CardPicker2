@@ -10,7 +10,11 @@ public static class DrawFeatureTestData
     public static readonly Guid BreakfastCardId = Guid.Parse("11111111-1111-1111-1111-111111111111");
     public static readonly Guid SecondBreakfastCardId = Guid.Parse("11111111-1111-1111-1111-111111111112");
     public static readonly Guid LunchCardId = Guid.Parse("22222222-2222-2222-2222-222222222221");
+    public static readonly Guid LowPriceLunchCardId = Guid.Parse("22222222-2222-2222-2222-222222222222");
+    public static readonly Guid VegetarianLunchCardId = Guid.Parse("22222222-2222-2222-2222-222222222223");
     public static readonly Guid DinnerCardId = Guid.Parse("33333333-3333-3333-3333-333333333331");
+    public static readonly Guid SpicyDinnerCardId = Guid.Parse("33333333-3333-3333-3333-333333333332");
+    public static readonly Guid MetadataMissingDinnerCardId = Guid.Parse("33333333-3333-3333-3333-333333333333");
     public static readonly Guid DeletedCardId = Guid.Parse("44444444-4444-4444-4444-444444444441");
     public static readonly Guid FirstOperationId = Guid.Parse("55555555-5555-5555-5555-555555555551");
     public static readonly Guid ReplayOperationId = Guid.Parse("55555555-5555-5555-5555-555555555552");
@@ -54,6 +58,18 @@ public static class DrawFeatureTestData
         };
     }
 
+    public static object SchemaV4Document(
+        IReadOnlyList<object>? cards = null,
+        IReadOnlyList<object>? drawHistory = null)
+    {
+        return new
+        {
+            schemaVersion = 4,
+            cards = cards ?? SchemaV4Cards(),
+            drawHistory = drawHistory ?? Array.Empty<object>()
+        };
+    }
+
     public static IReadOnlyList<object> SchemaV3Cards()
     {
         return new[]
@@ -63,6 +79,107 @@ public static class DrawFeatureTestData
             SchemaV3Card(LunchCardId, "Lunch", "Active", "牛肉麵", "Beef Noodle Soup"),
             SchemaV3Card(DinnerCardId, "Dinner", "Active", "番茄燉飯", "Tomato Risotto"),
             SchemaV3Card(DeletedCardId, "Dinner", "Deleted", "炙燒飯糰", "Seared Rice Ball", deletedAtUtc: KnownTimestamp())
+        };
+    }
+
+    public static IReadOnlyList<object> SchemaV4Cards()
+    {
+        return new[]
+        {
+            SchemaV4Card(
+                BreakfastCardId,
+                "Breakfast",
+                "Active",
+                "鮪魚蛋餅",
+                "Tuna Egg Crepe",
+                CompleteDecisionMetadata(
+                    tags: new[] { "早餐", "蛋餅", "快速" },
+                    priceRange: "Low",
+                    preparationTimeRange: "Quick",
+                    dietaryPreferences: new[] { "TakeoutFriendly" },
+                    spiceLevel: "None")),
+            SchemaV4Card(
+                SecondBreakfastCardId,
+                "Breakfast",
+                "Active",
+                "鹹粥小菜",
+                "Savory Congee",
+                PartialDecisionMetadata(tags: new[] { "清淡", "粥品" }, preparationTimeRange: "Standard")),
+            SchemaV4Card(
+                LunchCardId,
+                "Lunch",
+                "Active",
+                "牛肉麵",
+                "Beef Noodle Soup",
+                CompleteDecisionMetadata(
+                    tags: new[] { "麵食", "熱湯" },
+                    priceRange: "Medium",
+                    preparationTimeRange: "Standard",
+                    dietaryPreferences: new[] { "HeavyFlavor" },
+                    spiceLevel: "Mild")),
+            SchemaV4Card(
+                LowPriceLunchCardId,
+                "Lunch",
+                "Active",
+                "滷肉飯便當",
+                "Braised Pork Rice Bento",
+                CompleteDecisionMetadata(
+                    tags: new[] { "便當", "快速", "外帶" },
+                    priceRange: "Low",
+                    preparationTimeRange: "Quick",
+                    dietaryPreferences: new[] { "TakeoutFriendly", "HeavyFlavor" },
+                    spiceLevel: "None")),
+            SchemaV4Card(
+                VegetarianLunchCardId,
+                "Lunch",
+                "Active",
+                "菇菇蔬食便當",
+                "Mushroom Vegetable Bento",
+                CompleteDecisionMetadata(
+                    tags: new[] { "蔬食", "便當", "清淡" },
+                    priceRange: "Medium",
+                    preparationTimeRange: "Quick",
+                    dietaryPreferences: new[] { "Vegetarian", "Light", "TakeoutFriendly" },
+                    spiceLevel: "None")),
+            SchemaV4Card(
+                DinnerCardId,
+                "Dinner",
+                "Active",
+                "番茄燉飯",
+                "Tomato Risotto",
+                PartialDecisionMetadata(priceRange: "High", dietaryPreferences: new[] { "Vegetarian" })),
+            SchemaV4Card(
+                SpicyDinnerCardId,
+                "Dinner",
+                "Active",
+                "麻辣乾拌麵",
+                "Spicy Tossed Noodles",
+                CompleteDecisionMetadata(
+                    tags: new[] { "麵食", "重口味", "辣" },
+                    priceRange: "Low",
+                    preparationTimeRange: "Quick",
+                    dietaryPreferences: new[] { "HeavyFlavor" },
+                    spiceLevel: "Hot")),
+            SchemaV4Card(
+                MetadataMissingDinnerCardId,
+                "Dinner",
+                "Active",
+                "家常炒飯",
+                "Home-Style Fried Rice",
+                decisionMetadata: null),
+            SchemaV4Card(
+                DeletedCardId,
+                "Dinner",
+                "Deleted",
+                "炙燒飯糰",
+                "Seared Rice Ball",
+                CompleteDecisionMetadata(
+                    tags: new[] { "飯糰", "外帶" },
+                    priceRange: "Low",
+                    preparationTimeRange: "Quick",
+                    dietaryPreferences: new[] { "TakeoutFriendly" },
+                    spiceLevel: "None"),
+                deletedAtUtc: KnownTimestamp())
         };
     }
 
@@ -94,6 +211,82 @@ public static class DrawFeatureTestData
                 }
             }
         };
+    }
+
+    public static object SchemaV4Card(
+        Guid id,
+        string mealType,
+        string status,
+        string zhTwName,
+        string enUsName,
+        object? decisionMetadata,
+        DateTimeOffset? deletedAtUtc = null)
+    {
+        return new
+        {
+            id,
+            mealType,
+            status,
+            deletedAtUtc,
+            localizations = new Dictionary<string, object>
+            {
+                [SupportedLanguage.ZhTw.CultureName] = new
+                {
+                    name = zhTwName,
+                    description = $"{zhTwName} 描述"
+                },
+                [SupportedLanguage.EnUs.CultureName] = new
+                {
+                    name = enUsName,
+                    description = $"{enUsName} description"
+                }
+            },
+            decisionMetadata
+        };
+    }
+
+    public static object CompleteDecisionMetadata(
+        IReadOnlyList<string>? tags = null,
+        string priceRange = "Low",
+        string preparationTimeRange = "Quick",
+        IReadOnlyList<string>? dietaryPreferences = null,
+        string spiceLevel = "None")
+    {
+        return new
+        {
+            tags = tags ?? new[] { "快速", "外帶" },
+            priceRange,
+            preparationTimeRange,
+            dietaryPreferences = dietaryPreferences ?? new[] { "TakeoutFriendly" },
+            spiceLevel
+        };
+    }
+
+    public static object PartialDecisionMetadata(
+        IReadOnlyList<string>? tags = null,
+        string? priceRange = null,
+        string? preparationTimeRange = null,
+        IReadOnlyList<string>? dietaryPreferences = null,
+        string? spiceLevel = null)
+    {
+        return new
+        {
+            tags = tags ?? Array.Empty<string>(),
+            priceRange,
+            preparationTimeRange,
+            dietaryPreferences = dietaryPreferences ?? Array.Empty<string>(),
+            spiceLevel
+        };
+    }
+
+    public static object DecisionMetadataWithDuplicateAndBlankTags()
+    {
+        return CompleteDecisionMetadata(tags: new[] { "  便當 ", "便當", "Bento", "bento", "   " });
+    }
+
+    public static object DecisionMetadataWithInvalidEnum()
+    {
+        return CompleteDecisionMetadata(priceRange: "Premium", spiceLevel: "Extreme");
     }
 
     public static object DrawHistory(

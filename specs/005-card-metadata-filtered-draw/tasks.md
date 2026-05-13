@@ -17,11 +17,11 @@
 
 **目的**: 確認目前專案可還原與建置，並補齊 metadata/filter 測試會共用的 fixture 與 assertion helper。
 
-- [ ] T001 執行 `dotnet restore CardPicker2.sln`，確認 `CardPicker2.sln` 目前可還原。
-- [ ] T002 執行 `dotnet build CardPicker2.sln`，記錄 `CardPicker2.sln` 實作前 build baseline。
-- [ ] T003 [P] 擴充 metadata 測試資料建構器於 `tests/CardPicker2.UnitTests/Services/DrawFeatureTestData.cs`，加入 schema v4 cards、完整/缺漏 `decisionMetadata`、tags、price/time/diet/spice 與 deterministic card IDs。
-- [ ] T004 [P] 擴充整合測試 factory 於 `tests/CardPicker2.IntegrationTests/Infrastructure/DrawFeatureWebApplicationFactory.cs`，支援 filtered draw/filter query payload、culture cookie、Anti-Forgery token 與 production environment 切換。
-- [ ] T005 [P] 建立 metadata filter HTML assertion helper 於 `tests/CardPicker2.IntegrationTests/Pages/MetadataFilterHtmlAssertions.cs`，支援首頁、卡牌庫、details 與 create/edit 頁面的 filter controls、chips、metadata badges 與 localized empty state 驗證。
+- [X] T001 執行 `dotnet restore CardPicker2.sln`，確認 `CardPicker2.sln` 目前可還原。
+- [X] T002 執行 `dotnet build CardPicker2.sln`，記錄 `CardPicker2.sln` 實作前 build baseline。
+- [X] T003 [P] 擴充 metadata 測試資料建構器於 `tests/CardPicker2.UnitTests/Services/DrawFeatureTestData.cs`，加入 schema v4 cards、完整/缺漏 `decisionMetadata`、tags、price/time/diet/spice 與 deterministic card IDs。
+- [X] T004 [P] 擴充整合測試 factory 於 `tests/CardPicker2.IntegrationTests/Infrastructure/DrawFeatureWebApplicationFactory.cs`，支援 filtered draw/filter query payload、culture cookie、Anti-Forgery token 與 production environment 切換。
+- [X] T005 [P] 建立 metadata filter HTML assertion helper 於 `tests/CardPicker2.IntegrationTests/Pages/MetadataFilterHtmlAssertions.cs`，支援首頁、卡牌庫、details 與 create/edit 頁面的 filter controls、chips、metadata badges 與 localized empty state 驗證。
 
 ---
 
