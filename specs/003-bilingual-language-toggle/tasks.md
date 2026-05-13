@@ -15,11 +15,11 @@
 
 **Purpose**: 建立 localization resource 與測試輔助檔案，供所有故事共用。
 
-- [ ] T001 [P] 建立 shared localization marker class `CardPicker2/Resources/SharedResource.cs`
-- [ ] T002 [P] 建立繁體中文 shared resource keys `CardPicker2/Resources/SharedResource.zh-TW.resx`
-- [ ] T003 [P] 建立英文 shared resource keys 並與繁中 key 完全對齊 `CardPicker2/Resources/SharedResource.en-US.resx`
-- [ ] T004 [P] 建立語系頁面 HTML 斷言輔助工具 `tests/CardPicker2.IntegrationTests/Pages/LanguageHtmlAssertions.cs`
-- [ ] T005 [P] 建立 ASP.NET Core culture cookie 測試輔助工具 `tests/CardPicker2.IntegrationTests/Infrastructure/LanguageCookieTestExtensions.cs`
+- [X] T001 [P] 建立 shared localization marker class `CardPicker2/Resources/SharedResource.cs`
+- [X] T002 [P] 建立繁體中文 shared resource keys `CardPicker2/Resources/SharedResource.zh-TW.resx`
+- [X] T003 [P] 建立英文 shared resource keys 並與繁中 key 完全對齊 `CardPicker2/Resources/SharedResource.en-US.resx`
+- [X] T004 [P] 建立語系頁面 HTML 斷言輔助工具 `tests/CardPicker2.IntegrationTests/Pages/LanguageHtmlAssertions.cs`
+- [X] T005 [P] 建立 ASP.NET Core culture cookie 測試輔助工具 `tests/CardPicker2.IntegrationTests/Infrastructure/LanguageCookieTestExtensions.cs`
 
 ---
 
