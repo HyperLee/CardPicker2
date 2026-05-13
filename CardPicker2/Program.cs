@@ -51,6 +51,7 @@ public class Program
             options.LibraryFilePath = Path.Combine(builder.Environment.ContentRootPath, "data", "cards.json");
         });
         builder.Services.AddSingleton<DuplicateCardDetector>();
+        builder.Services.AddSingleton<CardLibraryFileCoordinator>();
         builder.Services.AddSingleton<LanguagePreferenceService>();
         builder.Services.AddSingleton<MealCardLocalizationService>();
         builder.Services.AddSingleton<IMealCardRandomizer, MealCardRandomizer>();

@@ -39,10 +39,30 @@ public sealed class MealCard
     /// <param name="mealType">The meal period this card belongs to.</param>
     /// <param name="localizations">The localized card content keyed by supported culture name.</param>
     public MealCard(Guid id, MealType mealType, IDictionary<string, MealCardLocalizedContent> localizations)
+        : this(id, mealType, localizations, CardStatus.Active, deletedAtUtc: null)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a card with explicit localized content and lifecycle state.
+    /// </summary>
+    /// <param name="id">The immutable system-generated card identifier.</param>
+    /// <param name="mealType">The meal period this card belongs to.</param>
+    /// <param name="localizations">The localized card content keyed by supported culture name.</param>
+    /// <param name="status">The lifecycle status.</param>
+    /// <param name="deletedAtUtc">The UTC deletion time when the card is retained as deleted.</param>
+    public MealCard(
+        Guid id,
+        MealType mealType,
+        IDictionary<string, MealCardLocalizedContent> localizations,
+        CardStatus status,
+        DateTimeOffset? deletedAtUtc)
     {
         Id = id;
         MealType = mealType;
         Localizations = new Dictionary<string, MealCardLocalizedContent>(localizations, StringComparer.OrdinalIgnoreCase);
+        Status = status;
+        DeletedAtUtc = deletedAtUtc;
     }
 
     /// <summary>
@@ -59,6 +79,28 @@ public sealed class MealCard
     /// Gets or initializes localized content keyed by supported culture name.
     /// </summary>
     public Dictionary<string, MealCardLocalizedContent> Localizations { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Gets or initializes whether the card is active or retained only for history.
+    /// </summary>
+    public CardStatus Status { get; init; } = CardStatus.Active;
+
+    /// <summary>
+    /// Gets or initializes the UTC deletion time for retained deleted cards.
+    /// </summary>
+    public DateTimeOffset? DeletedAtUtc { get; init; }
+
+    /// <summary>
+    /// Gets a value indicating whether the card can be browsed, edited, deleted, and drawn.
+    /// </summary>
+    [JsonIgnore]
+    public bool IsActive => Status == CardStatus.Active;
+
+    /// <summary>
+    /// Gets a value indicating whether the card is retained only for draw history.
+    /// </summary>
+    [JsonIgnore]
+    public bool IsDeleted => Status == CardStatus.Deleted;
 
     /// <summary>
     /// Gets the Traditional Chinese meal name for legacy callers.
@@ -135,7 +177,9 @@ public sealed class MealCard
             Localizations.ToDictionary(
                 pair => pair.Key,
                 pair => pair.Value.Normalize(),
-                StringComparer.OrdinalIgnoreCase));
+                StringComparer.OrdinalIgnoreCase),
+            Status,
+            DeletedAtUtc);
     }
 }
 

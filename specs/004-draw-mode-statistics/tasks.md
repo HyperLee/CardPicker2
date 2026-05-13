@@ -30,20 +30,20 @@
 
 **關鍵限制**: 未完成本階段前，不要開始 US1/US2/US3 的實作任務。
 
-- [ ] T005 [P] 新增 schema v3/migration 失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibrarySchemaVersionTests.cs`，覆蓋 v1/v2 in-memory migration、v3 validation、unsupported schema block、corrupted JSON preserve、missing file seed v3。
-- [ ] T006 [P] 新增檔案協調失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryFileCoordinatorTests.cs`，覆蓋並行 read-modify-write 序列化與 write failure 不覆寫原檔。
-- [ ] T007 [P] 建立抽卡模式模型於 `CardPicker2/Models/DrawMode.cs`，定義 `Normal` 與 `Random` 並補 XML 文件註解含 `<example>`/`<code>`。
-- [ ] T008 [P] 建立卡牌狀態模型於 `CardPicker2/Models/CardStatus.cs`，定義 `Active` 與 `Deleted` 並補 XML 文件註解含 `<example>`/`<code>`。
-- [ ] T009 [P] 建立抽卡操作輸入模型於 `CardPicker2/Models/DrawOperation.cs`，包含 `OperationId`、`Mode`、`MealType`、`CoinInserted`、`RequestedLanguage` 與驗證輔助屬性。
-- [ ] T010 [P] 建立成功抽卡歷史模型於 `CardPicker2/Models/DrawHistoryRecord.cs`，包含 immutable history ID、operation ID、draw mode、card ID、meal type at draw 與 UTC success time。
-- [ ] T011 [P] 建立單一卡牌統計列模型於 `CardPicker2/Models/CardDrawStatistic.cs`，包含 card ID、display name、meal type display、status、draw count、historical probability 與 display string。
-- [ ] T012 [P] 建立統計摘要模型於 `CardPicker2/Models/DrawStatisticsSummary.cs`，包含 total successful draws、rows、has history 與 stable status key。
-- [ ] T013 更新 schema 根文件於 `CardPicker2/Models/CardLibraryDocument.cs`，將 `CurrentSchemaVersion` 升級為 3 並新增 `DrawHistory` 集合，同時保留 legacy v1 與 bilingual v2 migration 常數。
-- [ ] T014 建立同 process 檔案協調器於 `CardPicker2/Services/CardLibraryFileCoordinator.cs`，用 `SemaphoreSlim` 包住 JSON read-modify-write critical section。
-- [ ] T015 更新種子資料建立於 `CardPicker2/Services/SeedMealCards.cs`，讓 missing file 建立 schema v3、每餐別至少 3 張 active bilingual cards，且 `drawHistory` 為空。
-- [ ] T016 更新 library load/write/validation 於 `CardPicker2/Services/CardLibraryService.cs`，支援 schema v1/v2/v3 migration、active/deleted 狀態驗證、history operation ID uniqueness、history card reference validation、unsupported/corrupted block 與原檔保留。
-- [ ] T017 更新 DI 註冊於 `CardPicker2/Program.cs`，註冊 `CardLibraryFileCoordinator` 與後續 draw/statistics 服務需要的 singleton/scoped lifetime。
-- [ ] T018 執行 `dotnet test CardPicker2.sln --filter "CardLibrarySchemaVersion|CardLibraryFileCoordinator"`，確認 `CardPicker2.sln` 的 foundation 測試從失敗轉為通過。
+- [X] T005 [P] 新增 schema v3/migration 失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibrarySchemaVersionTests.cs`，覆蓋 v1/v2 in-memory migration、v3 validation、unsupported schema block、corrupted JSON preserve、missing file seed v3。
+- [X] T006 [P] 新增檔案協調失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryFileCoordinatorTests.cs`，覆蓋並行 read-modify-write 序列化與 write failure 不覆寫原檔。
+- [X] T007 [P] 建立抽卡模式模型於 `CardPicker2/Models/DrawMode.cs`，定義 `Normal` 與 `Random` 並補 XML 文件註解含 `<example>`/`<code>`。
+- [X] T008 [P] 建立卡牌狀態模型於 `CardPicker2/Models/CardStatus.cs`，定義 `Active` 與 `Deleted` 並補 XML 文件註解含 `<example>`/`<code>`。
+- [X] T009 [P] 建立抽卡操作輸入模型於 `CardPicker2/Models/DrawOperation.cs`，包含 `OperationId`、`Mode`、`MealType`、`CoinInserted`、`RequestedLanguage` 與驗證輔助屬性。
+- [X] T010 [P] 建立成功抽卡歷史模型於 `CardPicker2/Models/DrawHistoryRecord.cs`，包含 immutable history ID、operation ID、draw mode、card ID、meal type at draw 與 UTC success time。
+- [X] T011 [P] 建立單一卡牌統計列模型於 `CardPicker2/Models/CardDrawStatistic.cs`，包含 card ID、display name、meal type display、status、draw count、historical probability 與 display string。
+- [X] T012 [P] 建立統計摘要模型於 `CardPicker2/Models/DrawStatisticsSummary.cs`，包含 total successful draws、rows、has history 與 stable status key。
+- [X] T013 更新 schema 根文件於 `CardPicker2/Models/CardLibraryDocument.cs`，將 `CurrentSchemaVersion` 升級為 3 並新增 `DrawHistory` 集合，同時保留 legacy v1 與 bilingual v2 migration 常數。
+- [X] T014 建立同 process 檔案協調器於 `CardPicker2/Services/CardLibraryFileCoordinator.cs`，用 `SemaphoreSlim` 包住 JSON read-modify-write critical section。
+- [X] T015 更新種子資料建立於 `CardPicker2/Services/SeedMealCards.cs`，讓 missing file 建立 schema v3、每餐別至少 3 張 active bilingual cards，且 `drawHistory` 為空。
+- [X] T016 更新 library load/write/validation 於 `CardPicker2/Services/CardLibraryService.cs`，支援 schema v1/v2/v3 migration、active/deleted 狀態驗證、history operation ID uniqueness、history card reference validation、unsupported/corrupted block 與原檔保留。
+- [X] T017 更新 DI 註冊於 `CardPicker2/Program.cs`，註冊 `CardLibraryFileCoordinator` 與後續 draw/statistics 服務需要的 singleton/scoped lifetime。
+- [X] T018 執行 `dotnet test CardPicker2.sln --filter "CardLibrarySchemaVersion|CardLibraryFileCoordinator"`，確認 `CardPicker2.sln` 的 foundation 測試從失敗轉為通過。
 
 **檢查點**: schema v3 與檔案一致性 foundation 完成，user story implementation 可開始。
 

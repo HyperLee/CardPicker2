@@ -40,14 +40,15 @@ public sealed class CardLibraryLocalizationTests
     }
 
     [Fact]
-    public async Task LoadAsync_WhenJsonIsMissing_CreatesSchemaV2SeedWithCompleteBilingualContent()
+    public async Task LoadAsync_WhenJsonIsMissing_CreatesSchemaV3SeedWithCompleteBilingualContent()
     {
         using var library = TempCardLibrary.Create();
         var service = CreateService(library.FilePath);
 
         var result = await service.LoadAsync();
 
-        Assert.Equal(2, result.Document!.SchemaVersion);
+        Assert.Equal(3, result.Document!.SchemaVersion);
+        Assert.Empty(result.Document.DrawHistory);
         Assert.All(result.Document.Cards, card =>
         {
             Assert.True(card.HasCompleteContent(SupportedLanguage.ZhTw));

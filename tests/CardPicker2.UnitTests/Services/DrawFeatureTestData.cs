@@ -37,7 +37,7 @@ public static class DrawFeatureTestData
     {
         return new CardLibraryDocument
         {
-            SchemaVersion = CardLibraryDocument.CurrentSchemaVersion,
+            SchemaVersion = CardLibraryDocument.BilingualSchemaVersion,
             Cards = ActiveLocalizedCards()
         };
     }

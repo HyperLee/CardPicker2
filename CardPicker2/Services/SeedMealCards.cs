@@ -86,7 +86,8 @@ public static class SeedMealCards
         return new CardLibraryDocument
         {
             SchemaVersion = CardLibraryDocument.CurrentSchemaVersion,
-            Cards = All
+            Cards = All,
+            DrawHistory = Array.Empty<DrawHistoryRecord>()
         };
     }
 
