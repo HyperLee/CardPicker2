@@ -90,6 +90,11 @@ public sealed class EditModel : PageModel
                 ? card.GetContent(SupportedLanguage.EnUs).Description
                 : null,
             MealType = card.MealType,
+            TagsInput = string.Join(", ", card.DecisionMetadata?.Normalize().Tags ?? Array.Empty<string>()),
+            PriceRange = card.DecisionMetadata?.Normalize().PriceRange,
+            PreparationTimeRange = card.DecisionMetadata?.Normalize().PreparationTimeRange,
+            DietaryPreferences = card.DecisionMetadata?.Normalize().DietaryPreferences.ToList() ?? new List<DietaryPreference>(),
+            SpiceLevel = card.DecisionMetadata?.Normalize().SpiceLevel
         };
         MissingEnglishTranslation = !card.HasCompleteContent(SupportedLanguage.EnUs);
     }

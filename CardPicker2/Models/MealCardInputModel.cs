@@ -53,6 +53,36 @@ public sealed class MealCardInputModel : IValidatableObject
     public MealType? MealType { get; set; }
 
     /// <summary>
+    /// Gets or sets comma-separated decision tags.
+    /// </summary>
+    [Display(Name = "標籤")]
+    public string? TagsInput { get; set; }
+
+    /// <summary>
+    /// Gets or sets the optional price range.
+    /// </summary>
+    [Display(Name = "價格區間")]
+    public PriceRange? PriceRange { get; set; }
+
+    /// <summary>
+    /// Gets or sets the optional preparation time range.
+    /// </summary>
+    [Display(Name = "準備時間")]
+    public PreparationTimeRange? PreparationTimeRange { get; set; }
+
+    /// <summary>
+    /// Gets or sets the selected dietary preferences.
+    /// </summary>
+    [Display(Name = "飲食偏好")]
+    public List<DietaryPreference> DietaryPreferences { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the optional spice level.
+    /// </summary>
+    [Display(Name = "辣度")]
+    public SpiceLevel? SpiceLevel { get; set; }
+
+    /// <summary>
     /// Gets or sets the legacy description alias. Setting this value fills both language descriptions for backward compatibility.
     /// </summary>
     [Display(Name = "描述")]
@@ -78,7 +108,15 @@ public sealed class MealCardInputModel : IValidatableObject
             DescriptionZhTw = DescriptionZhTw?.Trim(),
             NameEnUs = NameEnUs?.Trim(),
             DescriptionEnUs = DescriptionEnUs?.Trim(),
-            MealType = MealType
+            MealType = MealType,
+            TagsInput = TagsInput?.Trim(),
+            PriceRange = PriceRange,
+            PreparationTimeRange = PreparationTimeRange,
+            DietaryPreferences = DietaryPreferences
+                .Distinct()
+                .OrderBy(preference => preference)
+                .ToList(),
+            SpiceLevel = SpiceLevel
         };
     }
 
@@ -94,6 +132,31 @@ public sealed class MealCardInputModel : IValidatableObject
             [SupportedLanguage.ZhTw.CultureName] = new(normalized.NameZhTw ?? string.Empty, normalized.DescriptionZhTw ?? string.Empty),
             [SupportedLanguage.EnUs.CultureName] = new(normalized.NameEnUs ?? string.Empty, normalized.DescriptionEnUs ?? string.Empty)
         };
+    }
+
+    /// <summary>
+    /// Converts optional form metadata into a normalized decision metadata value.
+    /// </summary>
+    /// <returns>Normalized metadata, or <see langword="null"/> when no metadata was supplied.</returns>
+    public MealCardDecisionMetadata? ToDecisionMetadata()
+    {
+        var normalized = Normalize();
+        var metadata = new MealCardDecisionMetadata
+        {
+            Tags = SplitTags(normalized.TagsInput),
+            PriceRange = normalized.PriceRange,
+            PreparationTimeRange = normalized.PreparationTimeRange,
+            DietaryPreferences = normalized.DietaryPreferences,
+            SpiceLevel = normalized.SpiceLevel
+        }.Normalize();
+
+        return metadata.Tags.Count == 0 &&
+            metadata.PriceRange is null &&
+            metadata.PreparationTimeRange is null &&
+            metadata.DietaryPreferences.Count == 0 &&
+            metadata.SpiceLevel is null
+                ? null
+                : metadata;
     }
 
     /// <inheritdoc />
@@ -127,6 +190,27 @@ public sealed class MealCardInputModel : IValidatableObject
         {
             yield return new ValidationResult(Localize("餐別必須是早餐、午餐或晚餐。", "Meal type must be breakfast, lunch, or dinner."), new[] { nameof(MealType) });
         }
+
+        if (PriceRange is PriceRange priceRange && !Enum.IsDefined(typeof(PriceRange), priceRange))
+        {
+            yield return new ValidationResult(Localize("決策資訊選項不支援。", "That decision metadata option is not supported."), new[] { nameof(PriceRange) });
+        }
+
+        if (PreparationTimeRange is PreparationTimeRange preparationTimeRange &&
+            !Enum.IsDefined(typeof(PreparationTimeRange), preparationTimeRange))
+        {
+            yield return new ValidationResult(Localize("決策資訊選項不支援。", "That decision metadata option is not supported."), new[] { nameof(PreparationTimeRange) });
+        }
+
+        if (SpiceLevel is SpiceLevel spiceLevel && !Enum.IsDefined(typeof(SpiceLevel), spiceLevel))
+        {
+            yield return new ValidationResult(Localize("決策資訊選項不支援。", "That decision metadata option is not supported."), new[] { nameof(SpiceLevel) });
+        }
+
+        if (DietaryPreferences.Any(preference => !Enum.IsDefined(typeof(DietaryPreference), preference)))
+        {
+            yield return new ValidationResult(Localize("決策資訊選項不支援。", "That decision metadata option is not supported."), new[] { nameof(DietaryPreferences) });
+        }
     }
 
     private static string Localize(string zhTw, string enUs)
@@ -134,5 +218,18 @@ public sealed class MealCardInputModel : IValidatableObject
         return string.Equals(CultureInfo.CurrentUICulture.Name, SupportedLanguage.EnUs.CultureName, StringComparison.OrdinalIgnoreCase)
             ? enUs
             : zhTw;
+    }
+
+    private static IReadOnlyList<string> SplitTags(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return Array.Empty<string>();
+        }
+
+        return value
+            .Split(new[] { ',', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Where(tag => !string.IsNullOrWhiteSpace(tag))
+            .ToList();
     }
 }

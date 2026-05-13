@@ -116,4 +116,32 @@ public sealed class DuplicateCardDetectorTests
 
         Assert.True(detector.HasDuplicate(existing, input));
     }
+
+    [Fact]
+    public void HasDuplicate_IgnoresDecisionMetadataDifferences()
+    {
+        var existing = new[]
+        {
+            new MealCard(Guid.NewGuid(), "鮪魚蛋餅", MealType.Breakfast, "加一杯無糖豆漿")
+            {
+                DecisionMetadata = new MealCardDecisionMetadata
+                {
+                    Tags = new[] { "早餐" },
+                    PriceRange = PriceRange.Low
+                }
+            }
+        };
+        var input = new MealCardInputModel
+        {
+            Name = "鮪魚蛋餅",
+            MealType = MealType.Breakfast,
+            Description = "加一杯無糖豆漿",
+            TagsInput = "高價位",
+            PriceRange = PriceRange.High
+        };
+
+        var detector = new DuplicateCardDetector();
+
+        Assert.True(detector.HasDuplicate(existing, input));
+    }
 }

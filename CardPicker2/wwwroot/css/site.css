@@ -732,6 +732,30 @@ body .footer a {
   gap: 1rem;
 }
 
+.metadata-form-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cp-border-soft);
+}
+
+.metadata-form-section legend {
+  float: none;
+  width: auto;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.metadata-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.metadata-summary {
+  margin: 1rem 0;
+}
+
 .delete-panel {
   margin-top: 1.5rem;
   padding: 1rem;
@@ -831,7 +855,8 @@ body .footer a {
 
   .search-panel,
   .meal-card-item,
-  .bilingual-card-fields {
+  .bilingual-card-fields,
+  .metadata-form-grid {
     grid-template-columns: 1fr;
   }
 

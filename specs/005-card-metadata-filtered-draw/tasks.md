@@ -138,28 +138,28 @@
 
 > 先撰寫這些測試，確認在實作前失敗。
 
-- [ ] T062 [P] [US3] 擴充輸入模型失敗測試於 `tests/CardPicker2.UnitTests/Models/MealCardInputModelTests.cs`，覆蓋 metadata optional、invalid enum rejection、tag normalization、validation message localization。
-- [ ] T063 [P] [US3] 新增 metadata persistence 失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryMetadataPersistenceTests.cs`，覆蓋 create/edit metadata atomic write、schema v4 persist、restart reload、metadata update 保留 card ID/history/statistics/status。
-- [ ] T064 [P] [US3] 新增 card metadata management 頁面失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/CardMetadataManagementPageTests.cs`，覆蓋 create/edit/details metadata fields、not-set display、validation failure 保留輸入與 Anti-Forgery。
-- [ ] T065 [P] [US3] 擴充 duplicate detector 失敗測試於 `tests/CardPicker2.UnitTests/Services/DuplicateCardDetectorTests.cs`，確認 duplicate detection 只依 bilingual name、description、meal type，不因 metadata 不同而放寬或收緊。
-- [ ] T066 [P] [US3] 新增舊卡 metadata 缺漏相容失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryMetadataPersistenceTests.cs`，覆蓋 schema v3 舊卡未套用 filters 可搜尋/抽卡，套用缺漏欄位 filter 時不符合。
-- [ ] T067 [US3] 執行 `dotnet test CardPicker2.sln --filter "MealCardInputModel|CardLibraryMetadataPersistence|CardMetadataManagementPage|DuplicateCardDetector"`，確認 `CardPicker2.sln` 的 US3 新測試在實作前失敗。
+- [X] T062 [P] [US3] 擴充輸入模型失敗測試於 `tests/CardPicker2.UnitTests/Models/MealCardInputModelTests.cs`，覆蓋 metadata optional、invalid enum rejection、tag normalization、validation message localization。
+- [X] T063 [P] [US3] 新增 metadata persistence 失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryMetadataPersistenceTests.cs`，覆蓋 create/edit metadata atomic write、schema v4 persist、restart reload、metadata update 保留 card ID/history/statistics/status。
+- [X] T064 [P] [US3] 新增 card metadata management 頁面失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/CardMetadataManagementPageTests.cs`，覆蓋 create/edit/details metadata fields、not-set display、validation failure 保留輸入與 Anti-Forgery。
+- [X] T065 [P] [US3] 擴充 duplicate detector 失敗測試於 `tests/CardPicker2.UnitTests/Services/DuplicateCardDetectorTests.cs`，確認 duplicate detection 只依 bilingual name、description、meal type，不因 metadata 不同而放寬或收緊。
+- [X] T066 [P] [US3] 新增舊卡 metadata 缺漏相容失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryMetadataPersistenceTests.cs`，覆蓋 schema v3 舊卡未套用 filters 可搜尋/抽卡，套用缺漏欄位 filter 時不符合。
+- [X] T067 [US3] 執行 `dotnet test CardPicker2.sln --filter "MealCardInputModel|CardLibraryMetadataPersistence|CardMetadataManagementPage|DuplicateCardDetector"`，確認 `CardPicker2.sln` 的 US3 新測試在實作前失敗。
 
 ### 使用者故事 3 的實作
 
-- [ ] T068 [US3] 更新輸入模型於 `CardPicker2/Models/MealCardInputModel.cs`，新增 `TagsInput`、`PriceRange`、`PreparationTimeRange`、`DietaryPreferences`、`SpiceLevel`、metadata normalization 與 `ToDecisionMetadata()`。
-- [ ] T069 [US3] 更新共用卡牌表單於 `CardPicker2/Pages/Cards/_CardForm.cshtml`，加入 tags、price、time、dietary preferences、spice inputs，並保留 bilingual required fields 的 validation。
-- [ ] T070 [US3] 更新新增卡牌 PageModel 於 `CardPicker2/Pages/Cards/Create.cshtml.cs`，讓 metadata validation failure 回到 page、保留輸入、blocked state 禁用 submit。
-- [ ] T071 [US3] 更新編輯卡牌 PageModel 於 `CardPicker2/Pages/Cards/Edit.cshtml.cs`，從既有 card 載入 metadata 到 `MealCardInputModel`，且 metadata-only update 保留同一 card ID。
-- [ ] T072 [US3] 更新 create/update mutation 流程於 `CardPicker2/Services/CardLibraryService.cs`，在同一原子寫入中保存 metadata、拒絕 invalid metadata、保留 existing lifecycle/history、寫入失敗不局部修改。
-- [ ] T073 [US3] 更新重複偵測於 `CardPicker2/Services/DuplicateCardDetector.cs`，明確忽略 `DecisionMetadata`，只比對 active card 的 normalized bilingual name、description 與 meal type。
-- [ ] T074 [US3] 更新 details PageModel 於 `CardPicker2/Pages/Cards/Details.cshtml.cs`，載入 localized metadata summary 與 not-set display state。
-- [ ] T075 [US3] 更新 details Razor UI 於 `CardPicker2/Pages/Cards/Details.cshtml`，顯示 tags、price、time、diet、spice metadata summary，缺漏欄位顯示目前語系 not-set 文案。
-- [ ] T076 [P] [US3] 新增或更新繁中 card metadata 管理文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 form labels、help text、validation、details not-set 與 success/failure messages。
-- [ ] T077 [P] [US3] 新增或更新英文 card metadata 管理文案於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保 create/edit/details metadata UI 無未翻譯 key。
-- [ ] T078 [P] [US3] 更新 metadata form/detail responsive 樣式於 `CardPicker2/wwwroot/css/site.css`，確保 field groups、checkboxes、chips、badges 與 detail summary 在指定 viewport 不溢出。
-- [ ] T079 [P] [US3] 更新表單狀態保留腳本於 `CardPicker2/wwwroot/js/site.js`，讓 create/edit metadata fields 在語系或主題切換前可暫存並在成功還原後清除。
-- [ ] T080 [US3] 執行 `dotnet test CardPicker2.sln --filter "MealCardInputModel|CardLibraryMetadataPersistence|CardMetadataManagementPage|DuplicateCardDetector"`，確認 `CardPicker2.sln` 的 US3 測試通過。
+- [X] T068 [US3] 更新輸入模型於 `CardPicker2/Models/MealCardInputModel.cs`，新增 `TagsInput`、`PriceRange`、`PreparationTimeRange`、`DietaryPreferences`、`SpiceLevel`、metadata normalization 與 `ToDecisionMetadata()`。
+- [X] T069 [US3] 更新共用卡牌表單於 `CardPicker2/Pages/Cards/_CardForm.cshtml`，加入 tags、price、time、dietary preferences、spice inputs，並保留 bilingual required fields 的 validation。
+- [X] T070 [US3] 更新新增卡牌 PageModel 於 `CardPicker2/Pages/Cards/Create.cshtml.cs`，讓 metadata validation failure 回到 page、保留輸入、blocked state 禁用 submit。
+- [X] T071 [US3] 更新編輯卡牌 PageModel 於 `CardPicker2/Pages/Cards/Edit.cshtml.cs`，從既有 card 載入 metadata 到 `MealCardInputModel`，且 metadata-only update 保留同一 card ID。
+- [X] T072 [US3] 更新 create/update mutation 流程於 `CardPicker2/Services/CardLibraryService.cs`，在同一原子寫入中保存 metadata、拒絕 invalid metadata、保留 existing lifecycle/history、寫入失敗不局部修改。
+- [X] T073 [US3] 更新重複偵測於 `CardPicker2/Services/DuplicateCardDetector.cs`，明確忽略 `DecisionMetadata`，只比對 active card 的 normalized bilingual name、description 與 meal type。
+- [X] T074 [US3] 更新 details PageModel 於 `CardPicker2/Pages/Cards/Details.cshtml.cs`，載入 localized metadata summary 與 not-set display state。
+- [X] T075 [US3] 更新 details Razor UI 於 `CardPicker2/Pages/Cards/Details.cshtml`，顯示 tags、price、time、diet、spice metadata summary，缺漏欄位顯示目前語系 not-set 文案。
+- [X] T076 [P] [US3] 新增或更新繁中 card metadata 管理文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 form labels、help text、validation、details not-set 與 success/failure messages。
+- [X] T077 [P] [US3] 新增或更新英文 card metadata 管理文案於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保 create/edit/details metadata UI 無未翻譯 key。
+- [X] T078 [P] [US3] 更新 metadata form/detail responsive 樣式於 `CardPicker2/wwwroot/css/site.css`，確保 field groups、checkboxes、chips、badges 與 detail summary 在指定 viewport 不溢出。
+- [X] T079 [P] [US3] 更新表單狀態保留腳本於 `CardPicker2/wwwroot/js/site.js`，讓 create/edit metadata fields 在語系或主題切換前可暫存並在成功還原後清除。
+- [X] T080 [US3] 執行 `dotnet test CardPicker2.sln --filter "MealCardInputModel|CardLibraryMetadataPersistence|CardMetadataManagementPage|DuplicateCardDetector"`，確認 `CardPicker2.sln` 的 US3 測試通過。
 
 **檢查點**: 所有使用者故事均可獨立驗證，且 metadata 維護不破壞舊卡、history、statistics、duplicate detection 或 deleted retention。
 

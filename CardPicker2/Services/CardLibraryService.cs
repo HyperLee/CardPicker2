@@ -531,7 +531,13 @@ public sealed class CardLibraryService : ICardLibraryService
                 return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.Duplicate, "已有相同餐點名稱、餐別與描述的卡牌。");
             }
 
-            var card = new MealCard(Guid.NewGuid(), normalized.MealType!.Value, normalized.ToLocalizations());
+            var card = new MealCard(
+                Guid.NewGuid(),
+                normalized.MealType!.Value,
+                normalized.ToLocalizations(),
+                CardStatus.Active,
+                deletedAtUtc: null,
+                normalized.ToDecisionMetadata());
             var updatedDocument = new CardLibraryDocument
             {
                 SchemaVersion = CardLibraryDocument.CurrentSchemaVersion,
@@ -579,7 +585,7 @@ public sealed class CardLibraryService : ICardLibraryService
                 normalized.ToLocalizations(),
                 existing.Status,
                 existing.DeletedAtUtc,
-                existing.DecisionMetadata);
+                normalized.ToDecisionMetadata());
             var cards = loadResult.Document.Cards
                 .Select(card => card.Id == id ? updatedCard : card)
                 .ToList();

@@ -51,7 +51,8 @@ public sealed class LocalizationResourceTests
             "Home.Filters.ActiveConditions",
             "Home.Filters.Clear",
             "Home.Result.MetadataSummary",
-            "Cards.ResultCount"
+            "Cards.ResultCount",
+            "Form.Metadata.Legend"
         };
 
         foreach (var key in requiredKeys)

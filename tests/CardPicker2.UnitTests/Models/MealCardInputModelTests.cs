@@ -61,6 +61,59 @@ public sealed class MealCardInputModelTests
         Assert.Contains(results, result => result.MemberNames.Contains(nameof(MealCardInputModel.DescriptionEnUs)));
     }
 
+    [Fact]
+    public void ToDecisionMetadata_WithBlankMetadata_ReturnsNull()
+    {
+        var input = new MealCardInputModel
+        {
+            TagsInput = "  , "
+        };
+
+        Assert.Null(input.ToDecisionMetadata());
+    }
+
+    [Fact]
+    public void ToDecisionMetadata_NormalizesTagsAndSelectedOptions()
+    {
+        var input = new MealCardInputModel
+        {
+            TagsInput = "  便當, Bento, 便當 ",
+            PriceRange = PriceRange.Medium,
+            PreparationTimeRange = PreparationTimeRange.Quick,
+            DietaryPreferences = new List<DietaryPreference> { DietaryPreference.TakeoutFriendly, DietaryPreference.Vegetarian },
+            SpiceLevel = SpiceLevel.Mild
+        };
+
+        var metadata = input.ToDecisionMetadata();
+
+        Assert.NotNull(metadata);
+        Assert.Equal(new[] { "便當", "Bento" }, metadata.Tags);
+        Assert.Equal(PriceRange.Medium, metadata.PriceRange);
+        Assert.Equal(PreparationTimeRange.Quick, metadata.PreparationTimeRange);
+        Assert.Equal(new[] { DietaryPreference.Vegetarian, DietaryPreference.TakeoutFriendly }, metadata.DietaryPreferences);
+        Assert.Equal(SpiceLevel.Mild, metadata.SpiceLevel);
+    }
+
+    [Fact]
+    public void Validate_WithUnsupportedMetadataEnum_ReturnsMetadataError()
+    {
+        var input = new MealCardInputModel
+        {
+            NameZhTw = "測試餐點",
+            DescriptionZhTw = "測試描述",
+            NameEnUs = "Test Meal",
+            DescriptionEnUs = "Test description",
+            MealType = MealType.Lunch,
+            PriceRange = (PriceRange)999
+        };
+
+        var results = Validate(input);
+
+        Assert.Contains(results, result =>
+            result.MemberNames.Contains(nameof(MealCardInputModel.PriceRange)) &&
+            result.ErrorMessage?.Contains("決策資訊", StringComparison.Ordinal) == true);
+    }
+
     private static List<ValidationResult> Validate(MealCardInputModel input)
     {
         var results = new List<ValidationResult>();

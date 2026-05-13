@@ -42,3 +42,70 @@
     </select>
     <span asp-validation-for="MealType" class="text-danger"></span>
 </div>
+
+<fieldset class="metadata-form-section">
+    <legend>@Localizer["Form.Metadata.Legend"]</legend>
+    <div class="metadata-form-grid">
+        <div class="mb-3 filter-field-wide">
+            <label asp-for="TagsInput" class="form-label">@Localizer["Metadata.Label.Tags"]</label>
+            <input asp-for="TagsInput" id="TagsInput" class="form-control" placeholder="@Localizer["Home.Filters.TagsPlaceholder"]" />
+            <span asp-validation-for="TagsInput" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="PriceRange" class="form-label">@Localizer["Metadata.Label.PriceRange"]</label>
+            <select asp-for="PriceRange" id="PriceRange" class="form-select">
+                <option value="">@Localizer["Metadata.Option.NotSet"]</option>
+                @foreach (var priceRange in Enum.GetValues<PriceRange>())
+                {
+                    <option value="@priceRange">@Localizer[$"Metadata.PriceRange.{priceRange}"]</option>
+                }
+            </select>
+            <span asp-validation-for="PriceRange" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="PreparationTimeRange" class="form-label">@Localizer["Metadata.Label.PreparationTimeRange"]</label>
+            <select asp-for="PreparationTimeRange" id="PreparationTimeRange" class="form-select">
+                <option value="">@Localizer["Metadata.Option.NotSet"]</option>
+                @foreach (var preparationTimeRange in Enum.GetValues<PreparationTimeRange>())
+                {
+                    <option value="@preparationTimeRange">@Localizer[$"Metadata.PreparationTimeRange.{preparationTimeRange}"]</option>
+                }
+            </select>
+            <span asp-validation-for="PreparationTimeRange" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="SpiceLevel" class="form-label">@Localizer["Metadata.Label.SpiceLevel"]</label>
+            <select asp-for="SpiceLevel" id="SpiceLevel" class="form-select">
+                <option value="">@Localizer["Metadata.Option.NotSet"]</option>
+                @foreach (var spiceLevel in Enum.GetValues<SpiceLevel>())
+                {
+                    <option value="@spiceLevel">@Localizer[$"Metadata.SpiceLevel.{spiceLevel}"]</option>
+                }
+            </select>
+            <span asp-validation-for="SpiceLevel" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 filter-field-wide">
+            <p class="form-label mb-2">@Localizer["Metadata.Label.DietaryPreferences"]</p>
+            <div class="metadata-checkbox-grid" id="DietaryPreferences">
+                @foreach (var preference in Enum.GetValues<DietaryPreference>())
+                {
+                    var preferenceId = $"input-diet-{preference}";
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="@preferenceId"
+                               name="Input.DietaryPreferences"
+                               value="@preference"
+                               checked="@(Model.DietaryPreferences.Contains(preference) ? "checked" : null)" />
+                        <label class="form-check-label" for="@preferenceId">@Localizer[$"Metadata.DietaryPreference.{preference}"]</label>
+                    </div>
+                }
+            </div>
+            <span asp-validation-for="DietaryPreferences" class="text-danger"></span>
+        </div>
+    </div>
+</fieldset>

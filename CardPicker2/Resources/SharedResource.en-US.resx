@@ -258,6 +258,9 @@
   <data name="Form.SelectMealType" xml:space="preserve">
     <value>Choose a meal type</value>
   </data>
+  <data name="Form.Metadata.Legend" xml:space="preserve">
+    <value>Decision metadata</value>
+  </data>
   <data name="Create.Kicker" xml:space="preserve">
     <value>Card management</value>
   </data>

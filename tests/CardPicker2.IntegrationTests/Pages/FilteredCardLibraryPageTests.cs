@@ -18,7 +18,7 @@ public sealed class FilteredCardLibraryPageTests : IDisposable
         var html = await client.GetStringAsync("/Cards");
 
         MetadataFilterHtmlAssertions.AssertCardLibraryFilterControls(html);
-        Assert.Contains("共 3 張", WebUtility.HtmlDecode(html));
+        Assert.Contains("共 4 張", WebUtility.HtmlDecode(html));
         MetadataFilterHtmlAssertions.AssertNoUntranslatedMetadataKeys(html);
     }
 

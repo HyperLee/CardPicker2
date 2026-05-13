@@ -31,6 +31,22 @@
             <p class="fallback-badge">@Localizer["Card.NeedsEnglishTranslation"]</p>
         }
 
+        <section class="metadata-summary" aria-label="@Localizer["Home.Result.MetadataSummary"]">
+            @if (Model.Card.MetadataBadges?.Count > 0)
+            {
+                <div class="metadata-badge-list">
+                    @foreach (var badge in Model.Card.MetadataBadges)
+                    {
+                        <span class="metadata-badge" data-metadata-badge>@badge</span>
+                    }
+                </div>
+            }
+            else
+            {
+                <span class="metadata-badge">@Localizer["Metadata.Option.NotSet"]</span>
+            }
+        </section>
+
         <div class="detail-actions">
             <a class="btn btn-danger" href="/Cards/Edit/@Model.Card.CardId">@Localizer["Details.EditCard"]</a>
         </div>

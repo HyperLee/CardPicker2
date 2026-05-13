@@ -258,6 +258,9 @@
   <data name="Form.SelectMealType" xml:space="preserve">
     <value>請選擇餐別</value>
   </data>
+  <data name="Form.Metadata.Legend" xml:space="preserve">
+    <value>決策資訊</value>
+  </data>
   <data name="Create.Kicker" xml:space="preserve">
     <value>卡牌管理</value>
   </data>
@@ -307,7 +310,7 @@
     <value>辣度</value>
   </data>
   <data name="Metadata.Option.NotSet" xml:space="preserve">
-    <value>尚未填寫</value>
+    <value>未設定</value>
   </data>
   <data name="Metadata.PriceRange.Low" xml:space="preserve">
     <value>低價位</value>
