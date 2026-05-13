@@ -19,7 +19,7 @@ public sealed class CardLibraryService : ICardLibraryService
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
     {
-        WriteIndented = true,
+        WriteIndented = false,
         Converters = { new JsonStringEnumConverter() }
     };
 
@@ -711,7 +711,7 @@ public sealed class CardLibraryService : ICardLibraryService
                 FileAccess.Write,
                 FileShare.None,
                 bufferSize: 4096,
-                FileOptions.WriteThrough | FileOptions.Asynchronous))
+                FileOptions.Asynchronous))
             {
                 await JsonSerializer.SerializeAsync(stream, document, JsonOptions, cancellationToken);
                 await stream.FlushAsync(cancellationToken);

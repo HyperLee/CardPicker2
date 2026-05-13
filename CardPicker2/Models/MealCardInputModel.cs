@@ -6,6 +6,18 @@ namespace CardPicker2.Models;
 /// <summary>
 /// Captures user input for creating or editing a bilingual meal card.
 /// </summary>
+/// <example>
+/// <code>
+/// var input = new MealCardInputModel
+/// {
+///     NameZhTw = "測試便當",
+///     DescriptionZhTw = "測試描述",
+///     NameEnUs = "Test Bento",
+///     DescriptionEnUs = "Test description",
+///     MealType = MealType.Lunch
+/// };
+/// </code>
+/// </example>
 public sealed class MealCardInputModel : IValidatableObject
 {
     /// <summary>

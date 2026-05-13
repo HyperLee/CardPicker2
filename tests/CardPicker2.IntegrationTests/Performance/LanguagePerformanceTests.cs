@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace CardPicker2.IntegrationTests.Performance;
 
+[Collection(NonParallelPerformanceCollection.Name)]
 public sealed class LanguagePerformanceTests
 {
     [Theory]

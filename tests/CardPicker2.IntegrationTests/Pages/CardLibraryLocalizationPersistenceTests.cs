@@ -63,8 +63,8 @@ public sealed partial class CardLibraryLocalizationPersistenceTests : IDisposabl
         Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
         var json = await File.ReadAllTextAsync(_library.FilePath);
 
-        Assert.Contains($"\"schemaVersion\": {CardPicker2.Models.CardLibraryDocument.CurrentSchemaVersion}", json);
-        Assert.Contains("\"drawHistory\": []", json);
+        Assert.Contains($"\"schemaVersion\":{CardPicker2.Models.CardLibraryDocument.CurrentSchemaVersion}", json);
+        Assert.Contains("\"drawHistory\":[]", json);
         Assert.Contains("Breakfast Card", json);
         Assert.Contains("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", json);
     }

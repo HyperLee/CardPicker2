@@ -98,6 +98,62 @@ public sealed class DrawLoggingTests
     }
 
     [Fact]
+    public async Task MetadataFiltering_LogsValidationEmptyPoolAndSearchCountsWithoutRawPayloads()
+    {
+        using var invalidMetadataLibrary = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV4Document(
+            cards: new[]
+            {
+                DrawFeatureTestData.SchemaV4Card(
+                    DrawFeatureTestData.BreakfastCardId,
+                    "Breakfast",
+                    "Active",
+                    "Invalid metadata",
+                    "Invalid metadata",
+                    new
+                    {
+                        tags = new[] { "metadata" },
+                        priceRange = 999,
+                        preparationTimeRange = "Quick",
+                        dietaryPreferences = Array.Empty<string>(),
+                        spiceLevel = "None"
+                    })
+            }));
+        var invalidMetadataLogger = new CapturingLogger<CardLibraryService>();
+        await CreateService(invalidMetadataLibrary.FilePath, invalidMetadataLogger).LoadAsync();
+
+        using var filteredLibrary = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV4Document());
+        var filteredLogger = new CapturingLogger<CardLibraryService>();
+        var service = CreateService(filteredLibrary.FilePath, filteredLogger);
+
+        await service.SearchAsync(new SearchCriteria
+        {
+            Filters = new CardFilterCriteria
+            {
+                Tags = new[] { "do-not-log" },
+                PriceRange = PriceRange.Low
+            }
+        });
+        await service.DrawAsync(new DrawOperation
+        {
+            OperationId = Guid.NewGuid(),
+            Mode = DrawMode.Normal,
+            MealType = MealType.Breakfast,
+            CoinInserted = true,
+            Filters = new CardFilterCriteria
+            {
+                Tags = new[] { "do-not-log" },
+                PriceRange = PriceRange.High
+            }
+        });
+
+        Assert.Contains(invalidMetadataLogger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("validation failed", StringComparison.Ordinal));
+        Assert.Contains(filteredLogger.Entries, entry => entry.Level == LogLevel.Information && entry.Message.Contains("Card search returned", StringComparison.Ordinal));
+        Assert.Contains(filteredLogger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("candidate pool is empty", StringComparison.Ordinal));
+        AssertNoSensitivePayloads(invalidMetadataLogger);
+        AssertNoSensitivePayloads(filteredLogger);
+    }
+
+    [Fact]
     public async Task DeleteAsync_WithHistory_LogsRetainedDeletedCardWithoutRawPayloads()
     {
         using var library = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV3Document(

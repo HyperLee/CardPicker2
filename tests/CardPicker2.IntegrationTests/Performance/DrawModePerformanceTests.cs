@@ -5,6 +5,7 @@ using CardPicker2.Models;
 
 namespace CardPicker2.IntegrationTests.Performance;
 
+[Collection(NonParallelPerformanceCollection.Name)]
 public sealed class DrawModePerformanceTests : IDisposable
 {
     private static readonly TimeSpan Budget = TimeSpan.FromMilliseconds(200);

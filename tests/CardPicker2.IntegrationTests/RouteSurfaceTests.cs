@@ -10,6 +10,9 @@ public sealed class RouteSurfaceTests
     [InlineData("/api/draw")]
     [InlineData("/api/draw-statistics")]
     [InlineData("/api/cards")]
+    [InlineData("/api/metadata")]
+    [InlineData("/api/filters")]
+    [InlineData("/api/card-metadata")]
     [InlineData("/draws")]
     public async Task DrawFeature_DoesNotExposeExternalJsonApiEndpoints(string path)
     {
@@ -27,7 +30,9 @@ public sealed class RouteSurfaceTests
     [Theory]
     [InlineData("/")]
     [InlineData("/Cards")]
+    [InlineData("/Cards?tags=%E4%BE%BF%E7%95%B6&priceRange=Low")]
     [InlineData("/Cards/Create")]
+    [InlineData("/Cards/Edit/11111111-1111-1111-1111-111111111111")]
     public async Task PublicSurface_RemainsRazorPagesReturningHtml(string path)
     {
         await using var factory = new WebApplicationFactory<Program>();

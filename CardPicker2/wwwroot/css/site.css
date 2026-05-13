@@ -210,8 +210,8 @@ body .footer a {
   align-items: center;
   justify-content: center;
   border: 1px solid var(--cp-border);
-  background-color: var(--cp-surface-plain);
-  color: var(--cp-text);
+  background-color: var(--cp-surface-plain) !important;
+  color: var(--cp-text) !important;
   font-weight: 800;
 }
 

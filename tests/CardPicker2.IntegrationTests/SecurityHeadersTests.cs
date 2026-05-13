@@ -61,6 +61,24 @@ public sealed class SecurityHeadersTests
         Assert.DoesNotContain("connect-src", contentSecurityPolicy, StringComparison.OrdinalIgnoreCase);
     }
 
+    [Theory]
+    [InlineData("/?tags=便當&dietaryPreferences=TakeoutFriendly")]
+    [InlineData("/Cards?tags=便當&priceRange=Low")]
+    [InlineData("/Cards/Create")]
+    public async Task ProductionMetadataSurfaces_IncludeSecurityHeaders(string path)
+    {
+        await using var factory = DrawFeatureWebApplicationFactory.CreateProduction();
+        var client = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            BaseAddress = new Uri("https://localhost")
+        });
+
+        var response = await client.GetAsync(path);
+
+        AssertProductionSecurityHeaders(response);
+        AssertContentSecurityPolicyAllowsThemeBootstrap(GetContentSecurityPolicy(response));
+    }
+
     [Fact]
     public async Task PostDraw_WithoutAntiForgeryToken_ReturnsBadRequest()
     {
@@ -72,6 +90,44 @@ public sealed class SecurityHeadersTests
             ["DrawMode"] = nameof(DrawMode.Random),
             ["CoinInserted"] = "true",
             ["DrawOperationId"] = Guid.NewGuid().ToString()
+        }));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task PostCreateMetadataCard_WithoutAntiForgeryToken_ReturnsBadRequest()
+    {
+        await using var factory = new DrawFeatureWebApplicationFactory();
+        var client = factory.CreateClient();
+
+        var response = await client.PostAsync("/Cards/Create", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["Input.NameZhTw"] = "測試",
+            ["Input.DescriptionZhTw"] = "測試",
+            ["Input.NameEnUs"] = "Test",
+            ["Input.DescriptionEnUs"] = "Test",
+            ["Input.MealType"] = nameof(MealType.Lunch),
+            ["Input.TagsInput"] = "便當"
+        }));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task PostEditMetadataCard_WithoutAntiForgeryToken_ReturnsBadRequest()
+    {
+        await using var factory = new DrawFeatureWebApplicationFactory();
+        var client = factory.CreateClient();
+
+        var response = await client.PostAsync("/Cards/Edit/11111111-1111-1111-1111-111111111111", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["Input.NameZhTw"] = "測試",
+            ["Input.DescriptionZhTw"] = "測試",
+            ["Input.NameEnUs"] = "Test",
+            ["Input.DescriptionEnUs"] = "Test",
+            ["Input.MealType"] = nameof(MealType.Breakfast),
+            ["Input.TagsInput"] = "早餐"
         }));
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
