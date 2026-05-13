@@ -274,12 +274,14 @@ body .footer a {
 }
 
 .draw-mode-selector,
-.meal-selector {
+.meal-selector,
+.metadata-filter-panel {
   min-width: 0;
 }
 
 .draw-mode-selector legend,
-.meal-selector legend {
+.meal-selector legend,
+.metadata-filter-panel legend {
   float: none;
   width: auto;
   margin-bottom: 0.75rem;
@@ -337,6 +339,86 @@ body .footer a {
   border-color: var(--cp-accent);
   background-color: var(--cp-accent) !important;
   color: var(--cp-accent-text) !important;
+}
+
+.metadata-filter-panel {
+  padding: 1rem;
+  border: 1px solid var(--cp-border-soft);
+  border-radius: 8px;
+  background: var(--cp-surface);
+}
+
+.metadata-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.filter-field {
+  min-width: 0;
+}
+
+.filter-field-wide {
+  grid-column: span 3;
+}
+
+.metadata-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem 1rem;
+}
+
+.metadata-checkbox-grid .form-check {
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.metadata-checkbox-grid .form-check-label {
+  overflow-wrap: anywhere;
+}
+
+.active-filter-summary {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border: 1px dashed var(--cp-border);
+  border-radius: 8px;
+  background: var(--cp-surface-plain);
+  color: var(--cp-text);
+  font-weight: 700;
+}
+
+.filter-chip-list,
+.metadata-badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.filter-chip,
+.metadata-badge {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--cp-border-soft);
+  border-radius: 999px;
+  background: var(--cp-surface);
+  color: var(--cp-text);
+  font-size: 0.95rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.metadata-badge-list {
+  margin-top: 0.75rem;
+}
+
+.metadata-badge {
+  background: var(--cp-surface-plain);
 }
 
 .slot-machine {
@@ -691,8 +773,14 @@ body .footer a {
   .draw-mode-options,
   .meal-options,
   .theme-mode-options,
-  .draw-controls {
+  .draw-controls,
+  .metadata-filter-grid,
+  .metadata-checkbox-grid {
     grid-template-columns: 1fr;
+  }
+
+  .filter-field-wide {
+    grid-column: span 1;
   }
 
   .language-switcher {

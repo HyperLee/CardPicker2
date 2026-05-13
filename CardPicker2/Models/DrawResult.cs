@@ -16,6 +16,9 @@ namespace CardPicker2.Models;
 /// <param name="DrawMode">The mode used to build the candidate pool.</param>
 /// <param name="RequestedMealType">The submitted meal type for normal mode; random mode uses <see langword="null"/>.</param>
 /// <param name="IsReplay">Whether this result replays an existing successful operation.</param>
+/// <param name="AppliedFilters">The filters applied to the candidate pool.</param>
+/// <param name="FilterSummary">A localized summary of the applied filters.</param>
+/// <param name="FilteredPoolSize">The number of cards in the filtered candidate pool.</param>
 /// <example>
 /// <code>
 /// var result = DrawResult.Failure(operation, "Coin required.", "Draw.CoinRequired");
@@ -34,7 +37,10 @@ public sealed record DrawResult(
     Guid OperationId = default,
     DrawMode DrawMode = DrawMode.Normal,
     MealType? RequestedMealType = null,
-    bool IsReplay = false)
+    bool IsReplay = false,
+    CardFilterCriteria? AppliedFilters = null,
+    FilterSummary? FilterSummary = null,
+    int? FilteredPoolSize = null)
 {
     /// <summary>
     /// Gets the display name of the selected card meal type.
@@ -76,7 +82,10 @@ public sealed record DrawResult(
         MealCard card,
         LocalizedMealCardView localizedCard,
         string message,
-        string statusKey)
+        string statusKey,
+        int? filteredPoolSize = null,
+        CardFilterCriteria? appliedFilters = null,
+        FilterSummary? filterSummary = null)
     {
         return new DrawResult(
             true,
@@ -88,7 +97,10 @@ public sealed record DrawResult(
             message,
             localizedCard,
             statusKey,
-            RequestedMealType: selectedMealType);
+            RequestedMealType: selectedMealType,
+            AppliedFilters: appliedFilters,
+            FilterSummary: filterSummary,
+            FilteredPoolSize: filteredPoolSize);
     }
 
     /// <summary>
@@ -107,7 +119,10 @@ public sealed record DrawResult(
         LocalizedMealCardView localizedCard,
         string message,
         string statusKey,
-        bool isReplay = false)
+        bool isReplay = false,
+        int? filteredPoolSize = null,
+        CardFilterCriteria? appliedFilters = null,
+        FilterSummary? filterSummary = null)
     {
         var requestedMealType = operation.Mode == DrawMode.Normal ? operation.MealType : null;
         return new DrawResult(
@@ -123,7 +138,10 @@ public sealed record DrawResult(
             operation.OperationId,
             operation.Mode,
             requestedMealType,
-            isReplay);
+            isReplay,
+            appliedFilters,
+            filterSummary,
+            filteredPoolSize);
     }
 
     /// <summary>
@@ -170,6 +188,7 @@ public sealed record DrawResult(
             statusKey,
             operation.OperationId,
             operation.Mode,
-            requestedMealType);
+            requestedMealType,
+            AppliedFilters: operation.Filters?.ForDrawMode(operation.Mode));
     }
 }

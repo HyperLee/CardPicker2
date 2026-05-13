@@ -30,7 +30,30 @@ public class IndexModel : PageModel
     [BindProperty]
     public Guid DrawOperationId { get; set; }
 
+    [BindProperty(SupportsGet = true)]
+    public PriceRange? PriceRange { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public PreparationTimeRange? PreparationTimeRange { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public List<DietaryPreference> DietaryPreferences { get; set; } = new();
+
+    [BindProperty(SupportsGet = true)]
+    public SpiceLevel? MaxSpiceLevel { get; set; }
+
+    [BindProperty(SupportsGet = true)]
+    public List<string> Tags { get; set; } = new();
+
     public IReadOnlyList<MealType> MealTypes { get; } = Enum.GetValues<MealType>();
+
+    public IReadOnlyList<PriceRange> PriceRangeOptions { get; } = Enum.GetValues<PriceRange>();
+
+    public IReadOnlyList<PreparationTimeRange> PreparationTimeRangeOptions { get; } = Enum.GetValues<PreparationTimeRange>();
+
+    public IReadOnlyList<DietaryPreference> DietaryPreferenceOptions { get; } = Enum.GetValues<DietaryPreference>();
+
+    public IReadOnlyList<SpiceLevel> SpiceLevelOptions { get; } = Enum.GetValues<SpiceLevel>();
 
     public SupportedLanguage CurrentLanguage => SupportedLanguage.FromCultureNameOrDefault(Thread.CurrentThread.CurrentUICulture.Name);
 
@@ -47,16 +70,29 @@ public class IndexModel : PageModel
 
     public bool IsBlocked => LibraryState?.IsBlocked == true;
 
+    public FilterSummary CurrentFilterSummary { get; private set; } = FilterSummary.Empty;
+
     public async Task OnGetAsync(
         MealType? mealType,
         bool coinInserted,
         Guid? resultCardId,
         DrawMode? drawMode,
         Guid? drawOperationId,
+        PriceRange? priceRange,
+        PreparationTimeRange? preparationTimeRange,
+        List<DietaryPreference>? dietaryPreferences,
+        SpiceLevel? maxSpiceLevel,
+        List<string>? tags,
         CancellationToken cancellationToken)
     {
         MealType = mealType;
         CoinInserted = coinInserted;
+        PriceRange = priceRange;
+        PreparationTimeRange = preparationTimeRange;
+        DietaryPreferences = dietaryPreferences ?? new List<DietaryPreference>();
+        MaxSpiceLevel = maxSpiceLevel;
+        Tags = tags ?? new List<string>();
+        CurrentFilterSummary = CreateLocalizedFilterSummary(BuildCriteria());
         DrawMode = drawMode is DrawMode submittedMode && Enum.IsDefined(typeof(DrawMode), submittedMode)
             ? submittedMode
             : CardPicker2.Models.DrawMode.Normal;
@@ -108,14 +144,16 @@ public class IndexModel : PageModel
             Mode = DrawMode,
             MealType = MealType,
             CoinInserted = CoinInserted,
-            RequestedLanguage = CurrentLanguage
+            RequestedLanguage = CurrentLanguage,
+            Filters = BuildCriteria().ForDrawMode(DrawMode)
         };
         Result = await _cardLibraryService.DrawAsync(operation, cancellationToken);
         Statistics = await _cardLibraryService.GetDrawStatisticsAsync(CurrentLanguage, cancellationToken);
         OperationState = Result.Succeeded ? DrawOperationState.Revealed : DrawOperationState.Blocked;
+        CurrentFilterSummary = CreateLocalizedFilterSummary(BuildCriteria());
         StatusMessage = Result.Succeeded
             ? (Result.IsReplay ? _localizer["Home.Status.Replay"] : _localizer["Home.Status.DrawSuccess"])
-            : Result.UserMessage;
+            : LocalizeStatus(Result.StatusKey, Result.UserMessage);
         if (Result.Succeeded)
         {
             DrawOperationId = Guid.NewGuid();
@@ -133,7 +171,7 @@ public class IndexModel : PageModel
             }
             else
             {
-                ModelState.AddModelError(string.Empty, Result.UserMessage);
+                ModelState.AddModelError(string.Empty, StatusMessage);
             }
         }
     }
@@ -169,6 +207,91 @@ public class IndexModel : PageModel
             "Draw.Restored",
             DrawOperationId,
             DrawMode,
-            MealType);
+            MealType,
+            AppliedFilters: BuildCriteria().ForDrawMode(DrawMode),
+            FilterSummary: CurrentFilterSummary);
+    }
+
+    public string DisplayPriceRange(PriceRange value)
+    {
+        return _localizer[$"Metadata.PriceRange.{value}"];
+    }
+
+    public string DisplayPreparationTimeRange(PreparationTimeRange value)
+    {
+        return _localizer[$"Metadata.PreparationTimeRange.{value}"];
+    }
+
+    public string DisplayDietaryPreference(DietaryPreference value)
+    {
+        return _localizer[$"Metadata.DietaryPreference.{value}"];
+    }
+
+    public string DisplaySpiceLevel(SpiceLevel value)
+    {
+        return _localizer[$"Metadata.SpiceLevel.{value}"];
+    }
+
+    private CardFilterCriteria BuildCriteria()
+    {
+        return new CardFilterCriteria
+        {
+            MealType = MealType,
+            PriceRange = PriceRange,
+            PreparationTimeRange = PreparationTimeRange,
+            DietaryPreferences = DietaryPreferences,
+            MaxSpiceLevel = MaxSpiceLevel,
+            Tags = SplitTags(Tags),
+            CurrentLanguage = CurrentLanguage
+        }.Normalize();
+    }
+
+    private FilterSummary CreateLocalizedFilterSummary(CardFilterCriteria criteria)
+    {
+        var normalized = criteria.Normalize();
+        var items = new List<string>();
+        if (normalized.PriceRange is PriceRange priceRange)
+        {
+            items.Add(DisplayPriceRange(priceRange));
+        }
+
+        if (normalized.PreparationTimeRange is PreparationTimeRange preparationTimeRange)
+        {
+            items.Add(DisplayPreparationTimeRange(preparationTimeRange));
+        }
+
+        items.AddRange(normalized.DietaryPreferences.Select(DisplayDietaryPreference));
+
+        if (normalized.MaxSpiceLevel is SpiceLevel maxSpiceLevel)
+        {
+            items.Add(DisplaySpiceLevel(maxSpiceLevel));
+        }
+
+        items.AddRange(normalized.Tags);
+        return items.Count == 0 ? FilterSummary.Empty : new FilterSummary(items);
+    }
+
+    private string LocalizeStatus(string statusKey, string fallback)
+    {
+        return statusKey switch
+        {
+            "Metadata.Filter.EmptyPool" => _localizer["Metadata.Filter.EmptyPool"],
+            "Metadata.InvalidEnum" => _localizer["Metadata.Validation.InvalidEnum"],
+            "Metadata.InvalidTag" => _localizer["Metadata.Validation.InvalidTag"],
+            _ => fallback
+        };
+    }
+
+    private static IReadOnlyList<string> SplitTags(IEnumerable<string>? values)
+    {
+        if (values is null)
+        {
+            return Array.Empty<string>();
+        }
+
+        return values
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .SelectMany(value => value!.Split(new[] { ',', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            .ToList();
     }
 }

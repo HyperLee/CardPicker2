@@ -36,6 +36,39 @@ public sealed class DrawIdempotencyTests
         Assert.Single((await ReadDocumentAsync(library.FilePath)).DrawHistory);
     }
 
+    [Fact]
+    public async Task DrawAsync_ReplayDoesNotReapplyNewFilters()
+    {
+        using var library = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV4Document());
+        var randomizer = new SequenceMealCardRandomizer(0, 0);
+        var service = CreateService(library.FilePath, randomizer);
+        var operationId = Guid.NewGuid();
+
+        var first = await service.DrawAsync(new DrawOperation
+        {
+            OperationId = operationId,
+            Mode = DrawMode.Normal,
+            MealType = MealType.Lunch,
+            CoinInserted = true,
+            Filters = new CardFilterCriteria { Tags = new[] { "蔬食", "便當" } }
+        });
+        var second = await service.DrawAsync(new DrawOperation
+        {
+            OperationId = operationId,
+            Mode = DrawMode.Normal,
+            MealType = MealType.Lunch,
+            CoinInserted = true,
+            Filters = new CardFilterCriteria { Tags = new[] { "不存在" } }
+        });
+
+        Assert.True(first.Succeeded);
+        Assert.True(second.Succeeded);
+        Assert.Equal(first.CardId, second.CardId);
+        Assert.True(second.IsReplay);
+        Assert.Equal(1, randomizer.CallCount);
+        Assert.Single((await ReadDocumentAsync(library.FilePath)).DrawHistory);
+    }
+
     private static CardLibraryService CreateService(string filePath, IMealCardRandomizer randomizer)
     {
         return new CardLibraryService(
@@ -44,7 +77,10 @@ public sealed class DrawIdempotencyTests
             new DuplicateCardDetector(),
             NullLogger<CardLibraryService>.Instance,
             new MealCardLocalizationService(),
-            new CardLibraryFileCoordinator());
+            new CardLibraryFileCoordinator(),
+            new DrawCandidatePoolBuilder(new MealCardFilterService()),
+            new DrawStatisticsService(new MealCardLocalizationService()),
+            new MealCardMetadataValidator());
     }
 
     private static async Task<CardLibraryDocument> ReadDocumentAsync(string filePath)
@@ -87,10 +123,15 @@ public sealed class DrawIdempotencyTests
 
         public static async Task<TempCardLibrary> CreateWithDocumentAsync()
         {
+            return await CreateWithDocumentAsync(DrawFeatureTestData.SchemaV3Document());
+        }
+
+        public static async Task<TempCardLibrary> CreateWithDocumentAsync(object document)
+        {
             var library = new TempCardLibrary(Directory.CreateTempSubdirectory("cardpicker-idempotency-tests-").FullName);
             await File.WriteAllTextAsync(
                 library.FilePath,
-                JsonSerializer.Serialize(DrawFeatureTestData.SchemaV3Document(), DrawFeatureTestData.JsonOptions));
+                JsonSerializer.Serialize(document, DrawFeatureTestData.JsonOptions));
             return library;
         }
 

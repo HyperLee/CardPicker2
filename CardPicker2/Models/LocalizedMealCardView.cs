@@ -13,6 +13,7 @@ namespace CardPicker2.Models;
 /// <param name="MissingTranslationCultures">The cultures missing complete localized content.</param>
 /// <param name="Status">The card lifecycle status.</param>
 /// <param name="DeletedAtUtc">The UTC deletion time when retained as deleted.</param>
+/// <param name="MetadataBadges">Localized metadata labels suitable for compact display.</param>
 public sealed record LocalizedMealCardView(
     Guid CardId,
     MealType MealType,
@@ -23,4 +24,5 @@ public sealed record LocalizedMealCardView(
     bool IsFallback,
     IReadOnlyList<string> MissingTranslationCultures,
     CardStatus Status = CardStatus.Active,
-    DateTimeOffset? DeletedAtUtc = null);
+    DateTimeOffset? DeletedAtUtc = null,
+    IReadOnlyList<string>? MetadataBadges = null);

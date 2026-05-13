@@ -43,6 +43,11 @@ public sealed class DrawOperation
     public SupportedLanguage RequestedLanguage { get; init; } = SupportedLanguage.ZhTw;
 
     /// <summary>
+    /// Gets or initializes optional metadata filters submitted with the draw.
+    /// </summary>
+    public CardFilterCriteria? Filters { get; init; }
+
+    /// <summary>
     /// Gets a value indicating whether <see cref="OperationId"/> can be persisted.
     /// </summary>
     public bool HasValidOperationId => OperationId != Guid.Empty;

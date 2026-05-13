@@ -69,28 +69,28 @@
 
 > 先撰寫這些測試，確認在實作前失敗。
 
-- [ ] T029 [P] [US1] 新增候選池篩選失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCandidatePoolFilterTests.cs`，覆蓋 Normal meal type 後套用 filters、Random 忽略 meal type、missing metadata 被 selected filters 排除、每張候選卡標稱機率 `1/N`。
-- [ ] T030 [P] [US1] 新增 filtered draw 服務失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryFilteredDrawTests.cs`，覆蓋 price/time/diet/spice/tags filters、empty filtered pool 不新增 `DrawHistory`、statistics 不變、write failure 不宣告成功。
-- [ ] T031 [P] [US1] 擴充 idempotency 失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawIdempotencyTests.cs`，覆蓋同一 `DrawOperationId` replay 原 card ID，且不得因目前提交的新 filters 重新抽卡。
-- [ ] T032 [P] [US1] 新增首頁 filtered draw 整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/FilteredDrawPageTests.cs`，覆蓋 GET 顯示 filter controls、POST Normal/Random filters、empty pool message、Anti-Forgery 與 blocked state disable draw。
-- [ ] T033 [P] [US1] 新增首頁 filter 狀態語系與主題切換失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/FilterLocalizationStateTests.cs`，覆蓋 `zh-TW`/`en-US` 切換與 theme toggle 後保留 filters、result card ID、operation ID、候選池語意與 statistics。
-- [ ] T034 [US1] 執行 `dotnet test CardPicker2.sln --filter "DrawCandidatePoolFilter|CardLibraryFilteredDraw|DrawIdempotency|FilteredDrawPage|FilterLocalizationState"`，確認 `CardPicker2.sln` 的 US1 新測試在實作前失敗。
+- [X] T029 [P] [US1] 新增候選池篩選失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCandidatePoolFilterTests.cs`，覆蓋 Normal meal type 後套用 filters、Random 忽略 meal type、missing metadata 被 selected filters 排除、每張候選卡標稱機率 `1/N`。
+- [X] T030 [P] [US1] 新增 filtered draw 服務失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryFilteredDrawTests.cs`，覆蓋 price/time/diet/spice/tags filters、empty filtered pool 不新增 `DrawHistory`、statistics 不變、write failure 不宣告成功。
+- [X] T031 [P] [US1] 擴充 idempotency 失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawIdempotencyTests.cs`，覆蓋同一 `DrawOperationId` replay 原 card ID，且不得因目前提交的新 filters 重新抽卡。
+- [X] T032 [P] [US1] 新增首頁 filtered draw 整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/FilteredDrawPageTests.cs`，覆蓋 GET 顯示 filter controls、POST Normal/Random filters、empty pool message、Anti-Forgery 與 blocked state disable draw。
+- [X] T033 [P] [US1] 新增首頁 filter 狀態語系與主題切換失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/FilterLocalizationStateTests.cs`，覆蓋 `zh-TW`/`en-US` 切換與 theme toggle 後保留 filters、result card ID、operation ID、候選池語意與 statistics。
+- [X] T034 [US1] 執行 `dotnet test CardPicker2.sln --filter "DrawCandidatePoolFilter|CardLibraryFilteredDraw|DrawIdempotency|FilteredDrawPage|FilterLocalizationState"`，確認 `CardPicker2.sln` 的 US1 新測試在實作前失敗。
 
 ### 使用者故事 1 的實作
 
-- [ ] T035 [US1] 更新抽卡操作模型於 `CardPicker2/Models/DrawOperation.cs`，新增 `Filters` 並確保 Random mode criteria 不使用 meal type。
-- [ ] T036 [US1] 更新候選池建構器於 `CardPicker2/Services/DrawCandidatePoolBuilder.cs`，先建立 Normal/Random base pool，再透過 `MealCardFilterService` 套用 metadata filters。
-- [ ] T037 [US1] 更新抽卡結果模型於 `CardPicker2/Models/DrawResult.cs`，新增 `AppliedFilters`、`FilterSummary`、`FilteredPoolSize` 與 localized metadata result summary。
-- [ ] T038 [US1] 更新服務契約於 `CardPicker2/Services/ICardLibraryService.cs`，讓 `DrawAsync(DrawOperation operation, CancellationToken)` 明確支援 filtered draw 與 filter summary。
-- [ ] T039 [US1] 更新抽卡核心流程於 `CardPicker2/Services/CardLibraryService.cs`，驗證 filters、建立 filtered pool、empty pool 不寫 history、成功 append history、replay 不重新套用新 filters、記錄 filtered draw success/empty pool 日誌。
-- [ ] T040 [US1] 更新首頁 PageModel 於 `CardPicker2/Pages/Index.cshtml.cs`，bind price/time/diet/spice/tags filters、建立 `CardFilterCriteria`、保留 clear/result restore/query state 與 localized summary。
-- [ ] T041 [US1] 更新首頁 Razor UI 於 `CardPicker2/Pages/Index.cshtml`，新增 filter controls、active filter summary、clear filters 入口、empty filtered pool message 與 result metadata summary。
-- [ ] T042 [US1] 更新 localized card projection 於 `CardPicker2/Models/LocalizedMealCardView.cs` 與 `CardPicker2/Services/MealCardLocalizationService.cs`，加入 metadata display badges 與 not-set/fallback summary。
-- [ ] T043 [P] [US1] 新增或更新繁中首頁 filtered draw 文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 filter legends、clear filters、empty filtered pool、metadata result summary 與 validation messages。
-- [ ] T044 [P] [US1] 新增或更新英文首頁 filtered draw 文案於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保首頁 filter UI 與 result summary 無未翻譯 key。
-- [ ] T045 [P] [US1] 更新首頁 filter responsive 樣式於 `CardPicker2/wwwroot/css/site.css`，確保 390x844、768x1024、1366x768 下 filter panel、chips、slot/result 不重疊或水平溢出。
-- [ ] T046 [P] [US1] 更新首頁 filter progressive enhancement 於 `CardPicker2/wwwroot/js/site.js`，支援 filter state preservation、clear filters、tag chips 與 reduced-motion-safe submit guard，且不決定抽卡結果。
-- [ ] T047 [US1] 執行 `dotnet test CardPicker2.sln --filter "DrawCandidatePoolFilter|CardLibraryFilteredDraw|DrawIdempotency|FilteredDrawPage|FilterLocalizationState"`，確認 `CardPicker2.sln` 的 US1 測試通過。
+- [X] T035 [US1] 更新抽卡操作模型於 `CardPicker2/Models/DrawOperation.cs`，新增 `Filters` 並確保 Random mode criteria 不使用 meal type。
+- [X] T036 [US1] 更新候選池建構器於 `CardPicker2/Services/DrawCandidatePoolBuilder.cs`，先建立 Normal/Random base pool，再透過 `MealCardFilterService` 套用 metadata filters。
+- [X] T037 [US1] 更新抽卡結果模型於 `CardPicker2/Models/DrawResult.cs`，新增 `AppliedFilters`、`FilterSummary`、`FilteredPoolSize` 與 localized metadata result summary。
+- [X] T038 [US1] 更新服務契約於 `CardPicker2/Services/ICardLibraryService.cs`，讓 `DrawAsync(DrawOperation operation, CancellationToken)` 明確支援 filtered draw 與 filter summary。
+- [X] T039 [US1] 更新抽卡核心流程於 `CardPicker2/Services/CardLibraryService.cs`，驗證 filters、建立 filtered pool、empty pool 不寫 history、成功 append history、replay 不重新套用新 filters、記錄 filtered draw success/empty pool 日誌。
+- [X] T040 [US1] 更新首頁 PageModel 於 `CardPicker2/Pages/Index.cshtml.cs`，bind price/time/diet/spice/tags filters、建立 `CardFilterCriteria`、保留 clear/result restore/query state 與 localized summary。
+- [X] T041 [US1] 更新首頁 Razor UI 於 `CardPicker2/Pages/Index.cshtml`，新增 filter controls、active filter summary、clear filters 入口、empty filtered pool message 與 result metadata summary。
+- [X] T042 [US1] 更新 localized card projection 於 `CardPicker2/Models/LocalizedMealCardView.cs` 與 `CardPicker2/Services/MealCardLocalizationService.cs`，加入 metadata display badges 與 not-set/fallback summary。
+- [X] T043 [P] [US1] 新增或更新繁中首頁 filtered draw 文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 filter legends、clear filters、empty filtered pool、metadata result summary 與 validation messages。
+- [X] T044 [P] [US1] 新增或更新英文首頁 filtered draw 文案於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保首頁 filter UI 與 result summary 無未翻譯 key。
+- [X] T045 [P] [US1] 更新首頁 filter responsive 樣式於 `CardPicker2/wwwroot/css/site.css`，確保 390x844、768x1024、1366x768 下 filter panel、chips、slot/result 不重疊或水平溢出。
+- [X] T046 [P] [US1] 更新首頁 filter progressive enhancement 於 `CardPicker2/wwwroot/js/site.js`，支援 filter state preservation、clear filters、tag chips 與 reduced-motion-safe submit guard，且不決定抽卡結果。
+- [X] T047 [US1] 執行 `dotnet test CardPicker2.sln --filter "DrawCandidatePoolFilter|CardLibraryFilteredDraw|DrawIdempotency|FilteredDrawPage|FilterLocalizationState"`，確認 `CardPicker2.sln` 的 US1 測試通過。
 
 **檢查點**: US1 可作為 MVP 獨立展示，包含 Normal/Random filtered draw、公平候選池、empty pool 防寫入與 idempotent replay。
 

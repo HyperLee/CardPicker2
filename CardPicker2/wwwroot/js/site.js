@@ -69,6 +69,15 @@
     }
   };
 
+  const appendRepeatedValues = (url, key, values) => {
+    url.searchParams.delete(key);
+    values.forEach((value) => {
+      if (value !== null && value !== undefined && value !== '') {
+        url.searchParams.append(key, value);
+      }
+    });
+  };
+
   const preserveHomeState = (url) => {
     const drawForm = document.querySelector('[data-draw-form]');
     if (!drawForm) {
@@ -79,6 +88,13 @@
     const selectedMode = drawForm.querySelector('input[name="drawMode"]:checked');
     const operationId = drawForm.querySelector('input[name="drawOperationId"]');
     const coin = drawForm.querySelector('input[name="CoinInserted"]');
+    const priceRange = drawForm.querySelector('[name="PriceRange"]');
+    const preparationTimeRange = drawForm.querySelector('[name="PreparationTimeRange"]');
+    const maxSpiceLevel = drawForm.querySelector('[name="MaxSpiceLevel"]');
+    const tags = drawForm.querySelector('[name="Tags"]');
+    const dietaryPreferences = Array.from(drawForm.querySelectorAll('input[name="DietaryPreferences"]:checked'))
+      .filter((input) => input instanceof HTMLInputElement)
+      .map((input) => input.value);
     const result = document.querySelector('[data-result-card-id]');
 
     if (selectedMode instanceof HTMLInputElement) {
@@ -96,6 +112,24 @@
     if (coin instanceof HTMLInputElement && coin.checked) {
       appendValue(url, 'coinInserted', 'true');
     }
+
+    if (priceRange instanceof HTMLSelectElement) {
+      appendValue(url, 'priceRange', priceRange.value);
+    }
+
+    if (preparationTimeRange instanceof HTMLSelectElement) {
+      appendValue(url, 'preparationTimeRange', preparationTimeRange.value);
+    }
+
+    if (maxSpiceLevel instanceof HTMLSelectElement) {
+      appendValue(url, 'maxSpiceLevel', maxSpiceLevel.value);
+    }
+
+    if (tags instanceof HTMLInputElement) {
+      appendRepeatedValues(url, 'tags', tags.value.split(',').map((value) => value.trim()));
+    }
+
+    appendRepeatedValues(url, 'dietaryPreferences', dietaryPreferences);
 
     if (result instanceof HTMLElement) {
       appendValue(url, 'resultCardId', result.dataset.resultCardId);

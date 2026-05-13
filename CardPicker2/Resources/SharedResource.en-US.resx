@@ -363,4 +363,19 @@
   <data name="Metadata.Filter.Summary" xml:space="preserve">
     <value>Current filters: {0}</value>
   </data>
+  <data name="Home.Filters.Legend" xml:space="preserve">
+    <value>Decision filters</value>
+  </data>
+  <data name="Home.Filters.TagsPlaceholder" xml:space="preserve">
+    <value>Enter tags separated by commas</value>
+  </data>
+  <data name="Home.Filters.ActiveConditions" xml:space="preserve">
+    <value>Active filters</value>
+  </data>
+  <data name="Home.Filters.Clear" xml:space="preserve">
+    <value>Clear filters</value>
+  </data>
+  <data name="Home.Result.MetadataSummary" xml:space="preserve">
+    <value>Meal decision metadata</value>
+  </data>
 </root>

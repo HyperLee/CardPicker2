@@ -261,6 +261,15 @@ public sealed class CardLibraryService : ICardLibraryService
             return DrawResult.Failure(operation, "請先選擇早餐、午餐或晚餐。", "Draw.InvalidMealType");
         }
 
+        var filterValidationError = ValidateCriteria(operation.Filters);
+        if (filterValidationError is not null)
+        {
+            _logger.LogWarning(
+                "Draw rejected because metadata filter validation failed with {ValidationError}",
+                filterValidationError);
+            return DrawResult.Failure(operation, "決策資訊選項不支援。", filterValidationError);
+        }
+
         return await _fileCoordinator.RunExclusiveAsync(async innerCancellationToken =>
         {
             var loadResult = await LoadAsync(innerCancellationToken);
@@ -292,10 +301,27 @@ public sealed class CardLibraryService : ICardLibraryService
             if (pool.Cards.Count == 0)
             {
                 _logger.LogWarning(
-                    "Draw rejected because candidate pool is empty for mode {DrawMode} and meal type {MealType}",
+                    "Draw rejected because candidate pool is empty for mode {DrawMode}, meal type {MealType}, filter count {FilterCount}",
                     operation.Mode,
-                    operation.MealType);
-                return DrawResult.Failure(operation, "目前沒有可抽取的餐點卡牌。", "Draw.EmptyPool");
+                    operation.MealType,
+                    CountActiveFilters(pool.AppliedFilters));
+                var hasFilters = pool.AppliedFilters.HasActiveMetadataFilters;
+                return new DrawResult(
+                    false,
+                    operation.MealType ?? default,
+                    null,
+                    null,
+                    null,
+                    null,
+                    hasFilters ? "目前沒有符合條件的餐點。" : "目前沒有可抽取的餐點卡牌。",
+                    null,
+                    hasFilters ? "Metadata.Filter.EmptyPool" : "Draw.EmptyPool",
+                    operation.OperationId,
+                    operation.Mode,
+                    operation.Mode == DrawMode.Normal ? operation.MealType : null,
+                    AppliedFilters: pool.AppliedFilters,
+                    FilterSummary: CreateFilterSummary(pool.AppliedFilters),
+                    FilteredPoolSize: 0);
             }
 
             var selected = pool.Cards[_randomizer.NextIndex(pool.Cards.Count)];
@@ -333,8 +359,97 @@ public sealed class CardLibraryService : ICardLibraryService
                 pool.Cards.Count);
 
             var localizedCard = _localizationService.Project(selected, operation.RequestedLanguage);
-            return DrawResult.Success(operation, selected, localizedCard, "已抽出餐點卡牌。", "Draw.Success");
+            return DrawResult.Success(
+                operation,
+                selected,
+                localizedCard,
+                "已抽出餐點卡牌。",
+                "Draw.Success",
+                filteredPoolSize: pool.Cards.Count,
+                appliedFilters: pool.AppliedFilters,
+                filterSummary: CreateFilterSummary(pool.AppliedFilters));
         }, cancellationToken);
+    }
+
+    private static string? ValidateCriteria(CardFilterCriteria? criteria)
+    {
+        if (criteria is null)
+        {
+            return null;
+        }
+
+        if (criteria.MealType is MealType mealType && !Enum.IsDefined(typeof(MealType), mealType))
+        {
+            return "Draw.InvalidMealType";
+        }
+
+        if (criteria.PriceRange is PriceRange priceRange && !Enum.IsDefined(typeof(PriceRange), priceRange))
+        {
+            return "Metadata.InvalidEnum";
+        }
+
+        if (criteria.PreparationTimeRange is PreparationTimeRange preparationTimeRange &&
+            !Enum.IsDefined(typeof(PreparationTimeRange), preparationTimeRange))
+        {
+            return "Metadata.InvalidEnum";
+        }
+
+        if (criteria.MaxSpiceLevel is SpiceLevel spiceLevel && !Enum.IsDefined(typeof(SpiceLevel), spiceLevel))
+        {
+            return "Metadata.InvalidEnum";
+        }
+
+        return criteria.DietaryPreferences.Any(preference => !Enum.IsDefined(typeof(DietaryPreference), preference))
+            ? "Metadata.InvalidEnum"
+            : null;
+    }
+
+    private static FilterSummary CreateFilterSummary(CardFilterCriteria? criteria)
+    {
+        var normalized = (criteria ?? new CardFilterCriteria()).Normalize();
+        var items = new List<string>();
+        if (normalized.PriceRange is PriceRange priceRange)
+        {
+            items.Add(priceRange.ToString());
+        }
+
+        if (normalized.PreparationTimeRange is PreparationTimeRange preparationTimeRange)
+        {
+            items.Add(preparationTimeRange.ToString());
+        }
+
+        items.AddRange(normalized.DietaryPreferences.Select(preference => preference.ToString()));
+
+        if (normalized.MaxSpiceLevel is SpiceLevel maxSpiceLevel)
+        {
+            items.Add(maxSpiceLevel.ToString());
+        }
+
+        items.AddRange(normalized.Tags);
+        return items.Count == 0 ? FilterSummary.Empty : new FilterSummary(items);
+    }
+
+    private static int CountActiveFilters(CardFilterCriteria criteria)
+    {
+        var count = 0;
+        if (criteria.PriceRange is not null)
+        {
+            count++;
+        }
+
+        if (criteria.PreparationTimeRange is not null)
+        {
+            count++;
+        }
+
+        if (criteria.MaxSpiceLevel is not null)
+        {
+            count++;
+        }
+
+        count += criteria.DietaryPreferences.Count;
+        count += criteria.Tags.Count;
+        return count;
     }
 
     private async Task<IReadOnlyList<MealCard>> SearchCoreAsync(SearchCriteria criteria, CancellationToken cancellationToken)

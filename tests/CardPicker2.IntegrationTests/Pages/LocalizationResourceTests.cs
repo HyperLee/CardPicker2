@@ -45,7 +45,12 @@ public sealed class LocalizationResourceTests
             "Metadata.Validation.InvalidTag",
             "Metadata.Filter.EmptyPool",
             "Metadata.Filter.EmptySearch",
-            "Metadata.Filter.Summary"
+            "Metadata.Filter.Summary",
+            "Home.Filters.Legend",
+            "Home.Filters.TagsPlaceholder",
+            "Home.Filters.ActiveConditions",
+            "Home.Filters.Clear",
+            "Home.Result.MetadataSummary"
         };
 
         foreach (var key in requiredKeys)

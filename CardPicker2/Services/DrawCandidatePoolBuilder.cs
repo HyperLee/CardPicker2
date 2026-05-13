@@ -13,6 +13,17 @@ namespace CardPicker2.Services;
 /// </example>
 public sealed class DrawCandidatePoolBuilder
 {
+    private readonly MealCardFilterService _filterService;
+
+    /// <summary>
+    /// Initializes a new candidate-pool builder.
+    /// </summary>
+    /// <param name="filterService">The shared metadata filter service.</param>
+    public DrawCandidatePoolBuilder(MealCardFilterService? filterService = null)
+    {
+        _filterService = filterService ?? new MealCardFilterService();
+    }
+
     /// <summary>
     /// Builds a candidate pool using active cards only.
     /// </summary>
@@ -24,18 +35,22 @@ public sealed class DrawCandidatePoolBuilder
         var activeCards = cards.Where(card => card.IsActive);
         var selectedMealType = operation.Mode == DrawMode.Normal ? operation.MealType : null;
 
-        var candidates = operation.Mode switch
+        var baseCandidates = operation.Mode switch
         {
             DrawMode.Normal when selectedMealType is MealType mealType && Enum.IsDefined(typeof(MealType), mealType) =>
                 activeCards.Where(card => card.MealType == mealType),
             DrawMode.Random => activeCards,
             _ => Array.Empty<MealCard>()
         };
+        var appliedFilters = (operation.Filters ?? new CardFilterCriteria { CurrentLanguage = operation.RequestedLanguage })
+            .ForDrawMode(operation.Mode);
+        var candidates = _filterService.Apply(baseCandidates, appliedFilters);
 
         return new DrawCandidatePool(
             operation.Mode,
             selectedMealType,
-            candidates.ToList());
+            candidates.ToList(),
+            appliedFilters);
     }
 }
 
@@ -53,10 +68,12 @@ public sealed class DrawCandidatePoolBuilder
 /// <param name="Mode">The draw mode used to build the pool.</param>
 /// <param name="SelectedMealType">The selected meal type for normal mode.</param>
 /// <param name="Cards">The active cards eligible for selection.</param>
+/// <param name="AppliedFilters">The normalized filters applied after the base pool was built.</param>
 public sealed record DrawCandidatePool(
     DrawMode Mode,
     MealType? SelectedMealType,
-    IReadOnlyList<MealCard> Cards)
+    IReadOnlyList<MealCard> Cards,
+    CardFilterCriteria AppliedFilters)
 {
     /// <summary>
     /// Gets each candidate card's nominal probability when the pool is non-empty.

@@ -83,6 +83,86 @@
             <span asp-validation-for="MealType" class="text-danger"></span>
         </fieldset>
 
+        <fieldset class="metadata-filter-panel" disabled="@Model.IsBlocked" data-metadata-filter-panel>
+            <legend>@Localizer["Home.Filters.Legend"]</legend>
+            <div class="metadata-filter-grid">
+                <div class="filter-field">
+                    <label class="form-label" for="filter-price">@Localizer["Metadata.Label.PriceRange"]</label>
+                    <select class="form-select" id="filter-price" name="PriceRange">
+                        <option value="">@Localizer["Metadata.Option.NotSet"]</option>
+                        @foreach (var priceRange in Model.PriceRangeOptions)
+                        {
+                            <option value="@priceRange" selected="@(Model.PriceRange == priceRange ? "selected" : null)">@Model.DisplayPriceRange(priceRange)</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label class="form-label" for="filter-time">@Localizer["Metadata.Label.PreparationTimeRange"]</label>
+                    <select class="form-select" id="filter-time" name="PreparationTimeRange">
+                        <option value="">@Localizer["Metadata.Option.NotSet"]</option>
+                        @foreach (var preparationTimeRange in Model.PreparationTimeRangeOptions)
+                        {
+                            <option value="@preparationTimeRange" selected="@(Model.PreparationTimeRange == preparationTimeRange ? "selected" : null)">@Model.DisplayPreparationTimeRange(preparationTimeRange)</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label class="form-label" for="filter-spice">@Localizer["Metadata.Label.SpiceLevel"]</label>
+                    <select class="form-select" id="filter-spice" name="MaxSpiceLevel">
+                        <option value="">@Localizer["Metadata.Option.NotSet"]</option>
+                        @foreach (var spiceLevel in Model.SpiceLevelOptions)
+                        {
+                            <option value="@spiceLevel" selected="@(Model.MaxSpiceLevel == spiceLevel ? "selected" : null)">@Model.DisplaySpiceLevel(spiceLevel)</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="filter-field filter-field-wide">
+                    <label class="form-label" for="filter-tags">@Localizer["Metadata.Label.Tags"]</label>
+                    <input class="form-control"
+                           id="filter-tags"
+                           name="Tags"
+                           value="@string.Join(", ", Model.Tags)"
+                           placeholder="@Localizer["Home.Filters.TagsPlaceholder"]" />
+                </div>
+
+                <div class="filter-field filter-field-wide">
+                    <p class="form-label mb-2">@Localizer["Metadata.Label.DietaryPreferences"]</p>
+                    <div class="metadata-checkbox-grid">
+                        @foreach (var preference in Model.DietaryPreferenceOptions)
+                        {
+                            var preferenceId = $"diet-{preference}";
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       id="@preferenceId"
+                                       name="DietaryPreferences"
+                                       value="@preference"
+                                       checked="@(Model.DietaryPreferences.Contains(preference) ? "checked" : null)" />
+                                <label class="form-check-label" for="@preferenceId">@Model.DisplayDietaryPreference(preference)</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            @if (!Model.CurrentFilterSummary.IsEmpty)
+            {
+                <div class="active-filter-summary" data-filter-summary>
+                    <span>@Localizer["Metadata.Filter.Summary", string.Join(" / ", Model.CurrentFilterSummary.Items)]</span>
+                    <div class="filter-chip-list" aria-label="@Localizer["Home.Filters.ActiveConditions"]">
+                        @foreach (var item in Model.CurrentFilterSummary.Items)
+                        {
+                            <span class="filter-chip" data-tag-chip>@item</span>
+                        }
+                    </div>
+                    <a class="btn btn-outline-secondary btn-sm" asp-page="/Index">@Localizer["Home.Filters.Clear"]</a>
+                </div>
+            }
+        </fieldset>
+
         <div class="slot-machine" aria-label="@Localizer["Home.Slot.Aria"]" data-slot-machine>
             <div class="slot-reel">
                 @foreach (var symbol in slotColumnOne)
@@ -128,6 +208,15 @@
             @if (Model.Result.LocalizedCard?.IsFallback == true)
             {
                 <p class="fallback-badge">@Localizer["Card.NeedsEnglishTranslation"]</p>
+            }
+            @if (Model.Result.LocalizedCard?.MetadataBadges?.Count > 0)
+            {
+                <div class="metadata-badge-list" aria-label="@Localizer["Home.Result.MetadataSummary"]">
+                    @foreach (var badge in Model.Result.LocalizedCard.MetadataBadges)
+                    {
+                        <span class="metadata-badge" data-metadata-badge>@badge</span>
+                    }
+                </div>
             }
         </section>
     }
