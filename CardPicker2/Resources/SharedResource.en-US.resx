@@ -69,6 +69,12 @@
   <data name="Home.Status.CoinRequired" xml:space="preserve">
     <value>Insert a coin before pulling the lever.</value>
   </data>
+  <data name="Home.Status.Spinning" xml:space="preserve">
+    <value>Spinning. Please wait.</value>
+  </data>
+  <data name="Home.Status.Revealing" xml:space="preserve">
+    <value>Revealing the result.</value>
+  </data>
   <data name="Home.Status.DrawSuccess" xml:space="preserve">
     <value>A meal card has been drawn.</value>
   </data>

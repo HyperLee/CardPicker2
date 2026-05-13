@@ -37,7 +37,12 @@
         <div class="alert @alertClass" role="status" id="draw-state">@Model.StatusMessage</div>
     }
 
-    <form method="post" asp-page-handler="Draw" class="slot-console" data-draw-form>
+    <form method="post"
+          asp-page-handler="Draw"
+          class="slot-console"
+          data-draw-form
+          data-draw-state-spinning="@Localizer["Home.Status.Spinning"]"
+          data-draw-state-reduced="@Localizer["Home.Status.Revealing"]">
         <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
         <fieldset class="meal-selector" disabled="@Model.IsBlocked">
