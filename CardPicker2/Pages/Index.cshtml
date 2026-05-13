@@ -131,6 +131,53 @@
             }
         </section>
     }
+
+    <section class="draw-statistics" aria-labelledby="draw-statistics-title">
+        <div class="statistics-heading">
+            <div>
+                <p class="slot-kicker">@Localizer["Statistics.Kicker"]</p>
+                <h2 id="draw-statistics-title">@Localizer["Statistics.Title"]</h2>
+            </div>
+            <p class="statistics-total">@Localizer["Statistics.Total"] <strong>@Model.Statistics.TotalSuccessfulDraws</strong></p>
+        </div>
+
+        @if (!Model.Statistics.HasHistory)
+        {
+            <p class="statistics-empty">@Localizer["Statistics.Empty"]</p>
+        }
+        else
+        {
+            <div class="table-responsive statistics-table-wrap">
+                <table class="table statistics-table align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">@Localizer["Statistics.CardName"]</th>
+                            <th scope="col">@Localizer["Statistics.MealType"]</th>
+                            <th scope="col">@Localizer["Statistics.DrawCount"]</th>
+                            <th scope="col">@Localizer["Statistics.Probability"]</th>
+                            <th scope="col">@Localizer["Statistics.Status"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in Model.Statistics.Rows)
+                        {
+                            <tr>
+                                <td>@row.DisplayName</td>
+                                <td>@row.MealTypeDisplayName</td>
+                                <td>@row.DrawCount</td>
+                                <td>@row.HistoricalProbabilityDisplay</td>
+                                <td>
+                                    <span class="card-status-badge @(row.Status == CardStatus.Deleted ? "is-deleted" : "is-active")">
+                                        @(row.Status == CardStatus.Deleted ? Localizer["Statistics.Status.Deleted"] : Localizer["Statistics.Status.Active"])
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
 </section>
 
 @section Scripts {

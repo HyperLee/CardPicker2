@@ -25,6 +25,7 @@ public sealed class CardLibraryService : ICardLibraryService
     private readonly MealCardLocalizationService _localizationService;
     private readonly CardLibraryFileCoordinator _fileCoordinator;
     private readonly DrawCandidatePoolBuilder _candidatePoolBuilder;
+    private readonly DrawStatisticsService _statisticsService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CardLibraryService"/> class.
@@ -36,6 +37,7 @@ public sealed class CardLibraryService : ICardLibraryService
     /// <param name="localizationService">The localized card projection service.</param>
     /// <param name="fileCoordinator">The same-process file coordination gate.</param>
     /// <param name="candidatePoolBuilder">The draw candidate-pool builder.</param>
+    /// <param name="statisticsService">The draw statistics projection service.</param>
     public CardLibraryService(
         IOptions<CardLibraryOptions> options,
         IMealCardRandomizer randomizer,
@@ -43,7 +45,8 @@ public sealed class CardLibraryService : ICardLibraryService
         ILogger<CardLibraryService> logger,
         MealCardLocalizationService? localizationService = null,
         CardLibraryFileCoordinator? fileCoordinator = null,
-        DrawCandidatePoolBuilder? candidatePoolBuilder = null)
+        DrawCandidatePoolBuilder? candidatePoolBuilder = null,
+        DrawStatisticsService? statisticsService = null)
     {
         _options = options.Value;
         _randomizer = randomizer;
@@ -52,6 +55,7 @@ public sealed class CardLibraryService : ICardLibraryService
         _localizationService = localizationService ?? new MealCardLocalizationService();
         _fileCoordinator = fileCoordinator ?? new CardLibraryFileCoordinator();
         _candidatePoolBuilder = candidatePoolBuilder ?? new DrawCandidatePoolBuilder();
+        _statisticsService = statisticsService ?? new DrawStatisticsService(_localizationService);
     }
 
     /// <inheritdoc />
@@ -155,6 +159,18 @@ public sealed class CardLibraryService : ICardLibraryService
     public Task<DrawResult> DrawAsync(DrawOperation operation, CancellationToken cancellationToken = default)
     {
         return DrawCoreAsync(operation, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<DrawStatisticsSummary> GetDrawStatisticsAsync(SupportedLanguage language, CancellationToken cancellationToken = default)
+    {
+        var loadResult = await LoadAsync(cancellationToken);
+        if (loadResult.IsBlocked || loadResult.Document is null)
+        {
+            return new DrawStatisticsSummary(0, Array.Empty<CardDrawStatistic>(), loadResult.MessageKey);
+        }
+
+        return _statisticsService.CreateSummary(loadResult.Document, language);
     }
 
     /// <inheritdoc />

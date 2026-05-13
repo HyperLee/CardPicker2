@@ -80,6 +80,14 @@ public interface ICardLibraryService
     Task<DrawResult> DrawAsync(DrawOperation operation, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Gets the draw statistics projected for the current language.
+    /// </summary>
+    /// <param name="language">The projection language.</param>
+    /// <param name="cancellationToken">A token that cancels the operation.</param>
+    /// <returns>The draw statistics summary.</returns>
+    Task<DrawStatisticsSummary> GetDrawStatisticsAsync(SupportedLanguage language, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Creates a new card.
     /// </summary>
     /// <param name="input">The submitted card input.</param>

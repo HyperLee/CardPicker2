@@ -38,6 +38,9 @@ public class IndexModel : PageModel
 
     public DrawResult? Result { get; private set; }
 
+    public DrawStatisticsSummary Statistics { get; private set; } =
+        new(0, Array.Empty<CardDrawStatistic>(), "Statistics.Empty");
+
     public CardLibraryLoadResult? LibraryState { get; private set; }
 
     public string? StatusMessage { get; private set; }
@@ -63,10 +66,13 @@ public class IndexModel : PageModel
         LibraryState = await _cardLibraryService.LoadAsync(cancellationToken);
         if (LibraryState.IsBlocked)
         {
+            Statistics = new DrawStatisticsSummary(0, Array.Empty<CardDrawStatistic>(), LibraryState.MessageKey);
             OperationState = DrawOperationState.Blocked;
             StatusMessage = LibraryState.UserMessage;
             return;
         }
+
+        Statistics = await _cardLibraryService.GetDrawStatisticsAsync(CurrentLanguage, cancellationToken);
 
         if (resultCardId is Guid cardId)
         {
@@ -87,6 +93,7 @@ public class IndexModel : PageModel
         LibraryState = await _cardLibraryService.LoadAsync(cancellationToken);
         if (LibraryState.IsBlocked)
         {
+            Statistics = new DrawStatisticsSummary(0, Array.Empty<CardDrawStatistic>(), LibraryState.MessageKey);
             DrawOperationId = DrawOperationId == Guid.Empty ? Guid.NewGuid() : DrawOperationId;
             OperationState = DrawOperationState.Blocked;
             StatusMessage = LibraryState.UserMessage;
@@ -104,6 +111,7 @@ public class IndexModel : PageModel
             RequestedLanguage = CurrentLanguage
         };
         Result = await _cardLibraryService.DrawAsync(operation, cancellationToken);
+        Statistics = await _cardLibraryService.GetDrawStatisticsAsync(CurrentLanguage, cancellationToken);
         OperationState = Result.Succeeded ? DrawOperationState.Revealed : DrawOperationState.Blocked;
         StatusMessage = Result.Succeeded
             ? (Result.IsReplay ? _localizer["Home.Status.Replay"] : _localizer["Home.Status.DrawSuccess"])

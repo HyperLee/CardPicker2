@@ -114,6 +114,39 @@
   <data name="Card.NeedsEnglishTranslation" xml:space="preserve">
     <value>Needs English translation</value>
   </data>
+  <data name="Statistics.Kicker" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="Statistics.Title" xml:space="preserve">
+    <value>Draw Statistics</value>
+  </data>
+  <data name="Statistics.Total" xml:space="preserve">
+    <value>Total successful draws</value>
+  </data>
+  <data name="Statistics.Empty" xml:space="preserve">
+    <value>No successful draw history yet.</value>
+  </data>
+  <data name="Statistics.CardName" xml:space="preserve">
+    <value>Card name</value>
+  </data>
+  <data name="Statistics.MealType" xml:space="preserve">
+    <value>Meal type</value>
+  </data>
+  <data name="Statistics.DrawCount" xml:space="preserve">
+    <value>Draw count</value>
+  </data>
+  <data name="Statistics.Probability" xml:space="preserve">
+    <value>Historical probability</value>
+  </data>
+  <data name="Statistics.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Statistics.Status.Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Statistics.Status.Deleted" xml:space="preserve">
+    <value>Deleted</value>
+  </data>
   <data name="Cards.Kicker" xml:space="preserve">
     <value>Card library</value>
   </data>

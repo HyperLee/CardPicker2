@@ -451,6 +451,84 @@ body .footer a {
   font-weight: 700;
 }
 
+.draw-statistics {
+  margin-top: 1.5rem;
+  padding: 1rem 0 0;
+}
+
+.statistics-heading {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.statistics-heading h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.statistics-total {
+  margin: 0;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.statistics-total strong {
+  font-size: 1.5rem;
+}
+
+.statistics-empty {
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid var(--cp-border-soft);
+  border-radius: 8px;
+  background: var(--cp-surface);
+  color: var(--cp-muted);
+  font-weight: 700;
+}
+
+.statistics-table-wrap {
+  border: 1px solid var(--cp-border-soft);
+  border-radius: 8px;
+  background: var(--cp-surface-plain);
+}
+
+.statistics-table {
+  min-width: 640px;
+  margin-bottom: 0;
+}
+
+.statistics-table th,
+.statistics-table td {
+  color: var(--cp-text);
+  white-space: nowrap;
+}
+
+.card-status-badge {
+  display: inline-flex;
+  min-width: 4rem;
+  justify-content: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.card-status-badge.is-active {
+  background: var(--cp-success-surface);
+  color: var(--cp-success);
+  border: 1px solid var(--cp-success);
+}
+
+.card-status-badge.is-deleted {
+  background: var(--cp-danger-surface);
+  color: var(--cp-accent);
+  border: 1px solid var(--cp-danger-border);
+}
+
 .card-library,
 .card-detail {
   max-width: 980px;
@@ -598,6 +676,16 @@ body .footer a {
 
   .draw-result h2 {
     font-size: 1.5rem;
+  }
+
+  .statistics-heading {
+    display: grid;
+    gap: 0.5rem;
+    align-items: start;
+  }
+
+  .statistics-total {
+    white-space: normal;
   }
 
   .draw-mode-options,

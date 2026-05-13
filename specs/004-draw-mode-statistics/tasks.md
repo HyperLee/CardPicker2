@@ -94,22 +94,22 @@
 
 > 先撰寫這些測試，確認在實作前失敗。
 
-- [ ] T036 [P] [US2] 新增統計投影失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawStatisticsServiceTests.cs`，覆蓋 50 筆已知成功歷史的 total count、per-card count、probability formula、zero-history null probability、active zero rows、deleted-with-history rows。
-- [ ] T037 [P] [US2] 新增首頁統計整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/DrawStatisticsPageTests.cs`，覆蓋 50 筆已知成功歷史的總成功抽取次數、統計表欄位、無歷史空狀態、不顯示誤導性每卡 0%。
-- [ ] T038 [P] [US2] 新增歷史持久化整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/DrawHistoryPersistenceTests.cs`，覆蓋成功 draw 後重建 factory/client 仍保留 total、card draw count 與 probability。
-- [ ] T039 [US2] 執行 `dotnet test CardPicker2.sln --filter "DrawStatistics|DrawHistoryPersistence"`，確認 `CardPicker2.sln` 的 US2 新測試在實作前失敗。
+- [X] T036 [P] [US2] 新增統計投影失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawStatisticsServiceTests.cs`，覆蓋 50 筆已知成功歷史的 total count、per-card count、probability formula、zero-history null probability、active zero rows、deleted-with-history rows。
+- [X] T037 [P] [US2] 新增首頁統計整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/DrawStatisticsPageTests.cs`，覆蓋 50 筆已知成功歷史的總成功抽取次數、統計表欄位、無歷史空狀態、不顯示誤導性每卡 0%。
+- [X] T038 [P] [US2] 新增歷史持久化整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/DrawHistoryPersistenceTests.cs`，覆蓋成功 draw 後重建 factory/client 仍保留 total、card draw count 與 probability。
+- [X] T039 [US2] 執行 `dotnet test CardPicker2.sln --filter "DrawStatistics|DrawHistoryPersistence"`，確認 `CardPicker2.sln` 的 US2 新測試在實作前失敗。
 
 ### 使用者故事 2 的實作
 
-- [ ] T040 [US2] 建立統計投影服務於 `CardPicker2/Services/DrawStatisticsService.cs`，由 `CardLibraryDocument.Cards` 與 `DrawHistory` 產生 `DrawStatisticsSummary`，不持久化 aggregate counters。
-- [ ] T041 [US2] 更新服務契約於 `CardPicker2/Services/ICardLibraryService.cs`，新增 `GetDrawStatisticsAsync(SupportedLanguage language, CancellationToken)` 或等效 method。
-- [ ] T042 [US2] 更新統計讀取流程於 `CardPicker2/Services/CardLibraryService.cs`，載入 schema v3 document 後投影 localized statistics，blocked library 回傳可呈現的 recovery state。
-- [ ] T043 [US2] 更新首頁 PageModel 統計狀態於 `CardPicker2/Pages/Index.cshtml.cs`，GET、draw failure、draw success 與 replay 後都載入最新 `DrawStatisticsSummary`。
-- [ ] T044 [US2] 更新首頁統計 Razor UI 於 `CardPicker2/Pages/Index.cshtml`，呈現總成功抽取次數、無歷史空狀態、統計表欄位、active/deleted status 與 localized probability display。
-- [ ] T045 [P] [US2] 新增或更新繁中統計資源於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 total label、table headers、empty state、active/deleted status 與 percentage text。
-- [ ] T046 [P] [US2] 新增或更新英文統計資源於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保統計區在 `en-US` 無未翻譯 key。
-- [ ] T047 [P] [US2] 更新統計表 RWD 樣式於 `CardPicker2/wwwroot/css/site.css`，讓數字、百分比與狀態 badge 在 mobile/tablet/desktop 不重疊、不水平溢出。
-- [ ] T048 [US2] 執行 `dotnet test CardPicker2.sln --filter "DrawStatistics|DrawHistoryPersistence"`，確認 `CardPicker2.sln` 的 US2 測試通過。
+- [X] T040 [US2] 建立統計投影服務於 `CardPicker2/Services/DrawStatisticsService.cs`，由 `CardLibraryDocument.Cards` 與 `DrawHistory` 產生 `DrawStatisticsSummary`，不持久化 aggregate counters。
+- [X] T041 [US2] 更新服務契約於 `CardPicker2/Services/ICardLibraryService.cs`，新增 `GetDrawStatisticsAsync(SupportedLanguage language, CancellationToken)` 或等效 method。
+- [X] T042 [US2] 更新統計讀取流程於 `CardPicker2/Services/CardLibraryService.cs`，載入 schema v3 document 後投影 localized statistics，blocked library 回傳可呈現的 recovery state。
+- [X] T043 [US2] 更新首頁 PageModel 統計狀態於 `CardPicker2/Pages/Index.cshtml.cs`，GET、draw failure、draw success 與 replay 後都載入最新 `DrawStatisticsSummary`。
+- [X] T044 [US2] 更新首頁統計 Razor UI 於 `CardPicker2/Pages/Index.cshtml`，呈現總成功抽取次數、無歷史空狀態、統計表欄位、active/deleted status 與 localized probability display。
+- [X] T045 [P] [US2] 新增或更新繁中統計資源於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 total label、table headers、empty state、active/deleted status 與 percentage text。
+- [X] T046 [P] [US2] 新增或更新英文統計資源於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保統計區在 `en-US` 無未翻譯 key。
+- [X] T047 [P] [US2] 更新統計表 RWD 樣式於 `CardPicker2/wwwroot/css/site.css`，讓數字、百分比與狀態 badge 在 mobile/tablet/desktop 不重疊、不水平溢出。
+- [X] T048 [US2] 執行 `dotnet test CardPicker2.sln --filter "DrawStatistics|DrawHistoryPersistence"`，確認 `CardPicker2.sln` 的 US2 測試通過。
 
 **檢查點**: US1 與 US2 可同時運作，成功 draw 會持久化 history 並立即更新首頁統計。
 
