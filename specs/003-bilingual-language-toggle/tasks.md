@@ -154,18 +154,26 @@
 
 ## Final Phase: Polish & Cross-Cutting Concerns
 
-**Purpose**: 完成 responsive、可及性、安全標頭、效能與整體品質驗證。
+**Purpose**: 完成 responsive、可及性、安全標頭、效能、結構化日誌、文件註解、覆蓋率與整體品質驗證。
 
 - [ ] T071 [P] 新增兩語系 responsive、水平溢出與 axe smoke browser 測試 `tests/CardPicker2.IntegrationTests/Browser/LanguageResponsiveAccessibilityTests.cs`
-- [ ] T072 [P] 更新雙語長字串、fallback badge、語系切換與表單在 mobile/tablet/desktop 的最終樣式 `CardPicker2/wwwroot/css/site.css`
-- [ ] T073 [P] 更新 client-side localization state 程式碼，確保不保存完整餐點資料、秘密值、stack trace 或完整 JSON `CardPicker2/wwwroot/js/site.js`
-- [ ] T074 執行 `dotnet test CardPicker2.sln --filter Language` 並依 `specs/003-bilingual-language-toggle/quickstart.md` 確認語系測試通過
-- [ ] T075 執行 `dotnet test CardPicker2.sln --filter Localization` 並依 `specs/003-bilingual-language-toggle/quickstart.md` 確認 localization 測試通過
-- [ ] T076 執行 `dotnet test CardPicker2.sln --filter Bilingual` 並依 `specs/003-bilingual-language-toggle/quickstart.md` 確認雙語資料測試通過
-- [ ] T077 執行完整 `dotnet test CardPicker2.sln` 並依 `specs/003-bilingual-language-toggle/quickstart.md` 確認所有單元與整合測試通過
-- [ ] T078 執行 `dotnet build CardPicker2.sln` 並依 `.specify/memory/constitution.md` 確認無新增警告與格式違規
-- [ ] T079 依 `specs/003-bilingual-language-toggle/quickstart.md` 手動或 browser automation 驗證 390x844、768x1024、1366x768 兩語系無重疊與水平溢出
-- [ ] T080 依 `specs/003-bilingual-language-toggle/contracts/ui-contract.md` 驗證 production HSTS/CSP、Anti-Forgery 與安全錯誤訊息仍符合契約
+- [ ] T072 [P] 新增語系切換、無效 cookie fallback、翻譯缺漏、schema migration/write failure、validation failure 與 draw success 的安全 structured logging 測試 `tests/CardPicker2.UnitTests/Services/LocalizationLoggingTests.cs`
+- [ ] T073 [P] 新增 production HSTS/CSP、Anti-Forgery 與安全錯誤訊息自動化整合測試 `tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs`
+- [ ] T074 [P] 新增語系切換與主要頁面 render/handler 效能 smoke 測試，驗證 1 秒互動回應與 plan 效能預算 `tests/CardPicker2.IntegrationTests/Performance/LanguagePerformanceTests.cs`
+- [ ] T075 [P] 新增公開服務與模型 XML 文件註解檢查測試，涵蓋需要示例的 `<example>` 或 `<code>` `tests/CardPicker2.UnitTests/Documentation/PublicApiDocumentationTests.cs`
+- [ ] T076 [P] 更新測試專案 coverage collector 設定以支援憲章 80% 關鍵業務邏輯覆蓋率閘門 `tests/CardPicker2.UnitTests/CardPicker2.UnitTests.csproj` `tests/CardPicker2.IntegrationTests/CardPicker2.IntegrationTests.csproj`
+- [ ] T077 [P] 更新雙語長字串、fallback badge、語系切換與表單在 mobile/tablet/desktop 的最終樣式 `CardPicker2/wwwroot/css/site.css`
+- [ ] T078 [P] 更新 client-side localization state 程式碼，確保不保存完整餐點資料、秘密值、stack trace 或完整 JSON `CardPicker2/wwwroot/js/site.js`
+- [ ] T079 更新語系切換、偏好套用、翻譯缺漏、schema migration/write failure、validation failure 與 draw success 的 structured logging，且不得記錄未清理輸入、完整 JSON、秘密值或 stack trace `CardPicker2/Services/LanguagePreferenceService.cs` `CardPicker2/Services/MealCardLocalizationService.cs` `CardPicker2/Services/CardLibraryService.cs` `CardPicker2/Pages/Index.cshtml.cs`
+- [ ] T080 執行 `dotnet test CardPicker2.sln --filter Language` 並依 `specs/003-bilingual-language-toggle/quickstart.md` 確認語系測試通過
+- [ ] T081 執行 `dotnet test CardPicker2.sln --filter Localization` 並依 `specs/003-bilingual-language-toggle/quickstart.md` 確認 localization 測試通過
+- [ ] T082 執行 `dotnet test CardPicker2.sln --filter Bilingual` 並依 `specs/003-bilingual-language-toggle/quickstart.md` 確認雙語資料測試通過
+- [ ] T083 執行 `dotnet test CardPicker2.sln --filter "Logging|SecurityHeaders|Performance|Documentation"` 並依 `.specify/memory/constitution.md` 確認結構化日誌、安全標頭、效能與 XML 文件註解閘門通過
+- [ ] T084 執行完整 `dotnet test CardPicker2.sln` 並依 `specs/003-bilingual-language-toggle/quickstart.md` 確認所有單元與整合測試通過
+- [ ] T085 執行 `dotnet test CardPicker2.sln --collect:"XPlat Code Coverage"` 並依 `.specify/memory/constitution.md` 確認關鍵業務邏輯測試覆蓋率達 80% 以上，或在 PR handoff 中記錄合理例外
+- [ ] T086 執行 `dotnet build CardPicker2.sln` 並依 `.specify/memory/constitution.md` 確認無新增警告、格式違規與 XML 文件註解違規
+- [ ] T087 依 `specs/003-bilingual-language-toggle/quickstart.md` 手動或 browser automation 驗證 390x844、768x1024、1366x768 兩語系無重疊與水平溢出
+- [ ] T088 依 `specs/003-bilingual-language-toggle/contracts/ui-contract.md` 驗證 production HSTS/CSP、Anti-Forgery、安全錯誤訊息與自動化 `SecurityHeadersTests` 仍符合契約
 
 ---
 
@@ -202,7 +210,7 @@
 - US1 測試 T028-T030 可平行撰寫；T031-T033 可平行處理 language page 與 shared partial，T034-T040 需整合 layout/home/resources
 - US2 測試 T041-T044 可平行撰寫；T045-T051 可依頁面分工，T052-T055 在投影與 resource 完成後整合
 - US3 測試 T056-T059 可平行撰寫；T060-T065 可依 create/edit/details/form 分工，T066-T070 在雙語 mutation contract 確定後整合
-- Polish T071-T073 可平行處理，T074-T080 依驗證命令與手動檢查順序執行
+- Polish T071-T078 可平行處理，T079 在 logging 測試定義後整合實作，T080-T088 依驗證命令、coverage 與手動檢查順序執行
 
 ---
 
@@ -275,15 +283,19 @@ Task: "T065 [US3] CardPicker2/Pages/Cards/Details.cshtml.cs"
 - corrupted/unsupported `cards.json` 不得被 seed 或 migration 覆蓋
 - 語系切換不得改變 `CardId`、`MealType`、抽卡機率、搜尋條件、未送出輸入或刪除確認狀態
 - UI 在 `zh-TW` 與 `en-US` 下不得顯示未翻譯 key、空白餐點名稱、秘密值、stack trace 或完整內部資料
+- 關鍵語系、翻譯缺漏、schema、驗證與抽卡事件必須有安全 structured logging，且不得記錄秘密值、未清理輸入或完整 JSON
+- 主要頁面與語系切換必須符合 plan 效能預算，並以 smoke 測試或 browser automation 留下證據
+- 公開服務與模型的非平凡行為必須具備 XML 文件註解；需要示例的 API 必須含 `<example>` 或 `<code>`
+- 關鍵業務邏輯測試覆蓋率必須達 80% 以上，或在 PR handoff 中記錄合理例外與替代驗證
 
 ## Task Summary
 
-- **Total tasks**: 80
+- **Total tasks**: 88
 - **Setup tasks**: 5
 - **Foundational tasks**: 22
 - **US1 tasks**: 13
 - **US2 tasks**: 15
 - **US3 tasks**: 15
-- **Polish tasks**: 10
+- **Polish tasks**: 18
 - **Suggested MVP scope**: Phase 1 + Phase 2 + User Story 1
 - **Format validation**: 所有 checklist task 均使用 `- [ ] T###` 格式；使用者故事任務包含 `[US1]`、`[US2]` 或 `[US3]`；可平行任務以 `[P]` 標示；每項任務都包含至少一個檔案路徑。
