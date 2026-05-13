@@ -1,4 +1,57 @@
 ﻿(() => {
+  const forms = Array.from(document.querySelectorAll('[data-language-switcher]'));
+  if (forms.length === 0) {
+    return;
+  }
+
+  const appendValue = (url, key, value) => {
+    if (value !== null && value !== undefined && value !== '') {
+      url.searchParams.set(key, value);
+    }
+  };
+
+  const preserveHomeState = (url) => {
+    const drawForm = document.querySelector('[data-draw-form]');
+    if (!drawForm) {
+      return;
+    }
+
+    const selectedMeal = drawForm.querySelector('input[name="MealType"]:checked');
+    const coin = drawForm.querySelector('input[name="CoinInserted"]');
+    const result = document.querySelector('[data-result-card-id]');
+
+    if (selectedMeal instanceof HTMLInputElement) {
+      appendValue(url, 'mealType', selectedMeal.value);
+    }
+
+    if (coin instanceof HTMLInputElement && coin.checked) {
+      appendValue(url, 'coinInserted', 'true');
+    }
+
+    if (result instanceof HTMLElement) {
+      appendValue(url, 'resultCardId', result.dataset.resultCardId);
+    }
+  };
+
+  forms.forEach((form) => {
+    form.addEventListener('submit', () => {
+      const returnInput = form.querySelector('input[name="returnUrl"]');
+      if (!(returnInput instanceof HTMLInputElement)) {
+        return;
+      }
+
+      try {
+        const url = new URL(returnInput.value || `${window.location.pathname}${window.location.search}`, window.location.origin);
+        preserveHomeState(url);
+        returnInput.value = `${url.pathname}${url.search}${url.hash}`;
+      } catch {
+        returnInput.value = '/';
+      }
+    });
+  });
+})();
+
+(() => {
   const storageKey = 'cardpicker.theme.mode';
   const allowedModes = new Set(['light', 'dark', 'system']);
   const root = document.documentElement;

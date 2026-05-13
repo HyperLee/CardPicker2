@@ -24,10 +24,7 @@ public class Program
         });
 
         // Add services to the container.
-        builder.Services.AddLocalization(options =>
-        {
-            options.ResourcesPath = "Resources";
-        });
+        builder.Services.AddLocalization();
         builder.Services
             .AddRazorPages()
             .AddViewLocalization()

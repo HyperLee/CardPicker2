@@ -1,0 +1,27 @@
+@using CardPicker2.Models
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    var currentLanguage = SupportedLanguage.FromCultureNameOrDefault(CultureInfo.CurrentUICulture.Name);
+    var returnUrl = $"{Context.Request.PathBase}{Context.Request.Path}{Context.Request.QueryString}";
+}
+
+<form method="post" asp-page="/Language" asp-page-handler="Set" class="language-switcher" data-language-switcher>
+    <input type="hidden" name="returnUrl" value="@returnUrl" />
+    <div class="language-switcher-status" aria-live="polite">
+        @Localizer["Language.Current", currentLanguage.GetDisplayName(currentLanguage)]
+    </div>
+    <div class="language-switcher-actions" role="group" aria-label="@Localizer["Language.SwitcherLabel"]">
+        @foreach (var language in SupportedLanguage.All)
+        {
+            var isCurrent = language == currentLanguage;
+            <button type="submit"
+                    name="culture"
+                    value="@language.CultureName"
+                    class="btn btn-sm @(isCurrent ? "btn-danger" : "btn-outline-secondary")"
+                    aria-pressed="@isCurrent.ToString().ToLowerInvariant()">
+                @language.GetDisplayName(currentLanguage)
+            </button>
+        }
+    </div>
+</form>

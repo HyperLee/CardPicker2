@@ -109,6 +109,33 @@ body .footer a {
   border-color: var(--cp-muted);
 }
 
+.language-switcher {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
+}
+
+.language-switcher-status {
+  color: var(--cp-muted);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.language-switcher-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.language-switcher .btn {
+  min-height: 2.25rem;
+  white-space: normal;
+}
+
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);
   text-align: end;
@@ -386,6 +413,17 @@ body .footer a {
   font-weight: 700;
 }
 
+.fallback-badge {
+  display: inline-flex;
+  margin: 0.5rem 0 0;
+  padding: 0.25rem 0.65rem;
+  border: 1px solid var(--cp-border);
+  border-radius: 999px;
+  background: var(--cp-surface);
+  color: var(--cp-muted);
+  font-weight: 700;
+}
+
 .card-library,
 .card-detail {
   max-width: 980px;
@@ -533,6 +571,15 @@ body .footer a {
   .theme-mode-options,
   .draw-controls {
     grid-template-columns: 1fr;
+  }
+
+  .language-switcher {
+    justify-content: stretch;
+  }
+
+  .language-switcher-actions,
+  .language-switcher-actions .btn {
+    width: 100%;
   }
 
   .slot-machine {

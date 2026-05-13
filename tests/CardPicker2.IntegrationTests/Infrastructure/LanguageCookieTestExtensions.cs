@@ -17,10 +17,12 @@ public static class LanguageCookieTestExtensions
     public static bool HasCultureCookie(this HttpResponseHeaders headers, string cultureName)
     {
         var expectedValue = CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(cultureName, cultureName));
+        var encodedExpectedValue = Uri.EscapeDataString(expectedValue);
 
         return headers.TryGetValues("Set-Cookie", out var values) &&
             values.Any(value =>
                 value.Contains(CultureCookieName, StringComparison.Ordinal) &&
-                value.Contains(expectedValue, StringComparison.Ordinal));
+                (value.Contains(expectedValue, StringComparison.Ordinal) ||
+                    value.Contains(encodedExpectedValue, StringComparison.Ordinal)));
     }
 }

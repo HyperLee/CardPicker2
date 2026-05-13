@@ -1,35 +1,39 @@
 ﻿@page
-@using CardPicker2.Models
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
 @model IndexModel
 @{
-    ViewData["Title"] = "餐點抽卡機";
+    ViewData["Title"] = Localizer["Home.Title"];
+    var slotColumnOne = Model.CurrentLanguage == SupportedLanguage.EnUs ? new[] { "B", "L", "D" } : new[] { "早", "午", "晚" };
+    var slotColumnTwo = Model.CurrentLanguage == SupportedLanguage.EnUs ? new[] { "Rice", "Noodle", "Soup" } : new[] { "飯", "麵", "湯" };
+    var slotColumnThree = Model.CurrentLanguage == SupportedLanguage.EnUs ? new[] { "Fresh", "Savory", "Warm" } : new[] { "鮮", "香", "熱" };
 }
 
 <section class="slot-page" aria-labelledby="draw-title">
     <div class="slot-header">
-        <p class="slot-kicker">今日餐點</p>
-        <h1 id="draw-title">餐點抽卡機</h1>
+        <p class="slot-kicker">@Localizer["Home.Kicker"]</p>
+        <h1 id="draw-title">@Localizer["Home.Title"]</h1>
     </div>
 
     <section class="theme-mode-panel" data-theme-mode-selector aria-labelledby="theme-mode-title">
         <fieldset class="theme-mode-fieldset">
-            <legend id="theme-mode-title">網站主題</legend>
-            <div class="theme-mode-options" role="radiogroup" aria-label="網站主題">
+            <legend id="theme-mode-title">@Localizer["Theme.Title"]</legend>
+            <div class="theme-mode-options" role="radiogroup" aria-label="@Localizer["Theme.Title"]">
                 <input class="btn-check theme-mode-input" type="radio" name="theme-mode" id="theme-mode-light" value="light" autocomplete="off" />
-                <label class="btn theme-mode-option" for="theme-mode-light">亮色模式</label>
+                <label class="btn theme-mode-option" for="theme-mode-light">@Localizer["Theme.Light"]</label>
 
                 <input class="btn-check theme-mode-input" type="radio" name="theme-mode" id="theme-mode-dark" value="dark" autocomplete="off" />
-                <label class="btn theme-mode-option" for="theme-mode-dark">暗黑模式</label>
+                <label class="btn theme-mode-option" for="theme-mode-dark">@Localizer["Theme.Dark"]</label>
 
                 <input class="btn-check theme-mode-input" type="radio" name="theme-mode" id="theme-mode-system" value="system" autocomplete="off" checked />
-                <label class="btn theme-mode-option" for="theme-mode-system">跟隨系統</label>
+                <label class="btn theme-mode-option" for="theme-mode-system">@Localizer["Theme.System"]</label>
             </div>
         </fieldset>
     </section>
 
     @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
     {
-        var alertClass = Model.OperationState == CardPicker2.Models.DrawOperationState.Blocked ? "alert-danger" : "alert-info";
+        var alertClass = Model.OperationState == DrawOperationState.Blocked ? "alert-danger" : "alert-info";
         <div class="alert @alertClass" role="status" id="draw-state">@Model.StatusMessage</div>
     }
 
@@ -37,44 +41,63 @@
         <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
         <fieldset class="meal-selector" disabled="@Model.IsBlocked">
-            <legend>選擇餐別</legend>
-            <div class="meal-options" role="radiogroup" aria-label="選擇餐別">
+            <legend>@Localizer["Home.MealSelector.Legend"]</legend>
+            <div class="meal-options" role="radiogroup" aria-label="@Localizer["Home.MealSelector.Legend"]">
                 @foreach (var mealType in Model.MealTypes)
                 {
                     var id = $"meal-{mealType}";
                     <input class="btn-check" type="radio" asp-for="MealType" id="@id" value="@mealType" />
-                    <label class="btn meal-option" for="@id">@mealType.ToDisplayName()</label>
+                    <label class="btn meal-option" for="@id">@mealType.ToDisplayName(Model.CurrentLanguage)</label>
                 }
             </div>
             <span asp-validation-for="MealType" class="text-danger"></span>
         </fieldset>
 
-        <div class="slot-machine" aria-label="老虎機抽卡視覺區" data-slot-machine>
-            <div class="slot-reel"><span>早</span><span>午</span><span>晚</span></div>
-            <div class="slot-reel"><span>飯</span><span>麵</span><span>湯</span></div>
-            <div class="slot-reel"><span>鮮</span><span>香</span><span>熱</span></div>
+        <div class="slot-machine" aria-label="@Localizer["Home.Slot.Aria"]" data-slot-machine>
+            <div class="slot-reel">
+                @foreach (var symbol in slotColumnOne)
+                {
+                    <span>@symbol</span>
+                }
+            </div>
+            <div class="slot-reel">
+                @foreach (var symbol in slotColumnTwo)
+                {
+                    <span>@symbol</span>
+                }
+            </div>
+            <div class="slot-reel">
+                @foreach (var symbol in slotColumnThree)
+                {
+                    <span>@symbol</span>
+                }
+            </div>
         </div>
 
         <div class="draw-controls">
             <div class="form-check coin-control">
                 <input asp-for="CoinInserted" class="form-check-input" disabled="@Model.IsBlocked" />
-                <label asp-for="CoinInserted" class="form-check-label">投幣確認</label>
+                <label asp-for="CoinInserted" class="form-check-label">@Localizer["Home.Coin.Label"]</label>
             </div>
             <span asp-validation-for="CoinInserted" class="text-danger"></span>
 
             <button type="submit" class="btn btn-danger lever-button" disabled="@Model.IsBlocked" data-draw-submit>
-                拉桿開始抽卡
+                @Localizer["Home.Draw.Button"]
             </button>
         </div>
     </form>
 
     @if (Model.Result?.Succeeded == true)
     {
-        <section class="draw-result" aria-labelledby="draw-result-title">
-            <p class="slot-kicker">抽卡結果</p>
+        <section class="draw-result" aria-labelledby="draw-result-title" data-result-card-id="@Model.Result.CardId">
+            <p class="slot-kicker">@Localizer["Home.Result.Kicker"]</p>
             <h2 id="draw-result-title">@Model.Result.Name</h2>
             <p class="meal-badge">@Model.Result.MealTypeDisplayName</p>
             <p>@Model.Result.Description</p>
+            @if (Model.Result.LocalizedCard?.IsFallback == true)
+            {
+                <p class="fallback-badge">@Localizer["Card.NeedsEnglishTranslation"]</p>
+            }
         </section>
     }
 </section>

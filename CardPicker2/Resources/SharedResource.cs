@@ -1,4 +1,4 @@
-namespace CardPicker2.Resources;
+namespace CardPicker2;
 
 /// <summary>
 /// Marker type used to resolve shared localization resources.

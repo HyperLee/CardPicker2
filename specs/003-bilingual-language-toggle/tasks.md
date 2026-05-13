@@ -69,22 +69,22 @@
 
 ### Tests for User Story 1
 
-- [ ] T028 [P] [US1] 新增首頁預設繁中、英文 cookie、切回繁中與 layout 目前語系整合測試 `tests/CardPicker2.IntegrationTests/Pages/LanguageSwitchPageTests.cs`
-- [ ] T029 [P] [US1] 新增 `POST /Language?handler=Set` Anti-Forgery、culture 白名單、unsafe returnUrl 與 cookie 寫入整合測試 `tests/CardPicker2.IntegrationTests/Pages/LanguageSetHandlerTests.cs`
-- [ ] T030 [P] [US1] 新增首頁語系切換保留 meal selection、coin state 與 revealed result 的 browser 測試 `tests/CardPicker2.IntegrationTests/Browser/LanguageHomeStatePreservationTests.cs`
+- [X] T028 [P] [US1] 新增首頁預設繁中、英文 cookie、切回繁中與 layout 目前語系整合測試 `tests/CardPicker2.IntegrationTests/Pages/LanguageSwitchPageTests.cs`
+- [X] T029 [P] [US1] 新增 `POST /Language?handler=Set` Anti-Forgery、culture 白名單、unsafe returnUrl 與 cookie 寫入整合測試 `tests/CardPicker2.IntegrationTests/Pages/LanguageSetHandlerTests.cs`
+- [X] T030 [P] [US1] 新增首頁語系切換保留 meal selection、coin state 與 revealed result 的 browser 測試 `tests/CardPicker2.IntegrationTests/Browser/LanguageHomeStatePreservationTests.cs`
 
 ### Implementation for User Story 1
 
-- [ ] T031 [US1] 建立語系設定 Razor Page shell `CardPicker2/Pages/Language.cshtml`
-- [ ] T032 [US1] 實作語系設定 PageModel `POST /Language?handler=Set` `CardPicker2/Pages/Language.cshtml.cs`
-- [ ] T033 [US1] 建立 shared language switch partial，包含 Anti-Forgery form、目前語系與可及名稱 `CardPicker2/Pages/Shared/_LanguageSwitcher.cshtml`
-- [ ] T034 [US1] 更新 shared layout 的 `<html lang>`、導覽、標題、頁尾與 language switch placement `CardPicker2/Pages/Shared/_Layout.cshtml`
-- [ ] T035 [US1] 更新首頁 view 以使用 shared resources、localized meal labels、hidden result state 與 fallback prompt `CardPicker2/Pages/Index.cshtml`
-- [ ] T036 [US1] 更新首頁 PageModel 以使用 localized message keys、current culture projection 與同一 `CardId` result re-render `CardPicker2/Pages/Index.cshtml.cs`
-- [ ] T037 [US1] 實作首頁語系切換前後 transient state 保存與還原 `CardPicker2/wwwroot/js/site.js`
-- [ ] T038 [US1] 新增 language switcher、首頁長英文文案與焦點狀態 responsive 樣式 `CardPicker2/wwwroot/css/site.css`
-- [ ] T039 [US1] 補齊 layout、language switch、首頁、抽卡狀態與餐別 resource keys `CardPicker2/Resources/SharedResource.zh-TW.resx`
-- [ ] T040 [US1] 補齊 layout、language switch、首頁、抽卡狀態與餐別英文 resource keys `CardPicker2/Resources/SharedResource.en-US.resx`
+- [X] T031 [US1] 建立語系設定 Razor Page shell `CardPicker2/Pages/Language.cshtml`
+- [X] T032 [US1] 實作語系設定 PageModel `POST /Language?handler=Set` `CardPicker2/Pages/Language.cshtml.cs`
+- [X] T033 [US1] 建立 shared language switch partial，包含 Anti-Forgery form、目前語系與可及名稱 `CardPicker2/Pages/Shared/_LanguageSwitcher.cshtml`
+- [X] T034 [US1] 更新 shared layout 的 `<html lang>`、導覽、標題、頁尾與 language switch placement `CardPicker2/Pages/Shared/_Layout.cshtml`
+- [X] T035 [US1] 更新首頁 view 以使用 shared resources、localized meal labels、hidden result state 與 fallback prompt `CardPicker2/Pages/Index.cshtml`
+- [X] T036 [US1] 更新首頁 PageModel 以使用 localized message keys、current culture projection 與同一 `CardId` result re-render `CardPicker2/Pages/Index.cshtml.cs`
+- [X] T037 [US1] 實作首頁語系切換前後 transient state 保存與還原 `CardPicker2/wwwroot/js/site.js`
+- [X] T038 [US1] 新增 language switcher、首頁長英文文案與焦點狀態 responsive 樣式 `CardPicker2/wwwroot/css/site.css`
+- [X] T039 [US1] 補齊 layout、language switch、首頁、抽卡狀態與餐別 resource keys `CardPicker2/Resources/SharedResource.zh-TW.resx`
+- [X] T040 [US1] 補齊 layout、language switch、首頁、抽卡狀態與餐別英文 resource keys `CardPicker2/Resources/SharedResource.en-US.resx`
 
 **Checkpoint**: User Story 1 可獨立展示：首頁與 shared layout 可在兩語系間切換，狀態不被清除。
 

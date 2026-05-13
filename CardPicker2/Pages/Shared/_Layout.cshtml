@@ -1,12 +1,16 @@
-﻿@{
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+@{
     var cspNonce = Context.Items["CspNonce"] as string;
+    var currentLanguage = SupportedLanguage.FromCultureNameOrDefault(CultureInfo.CurrentUICulture.Name);
+    var appName = Localizer["App.Name"];
 }
 <!DOCTYPE html>
-<html lang="zh-Hant" data-bs-theme="light" data-theme-mode="system">
+<html lang="@currentLanguage.HtmlLang" data-bs-theme="light" data-theme-mode="system">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - 餐點抽卡機</title>
+    <title>@ViewData["Title"] - @appName</title>
     <script nonce="@cspNonce">
         (() => {
             const storageKey = 'cardpicker.theme.mode';
@@ -40,23 +44,24 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm cardpicker-navbar border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">餐點抽卡機</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index">@appName</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="切換導覽">
+                        aria-expanded="false" aria-label="@Localizer["Layout.ToggleNavigation"]">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-page="/Index">抽卡</a>
+                            <a class="nav-link" asp-area="" asp-page="/Index">@Localizer["Nav.Draw"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-page="/Cards/Index">卡牌庫</a>
+                            <a class="nav-link" asp-area="" asp-page="/Cards/Index">@Localizer["Nav.Cards"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-page="/Privacy">隱私</a>
+                            <a class="nav-link" asp-area="" asp-page="/Privacy">@Localizer["Nav.Privacy"]</a>
                         </li>
                     </ul>
+                    <partial name="_LanguageSwitcher" />
                 </div>
             </div>
         </nav>
@@ -69,7 +74,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2026 - 餐點抽卡機 - <a asp-area="" asp-page="/Privacy">隱私</a>
+            &copy; 2026 - @appName - <a asp-area="" asp-page="/Privacy">@Localizer["Nav.Privacy"]</a>
         </div>
     </footer>
 

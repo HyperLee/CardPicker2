@@ -36,6 +36,66 @@
   <data name="Language.SwitchTo" xml:space="preserve">
     <value>Switch to {0}</value>
   </data>
+  <data name="Language.SwitcherLabel" xml:space="preserve">
+    <value>Language switcher</value>
+  </data>
+  <data name="Layout.ToggleNavigation" xml:space="preserve">
+    <value>Toggle navigation</value>
+  </data>
+  <data name="Theme.Title" xml:space="preserve">
+    <value>Site theme</value>
+  </data>
+  <data name="Theme.Light" xml:space="preserve">
+    <value>Light mode</value>
+  </data>
+  <data name="Theme.Dark" xml:space="preserve">
+    <value>Dark mode</value>
+  </data>
+  <data name="Theme.System" xml:space="preserve">
+    <value>Follow system</value>
+  </data>
+  <data name="Home.Kicker" xml:space="preserve">
+    <value>Today's meal</value>
+  </data>
+  <data name="Home.Title" xml:space="preserve">
+    <value>Meal Card Slot</value>
+  </data>
+  <data name="Home.Status.ChooseMeal" xml:space="preserve">
+    <value>Choose breakfast, lunch, or dinner first.</value>
+  </data>
+  <data name="Home.Status.MealSelected" xml:space="preserve">
+    <value>Meal type selected. Insert a coin, then pull the lever.</value>
+  </data>
+  <data name="Home.Status.CoinRequired" xml:space="preserve">
+    <value>Insert a coin before pulling the lever.</value>
+  </data>
+  <data name="Home.Status.DrawSuccess" xml:space="preserve">
+    <value>A meal card has been drawn.</value>
+  </data>
+  <data name="Home.Status.ResultRestored" xml:space="preserve">
+    <value>The current draw result was preserved.</value>
+  </data>
+  <data name="Home.Status.ResultUnavailable" xml:space="preserve">
+    <value>The previous draw result is no longer available. Draw again.</value>
+  </data>
+  <data name="Home.MealSelector.Legend" xml:space="preserve">
+    <value>Choose a meal type</value>
+  </data>
+  <data name="Home.Slot.Aria" xml:space="preserve">
+    <value>Slot-machine draw visual</value>
+  </data>
+  <data name="Home.Coin.Label" xml:space="preserve">
+    <value>Insert coin</value>
+  </data>
+  <data name="Home.Draw.Button" xml:space="preserve">
+    <value>Pull lever to draw</value>
+  </data>
+  <data name="Home.Result.Kicker" xml:space="preserve">
+    <value>Draw result</value>
+  </data>
+  <data name="Card.NeedsEnglishTranslation" xml:space="preserve">
+    <value>Needs English translation</value>
+  </data>
   <data name="Meal.Breakfast" xml:space="preserve">
     <value>Breakfast</value>
   </data>

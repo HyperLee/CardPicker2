@@ -36,6 +36,66 @@
   <data name="Language.SwitchTo" xml:space="preserve">
     <value>切換到{0}</value>
   </data>
+  <data name="Language.SwitcherLabel" xml:space="preserve">
+    <value>語系切換</value>
+  </data>
+  <data name="Layout.ToggleNavigation" xml:space="preserve">
+    <value>切換導覽</value>
+  </data>
+  <data name="Theme.Title" xml:space="preserve">
+    <value>網站主題</value>
+  </data>
+  <data name="Theme.Light" xml:space="preserve">
+    <value>亮色模式</value>
+  </data>
+  <data name="Theme.Dark" xml:space="preserve">
+    <value>暗黑模式</value>
+  </data>
+  <data name="Theme.System" xml:space="preserve">
+    <value>跟隨系統</value>
+  </data>
+  <data name="Home.Kicker" xml:space="preserve">
+    <value>今日餐點</value>
+  </data>
+  <data name="Home.Title" xml:space="preserve">
+    <value>餐點抽卡機</value>
+  </data>
+  <data name="Home.Status.ChooseMeal" xml:space="preserve">
+    <value>請先選擇早餐、午餐或晚餐。</value>
+  </data>
+  <data name="Home.Status.MealSelected" xml:space="preserve">
+    <value>已選擇餐別，請投幣後拉桿。</value>
+  </data>
+  <data name="Home.Status.CoinRequired" xml:space="preserve">
+    <value>請先投幣再拉桿。</value>
+  </data>
+  <data name="Home.Status.DrawSuccess" xml:space="preserve">
+    <value>已抽出餐點卡牌。</value>
+  </data>
+  <data name="Home.Status.ResultRestored" xml:space="preserve">
+    <value>已保留目前抽卡結果。</value>
+  </data>
+  <data name="Home.Status.ResultUnavailable" xml:space="preserve">
+    <value>原抽卡結果已無法顯示，請重新抽卡。</value>
+  </data>
+  <data name="Home.MealSelector.Legend" xml:space="preserve">
+    <value>選擇餐別</value>
+  </data>
+  <data name="Home.Slot.Aria" xml:space="preserve">
+    <value>老虎機抽卡視覺區</value>
+  </data>
+  <data name="Home.Coin.Label" xml:space="preserve">
+    <value>投幣確認</value>
+  </data>
+  <data name="Home.Draw.Button" xml:space="preserve">
+    <value>拉桿開始抽卡</value>
+  </data>
+  <data name="Home.Result.Kicker" xml:space="preserve">
+    <value>抽卡結果</value>
+  </data>
+  <data name="Card.NeedsEnglishTranslation" xml:space="preserve">
+    <value>需要英文翻譯</value>
+  </data>
   <data name="Meal.Breakfast" xml:space="preserve">
     <value>早餐</value>
   </data>
