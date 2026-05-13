@@ -23,7 +23,9 @@ public sealed class IndexModel : PageModel
 
     public IReadOnlyList<MealType> MealTypes { get; } = Enum.GetValues<MealType>();
 
-    public IReadOnlyList<MealCard> Cards { get; private set; } = Array.Empty<MealCard>();
+    public SupportedLanguage CurrentLanguage => SupportedLanguage.FromCultureNameOrDefault(Thread.CurrentThread.CurrentUICulture.Name);
+
+    public IReadOnlyList<LocalizedMealCardView> Cards { get; private set; } = Array.Empty<LocalizedMealCardView>();
 
     public CardLibraryLoadResult? LibraryState { get; private set; }
 
@@ -37,14 +39,15 @@ public sealed class IndexModel : PageModel
         LibraryState = await _cardLibraryService.LoadAsync(cancellationToken);
         if (LibraryState.IsBlocked)
         {
-            Cards = Array.Empty<MealCard>();
+            Cards = Array.Empty<LocalizedMealCardView>();
             return;
         }
 
-        Cards = await _cardLibraryService.SearchAsync(new SearchCriteria
+        Cards = await _cardLibraryService.SearchLocalizedAsync(new SearchCriteria
         {
             Keyword = Keyword,
-            MealType = MealType
+            MealType = MealType,
+            CurrentLanguage = CurrentLanguage
         }, cancellationToken);
     }
 }

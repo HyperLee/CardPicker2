@@ -98,24 +98,24 @@
 
 ### Tests for User Story 2
 
-- [ ] T041 [P] [US2] 新增卡牌列表搜尋、英文 visible-name 搜尋與 fallback name 搜尋整合測試 `tests/CardPicker2.IntegrationTests/Pages/LocalizedSearchPageTests.cs`
-- [ ] T042 [P] [US2] 新增抽卡結果 card ID 不因語系切換重新抽卡的整合測試 `tests/CardPicker2.IntegrationTests/Pages/LocalizedDrawPageTests.cs`
-- [ ] T043 [P] [US2] 新增卡牌詳情、隱私權、錯誤頁與 shared layout 語系一致性整合測試 `tests/CardPicker2.IntegrationTests/Pages/LocalizedNonHomePageTests.cs`
-- [ ] T044 [P] [US2] 新增兩語系 resource completeness 與未翻譯 key 偵測測試 `tests/CardPicker2.IntegrationTests/Pages/LocalizationResourceTests.cs`
+- [X] T041 [P] [US2] 新增卡牌列表搜尋、英文 visible-name 搜尋與 fallback name 搜尋整合測試 `tests/CardPicker2.IntegrationTests/Pages/LocalizedSearchPageTests.cs`
+- [X] T042 [P] [US2] 新增抽卡結果 card ID 不因語系切換重新抽卡的整合測試 `tests/CardPicker2.IntegrationTests/Pages/LocalizedDrawPageTests.cs`
+- [X] T043 [P] [US2] 新增卡牌詳情、隱私權、錯誤頁與 shared layout 語系一致性整合測試 `tests/CardPicker2.IntegrationTests/Pages/LocalizedNonHomePageTests.cs`
+- [X] T044 [P] [US2] 新增兩語系 resource completeness 與未翻譯 key 偵測測試 `tests/CardPicker2.IntegrationTests/Pages/LocalizationResourceTests.cs`
 
 ### Implementation for User Story 2
 
-- [ ] T045 [US2] 更新卡牌列表 PageModel 以 current culture projection 搜尋並回傳 localized cards `CardPicker2/Pages/Cards/Index.cshtml.cs`
-- [ ] T046 [US2] 更新卡牌列表 view 的搜尋表單、結果數、無結果、餐別與 fallback prompt `CardPicker2/Pages/Cards/Index.cshtml`
-- [ ] T047 [US2] 更新卡牌詳情 PageModel 以回傳 localized card view、not-found 與 blocked recovery 訊息 `CardPicker2/Pages/Cards/Details.cshtml.cs`
-- [ ] T048 [US2] 更新卡牌詳情 view 的 labels、actions、餐點內容、fallback badge 與 delete confirmation 文案 `CardPicker2/Pages/Cards/Details.cshtml`
-- [ ] T049 [US2] 更新隱私權頁面 view 與 PageModel 的 localized title/copy `CardPicker2/Pages/Privacy.cshtml` `CardPicker2/Pages/Privacy.cshtml.cs`
-- [ ] T050 [US2] 更新錯誤頁面 view 與 PageModel 的安全 localized recovery copy `CardPicker2/Pages/Error.cshtml` `CardPicker2/Pages/Error.cshtml.cs`
-- [ ] T051 [US2] 更新餐別顯示 helper，改由支援語系或 localizer 產生餐別名稱 `CardPicker2/Models/MealType.cs`
-- [ ] T052 [US2] 更新搜尋與 draw service flow 以使用 visible localized projection 且不改變抽卡 pool `CardPicker2/Services/CardLibraryService.cs`
-- [ ] T053 [US2] 擴充語系切換 state 保存以保留 `/Cards` query string、validation context 與 delete confirmation context `CardPicker2/wwwroot/js/site.js`
-- [ ] T054 [US2] 補齊卡牌列表、詳情、隱私權、錯誤、搜尋、fallback 與 recovery resource keys `CardPicker2/Resources/SharedResource.zh-TW.resx`
-- [ ] T055 [US2] 補齊卡牌列表、詳情、隱私權、錯誤、搜尋、fallback 與 recovery 英文 resource keys `CardPicker2/Resources/SharedResource.en-US.resx`
+- [X] T045 [US2] 更新卡牌列表 PageModel 以 current culture projection 搜尋並回傳 localized cards `CardPicker2/Pages/Cards/Index.cshtml.cs`
+- [X] T046 [US2] 更新卡牌列表 view 的搜尋表單、結果數、無結果、餐別與 fallback prompt `CardPicker2/Pages/Cards/Index.cshtml`
+- [X] T047 [US2] 更新卡牌詳情 PageModel 以回傳 localized card view、not-found 與 blocked recovery 訊息 `CardPicker2/Pages/Cards/Details.cshtml.cs`
+- [X] T048 [US2] 更新卡牌詳情 view 的 labels、actions、餐點內容、fallback badge 與 delete confirmation 文案 `CardPicker2/Pages/Cards/Details.cshtml`
+- [X] T049 [US2] 更新隱私權頁面 view 與 PageModel 的 localized title/copy `CardPicker2/Pages/Privacy.cshtml` `CardPicker2/Pages/Privacy.cshtml.cs`
+- [X] T050 [US2] 更新錯誤頁面 view 與 PageModel 的安全 localized recovery copy `CardPicker2/Pages/Error.cshtml` `CardPicker2/Pages/Error.cshtml.cs`
+- [X] T051 [US2] 更新餐別顯示 helper，改由支援語系或 localizer 產生餐別名稱 `CardPicker2/Models/MealType.cs`
+- [X] T052 [US2] 更新搜尋與 draw service flow 以使用 visible localized projection 且不改變抽卡 pool `CardPicker2/Services/CardLibraryService.cs`
+- [X] T053 [US2] 擴充語系切換 state 保存以保留 `/Cards` query string、validation context 與 delete confirmation context `CardPicker2/wwwroot/js/site.js`
+- [X] T054 [US2] 補齊卡牌列表、詳情、隱私權、錯誤、搜尋、fallback 與 recovery resource keys `CardPicker2/Resources/SharedResource.zh-TW.resx`
+- [X] T055 [US2] 補齊卡牌列表、詳情、隱私權、錯誤、搜尋、fallback 與 recovery 英文 resource keys `CardPicker2/Resources/SharedResource.en-US.resx`
 
 **Checkpoint**: User Story 1 與 User Story 2 都可獨立驗證，且語系不影響抽卡身分、搜尋條件或卡牌資料。
 

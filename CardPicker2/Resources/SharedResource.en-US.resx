@@ -96,6 +96,87 @@
   <data name="Card.NeedsEnglishTranslation" xml:space="preserve">
     <value>Needs English translation</value>
   </data>
+  <data name="Cards.Kicker" xml:space="preserve">
+    <value>Card library</value>
+  </data>
+  <data name="Cards.Title" xml:space="preserve">
+    <value>Card Library</value>
+  </data>
+  <data name="Cards.Create" xml:space="preserve">
+    <value>Add card</value>
+  </data>
+  <data name="Cards.KeywordLabel" xml:space="preserve">
+    <value>Meal name keyword</value>
+  </data>
+  <data name="Cards.KeywordPlaceholder" xml:space="preserve">
+    <value>Enter a meal name</value>
+  </data>
+  <data name="Cards.MealTypeLabel" xml:space="preserve">
+    <value>Meal type</value>
+  </data>
+  <data name="Cards.AllMealTypes" xml:space="preserve">
+    <value>All meal types</value>
+  </data>
+  <data name="Cards.Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Cards.Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Cards.Empty" xml:space="preserve">
+    <value>No meal cards match your filters.</value>
+  </data>
+  <data name="Cards.ListAria" xml:space="preserve">
+    <value>Meal card list</value>
+  </data>
+  <data name="Cards.Details" xml:space="preserve">
+    <value>View details</value>
+  </data>
+  <data name="Cards.Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Details.Title" xml:space="preserve">
+    <value>Meal card details</value>
+  </data>
+  <data name="Details.Kicker" xml:space="preserve">
+    <value>Card details</value>
+  </data>
+  <data name="Details.EditCard" xml:space="preserve">
+    <value>Edit card</value>
+  </data>
+  <data name="Details.DeleteConfirmLabel" xml:space="preserve">
+    <value>I confirm that I want to permanently delete this meal card</value>
+  </data>
+  <data name="Details.DeleteButton" xml:space="preserve">
+    <value>Delete card</value>
+  </data>
+  <data name="Details.BackToCards" xml:space="preserve">
+    <value>Back to card library</value>
+  </data>
+  <data name="Details.NotFound" xml:space="preserve">
+    <value>Meal card was not found.</value>
+  </data>
+  <data name="Details.ConfirmRequired" xml:space="preserve">
+    <value>Confirm the delete action first.</value>
+  </data>
+  <data name="Privacy.Title" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="Privacy.Body" xml:space="preserve">
+    <value>This site is designed for single-user local use. Meal card data is stored in this app's local JSON file and is not sent to external services.</value>
+  </data>
+  <data name="Error.Title" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Error.Heading" xml:space="preserve">
+    <value>Something went wrong.</value>
+  </data>
+  <data name="Error.Message" xml:space="preserve">
+    <value>Go back to the previous page or try again later. This error page does not show stack traces or sensitive details.</value>
+  </data>
+  <data name="Error.RequestId" xml:space="preserve">
+    <value>Request ID:</value>
+  </data>
   <data name="Meal.Breakfast" xml:space="preserve">
     <value>Breakfast</value>
   </data>

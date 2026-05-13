@@ -1,8 +1,9 @@
 @page "/Cards/{id:guid}"
-@using CardPicker2.Models
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
 @model CardPicker2.Pages.Cards.DetailsModel
 @{
-    ViewData["Title"] = Model.Card?.Name ?? "餐點卡牌詳情";
+    ViewData["Title"] = Model.Card?.DisplayName ?? Localizer["Details.Title"];
 }
 
 <section class="card-detail" aria-labelledby="card-detail-title">
@@ -21,24 +22,28 @@
     }
     else
     {
-        <p class="slot-kicker">卡牌詳情</p>
-        <h1 id="card-detail-title">@Model.Card.Name</h1>
-        <p class="meal-badge">@Model.Card.MealType.ToDisplayName()</p>
-        <p class="card-description">@Model.Card.Description</p>
+        <p class="slot-kicker">@Localizer["Details.Kicker"]</p>
+        <h1 id="card-detail-title">@Model.Card.DisplayName</h1>
+        <p class="meal-badge">@Model.Card.MealTypeDisplayName</p>
+        <p class="card-description">@Model.Card.DisplayDescription</p>
+        @if (Model.Card.IsFallback)
+        {
+            <p class="fallback-badge">@Localizer["Card.NeedsEnglishTranslation"]</p>
+        }
 
         <div class="detail-actions">
-            <a class="btn btn-danger" href="/Cards/Edit/@Model.Card.Id">編輯卡牌</a>
+            <a class="btn btn-danger" href="/Cards/Edit/@Model.Card.CardId">@Localizer["Details.EditCard"]</a>
         </div>
 
-        <form method="post" asp-page-handler="Delete" asp-route-id="@Model.Card.Id" class="delete-panel">
+        <form method="post" asp-page-handler="Delete" asp-route-id="@Model.Card.CardId" class="delete-panel">
             <div asp-validation-summary="All" class="text-danger mb-3"></div>
             <div class="form-check">
                 <input asp-for="ConfirmDelete" class="form-check-input" />
-                <label asp-for="ConfirmDelete" class="form-check-label">我確認要永久刪除此餐點卡牌</label>
+                <label asp-for="ConfirmDelete" class="form-check-label">@Localizer["Details.DeleteConfirmLabel"]</label>
             </div>
-            <button type="submit" class="btn btn-outline-danger mt-3">刪除卡牌</button>
+            <button type="submit" class="btn btn-outline-danger mt-3">@Localizer["Details.DeleteButton"]</button>
         </form>
     }
 
-    <a class="btn btn-outline-secondary" asp-page="/Cards/Index">返回卡牌庫</a>
+    <a class="btn btn-outline-secondary" asp-page="/Cards/Index">@Localizer["Details.BackToCards"]</a>
 </section>

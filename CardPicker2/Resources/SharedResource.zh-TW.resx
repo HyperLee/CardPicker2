@@ -96,6 +96,87 @@
   <data name="Card.NeedsEnglishTranslation" xml:space="preserve">
     <value>需要英文翻譯</value>
   </data>
+  <data name="Cards.Kicker" xml:space="preserve">
+    <value>卡牌庫</value>
+  </data>
+  <data name="Cards.Title" xml:space="preserve">
+    <value>餐點卡牌庫</value>
+  </data>
+  <data name="Cards.Create" xml:space="preserve">
+    <value>新增卡牌</value>
+  </data>
+  <data name="Cards.KeywordLabel" xml:space="preserve">
+    <value>餐點名稱關鍵字</value>
+  </data>
+  <data name="Cards.KeywordPlaceholder" xml:space="preserve">
+    <value>輸入餐點名稱</value>
+  </data>
+  <data name="Cards.MealTypeLabel" xml:space="preserve">
+    <value>餐別</value>
+  </data>
+  <data name="Cards.AllMealTypes" xml:space="preserve">
+    <value>全部餐別</value>
+  </data>
+  <data name="Cards.Search" xml:space="preserve">
+    <value>搜尋</value>
+  </data>
+  <data name="Cards.Clear" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="Cards.Empty" xml:space="preserve">
+    <value>查無符合條件的餐點卡牌。</value>
+  </data>
+  <data name="Cards.ListAria" xml:space="preserve">
+    <value>餐點卡牌列表</value>
+  </data>
+  <data name="Cards.Details" xml:space="preserve">
+    <value>查看詳情</value>
+  </data>
+  <data name="Cards.Edit" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+  <data name="Details.Title" xml:space="preserve">
+    <value>餐點卡牌詳情</value>
+  </data>
+  <data name="Details.Kicker" xml:space="preserve">
+    <value>卡牌詳情</value>
+  </data>
+  <data name="Details.EditCard" xml:space="preserve">
+    <value>編輯卡牌</value>
+  </data>
+  <data name="Details.DeleteConfirmLabel" xml:space="preserve">
+    <value>我確認要永久刪除此餐點卡牌</value>
+  </data>
+  <data name="Details.DeleteButton" xml:space="preserve">
+    <value>刪除卡牌</value>
+  </data>
+  <data name="Details.BackToCards" xml:space="preserve">
+    <value>返回卡牌庫</value>
+  </data>
+  <data name="Details.NotFound" xml:space="preserve">
+    <value>找不到餐點卡牌。</value>
+  </data>
+  <data name="Details.ConfirmRequired" xml:space="preserve">
+    <value>請先確認刪除意圖。</value>
+  </data>
+  <data name="Privacy.Title" xml:space="preserve">
+    <value>隱私</value>
+  </data>
+  <data name="Privacy.Body" xml:space="preserve">
+    <value>本網站以本機單人使用為設計目標。餐點卡牌資料儲存在此應用程式的本機 JSON 檔案中，不會主動傳送到外部服務。</value>
+  </data>
+  <data name="Error.Title" xml:space="preserve">
+    <value>錯誤</value>
+  </data>
+  <data name="Error.Heading" xml:space="preserve">
+    <value>處理要求時發生問題。</value>
+  </data>
+  <data name="Error.Message" xml:space="preserve">
+    <value>請回到上一頁或稍後再試。錯誤頁不會顯示堆疊追蹤或敏感資訊。</value>
+  </data>
+  <data name="Error.RequestId" xml:space="preserve">
+    <value>要求 ID：</value>
+  </data>
   <data name="Meal.Breakfast" xml:space="preserve">
     <value>早餐</value>
   </data>

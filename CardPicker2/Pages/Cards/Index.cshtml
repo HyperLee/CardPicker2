@@ -1,14 +1,15 @@
 @page
-@using CardPicker2.Models
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
 @model CardPicker2.Pages.Cards.IndexModel
 @{
-    ViewData["Title"] = "餐點卡牌庫";
+    ViewData["Title"] = Localizer["Cards.Title"];
 }
 
 <section class="card-library" aria-labelledby="cards-title">
     <div class="page-heading">
-        <p class="slot-kicker">卡牌庫</p>
-        <h1 id="cards-title">餐點卡牌庫</h1>
+        <p class="slot-kicker">@Localizer["Cards.Kicker"]</p>
+        <h1 id="cards-title">@Localizer["Cards.Title"]</h1>
     </div>
 
     @if (Model.IsBlocked)
@@ -21,47 +22,51 @@
     }
 
     <div class="management-bar">
-        <a class="btn btn-danger" asp-page="/Cards/Create">新增卡牌</a>
+        <a class="btn btn-danger" asp-page="/Cards/Create">@Localizer["Cards.Create"]</a>
     </div>
 
     <form method="get" class="search-panel" role="search">
         <div>
-            <label asp-for="Keyword" class="form-label">餐點名稱關鍵字</label>
-            <input asp-for="Keyword" class="form-control" placeholder="輸入餐點名稱" />
+            <label asp-for="Keyword" class="form-label">@Localizer["Cards.KeywordLabel"]</label>
+            <input asp-for="Keyword" class="form-control" placeholder="@Localizer["Cards.KeywordPlaceholder"]" />
         </div>
         <div>
-            <label asp-for="MealType" class="form-label">餐別</label>
+            <label asp-for="MealType" class="form-label">@Localizer["Cards.MealTypeLabel"]</label>
             <select asp-for="MealType" class="form-select">
-                <option value="">全部餐別</option>
+                <option value="">@Localizer["Cards.AllMealTypes"]</option>
                 @foreach (var mealType in Model.MealTypes)
                 {
-                    <option value="@mealType">@mealType.ToDisplayName()</option>
+                    <option value="@mealType">@mealType.ToDisplayName(Model.CurrentLanguage)</option>
                 }
             </select>
         </div>
         <div class="search-actions">
-            <button class="btn btn-danger" type="submit" disabled="@Model.IsBlocked">搜尋</button>
-            <a class="btn btn-outline-secondary" asp-page="/Cards/Index">清除</a>
+            <button class="btn btn-danger" type="submit" disabled="@Model.IsBlocked">@Localizer["Cards.Search"]</button>
+            <a class="btn btn-outline-secondary" asp-page="/Cards/Index">@Localizer["Cards.Clear"]</a>
         </div>
     </form>
 
     @if (!Model.IsBlocked && Model.Cards.Count == 0)
     {
-        <div class="empty-state" role="status">查無符合條件的餐點卡牌。</div>
+        <div class="empty-state" role="status">@Localizer["Cards.Empty"]</div>
     }
     else if (!Model.IsBlocked)
     {
-        <div class="meal-card-list" aria-label="餐點卡牌列表">
+        <div class="meal-card-list" aria-label="@Localizer["Cards.ListAria"]">
             @foreach (var card in Model.Cards)
             {
                 <article class="meal-card-item">
                     <div>
-                        <h2>@card.Name</h2>
-                        <p class="meal-badge">@card.MealType.ToDisplayName()</p>
+                        <h2>@card.DisplayName</h2>
+                        <p class="meal-badge">@card.MealTypeDisplayName</p>
+                        @if (card.IsFallback)
+                        {
+                            <p class="fallback-badge">@Localizer["Card.NeedsEnglishTranslation"]</p>
+                        }
                     </div>
                     <div class="card-actions">
-                        <a class="btn btn-outline-danger" href="/Cards/@card.Id">查看詳情</a>
-                        <a class="btn btn-outline-secondary" href="/Cards/Edit/@card.Id">編輯</a>
+                        <a class="btn btn-outline-danger" href="/Cards/@card.CardId">@Localizer["Cards.Details"]</a>
+                        <a class="btn btn-outline-secondary" href="/Cards/Edit/@card.CardId">@Localizer["Cards.Edit"]</a>
                     </div>
                 </article>
             }

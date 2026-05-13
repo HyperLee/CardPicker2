@@ -1,8 +1,12 @@
 ﻿@page
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
 @model PrivacyModel
 @{
-    ViewData["Title"] = "隱私";
+    ViewData["Title"] = Localizer["Privacy.Title"];
 }
-<h1>@ViewData["Title"]</h1>
+<section class="privacy-page" aria-labelledby="privacy-title">
+    <h1 id="privacy-title">@Localizer["Privacy.Title"]</h1>
 
-<p>本網站以本機單人使用為設計目標。餐點卡牌資料儲存在此應用程式的本機 JSON 檔案中，不會主動傳送到外部服務。</p>
+    <p>@Localizer["Privacy.Body"]</p>
+</section>
