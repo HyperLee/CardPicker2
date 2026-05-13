@@ -24,6 +24,12 @@ public class IndexModel : PageModel
     [BindProperty]
     public bool CoinInserted { get; set; }
 
+    [BindProperty]
+    public DrawMode DrawMode { get; set; } = DrawMode.Normal;
+
+    [BindProperty]
+    public Guid DrawOperationId { get; set; }
+
     public IReadOnlyList<MealType> MealTypes { get; } = Enum.GetValues<MealType>();
 
     public SupportedLanguage CurrentLanguage => SupportedLanguage.FromCultureNameOrDefault(Thread.CurrentThread.CurrentUICulture.Name);
@@ -38,10 +44,22 @@ public class IndexModel : PageModel
 
     public bool IsBlocked => LibraryState?.IsBlocked == true;
 
-    public async Task OnGetAsync(MealType? mealType, bool coinInserted, Guid? resultCardId, CancellationToken cancellationToken)
+    public async Task OnGetAsync(
+        MealType? mealType,
+        bool coinInserted,
+        Guid? resultCardId,
+        DrawMode? drawMode,
+        Guid? drawOperationId,
+        CancellationToken cancellationToken)
     {
         MealType = mealType;
         CoinInserted = coinInserted;
+        DrawMode = drawMode is DrawMode submittedMode && Enum.IsDefined(typeof(DrawMode), submittedMode)
+            ? submittedMode
+            : CardPicker2.Models.DrawMode.Normal;
+        DrawOperationId = drawOperationId is Guid operationId && operationId != Guid.Empty
+            ? operationId
+            : Guid.NewGuid();
         LibraryState = await _cardLibraryService.LoadAsync(cancellationToken);
         if (LibraryState.IsBlocked)
         {
@@ -56,7 +74,9 @@ public class IndexModel : PageModel
             return;
         }
 
-        OperationState = DrawOperationStateTransitions.FromSelection(MealType);
+        OperationState = DrawMode == CardPicker2.Models.DrawMode.Random
+            ? DrawOperationState.MealSelected
+            : DrawOperationStateTransitions.FromSelection(MealType);
         StatusMessage = OperationState == DrawOperationState.MealSelected
             ? _localizer["Home.Status.MealSelected"]
             : _localizer["Home.Status.ChooseMeal"];
@@ -67,34 +87,41 @@ public class IndexModel : PageModel
         LibraryState = await _cardLibraryService.LoadAsync(cancellationToken);
         if (LibraryState.IsBlocked)
         {
+            DrawOperationId = DrawOperationId == Guid.Empty ? Guid.NewGuid() : DrawOperationId;
             OperationState = DrawOperationState.Blocked;
             StatusMessage = LibraryState.UserMessage;
             return;
         }
 
-        if (MealType is null || !Enum.IsDefined(typeof(MealType), MealType.Value))
-        {
-            OperationState = DrawOperationState.Blocked;
-            StatusMessage = _localizer["Home.Status.ChooseMeal"];
-            ModelState.AddModelError(nameof(MealType), StatusMessage);
-            return;
-        }
-
-        if (!CoinInserted)
-        {
-            OperationState = DrawOperationState.MealSelected;
-            StatusMessage = _localizer["Home.Status.CoinRequired"];
-            ModelState.AddModelError(nameof(CoinInserted), StatusMessage);
-            return;
-        }
-
         OperationState = DrawOperationState.Spinning;
-        Result = await _cardLibraryService.DrawAsync(MealType.Value, CurrentLanguage, cancellationToken);
+        DrawOperationId = DrawOperationId == Guid.Empty ? Guid.NewGuid() : DrawOperationId;
+        var operation = new DrawOperation
+        {
+            OperationId = DrawOperationId,
+            Mode = DrawMode,
+            MealType = MealType,
+            CoinInserted = CoinInserted,
+            RequestedLanguage = CurrentLanguage
+        };
+        Result = await _cardLibraryService.DrawAsync(operation, cancellationToken);
         OperationState = Result.Succeeded ? DrawOperationState.Revealed : DrawOperationState.Blocked;
-        StatusMessage = Result.Succeeded ? _localizer["Home.Status.DrawSuccess"] : Result.UserMessage;
+        StatusMessage = Result.Succeeded
+            ? (Result.IsReplay ? _localizer["Home.Status.Replay"] : _localizer["Home.Status.DrawSuccess"])
+            : Result.UserMessage;
         if (!Result.Succeeded)
         {
-            ModelState.AddModelError(string.Empty, Result.UserMessage);
+            if (Result.StatusKey == "Draw.InvalidMealType")
+            {
+                ModelState.AddModelError(nameof(MealType), Result.UserMessage);
+            }
+            else if (Result.StatusKey == "Draw.CoinRequired")
+            {
+                ModelState.AddModelError(nameof(CoinInserted), Result.UserMessage);
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, Result.UserMessage);
+            }
         }
     }
 
@@ -116,6 +143,7 @@ public class IndexModel : PageModel
         MealType ??= localizedCard.MealType;
         OperationState = DrawOperationState.Revealed;
         StatusMessage = _localizer["Home.Status.ResultRestored"];
+        DrawOperationId = DrawOperationId == Guid.Empty ? Guid.NewGuid() : DrawOperationId;
         Result = new DrawResult(
             true,
             MealType.Value,
@@ -125,6 +153,9 @@ public class IndexModel : PageModel
             localizedCard.DisplayDescription,
             StatusMessage,
             localizedCard,
-            "Draw.Restored");
+            "Draw.Restored",
+            DrawOperationId,
+            DrawMode,
+            MealType);
     }
 }

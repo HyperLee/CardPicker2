@@ -12,6 +12,10 @@ namespace CardPicker2.Models;
 /// <param name="UserMessage">A user-facing message suitable for UI feedback.</param>
 /// <param name="LocalizedCard">The selected card projected for the current culture.</param>
 /// <param name="StatusKey">The stable message key for localization-aware UI.</param>
+/// <param name="OperationId">The operation identifier submitted with the draw.</param>
+/// <param name="DrawMode">The mode used to build the candidate pool.</param>
+/// <param name="RequestedMealType">The submitted meal type for normal mode; random mode uses <see langword="null"/>.</param>
+/// <param name="IsReplay">Whether this result replays an existing successful operation.</param>
 public sealed record DrawResult(
     bool Succeeded,
     MealType SelectedMealType,
@@ -21,7 +25,11 @@ public sealed record DrawResult(
     string? Description,
     string UserMessage,
     LocalizedMealCardView? LocalizedCard = null,
-    string StatusKey = "")
+    string StatusKey = "",
+    Guid OperationId = default,
+    DrawMode DrawMode = DrawMode.Normal,
+    MealType? RequestedMealType = null,
+    bool IsReplay = false)
 {
     /// <summary>
     /// Gets the display name of the selected card meal type.
@@ -74,7 +82,43 @@ public sealed record DrawResult(
             localizedCard.DisplayDescription,
             message,
             localizedCard,
-            statusKey);
+            statusKey,
+            RequestedMealType: selectedMealType);
+    }
+
+    /// <summary>
+    /// Creates a successful draw result from an idempotent operation.
+    /// </summary>
+    /// <param name="operation">The submitted draw operation.</param>
+    /// <param name="card">The selected card.</param>
+    /// <param name="localizedCard">The selected card projection.</param>
+    /// <param name="message">The user-facing success message.</param>
+    /// <param name="statusKey">The stable message key.</param>
+    /// <param name="isReplay">Whether the result replays an existing history record.</param>
+    /// <returns>A successful draw result.</returns>
+    public static DrawResult Success(
+        DrawOperation operation,
+        MealCard card,
+        LocalizedMealCardView localizedCard,
+        string message,
+        string statusKey,
+        bool isReplay = false)
+    {
+        var requestedMealType = operation.Mode == DrawMode.Normal ? operation.MealType : null;
+        return new DrawResult(
+            true,
+            requestedMealType ?? card.MealType,
+            card.Id,
+            localizedCard.DisplayName,
+            card.MealType,
+            localizedCard.DisplayDescription,
+            message,
+            localizedCard,
+            statusKey,
+            operation.OperationId,
+            operation.Mode,
+            requestedMealType,
+            isReplay);
     }
 
     /// <summary>
@@ -86,6 +130,41 @@ public sealed record DrawResult(
     /// <returns>A failed draw result.</returns>
     public static DrawResult Failure(MealType selectedMealType, string message, string statusKey = "Draw.Failure")
     {
-        return new DrawResult(false, selectedMealType, null, null, null, null, message, null, statusKey);
+        return new DrawResult(
+            false,
+            selectedMealType,
+            null,
+            null,
+            null,
+            null,
+            message,
+            null,
+            statusKey,
+            RequestedMealType: selectedMealType);
+    }
+
+    /// <summary>
+    /// Creates a failed draw result for an idempotent operation.
+    /// </summary>
+    /// <param name="operation">The submitted operation.</param>
+    /// <param name="message">The failure message.</param>
+    /// <param name="statusKey">The stable message key.</param>
+    /// <returns>A failed draw result.</returns>
+    public static DrawResult Failure(DrawOperation operation, string message, string statusKey = "Draw.Failure")
+    {
+        var requestedMealType = operation.Mode == DrawMode.Normal ? operation.MealType : null;
+        return new DrawResult(
+            false,
+            requestedMealType ?? default,
+            null,
+            null,
+            null,
+            null,
+            message,
+            null,
+            statusKey,
+            operation.OperationId,
+            operation.Mode,
+            requestedMealType);
     }
 }

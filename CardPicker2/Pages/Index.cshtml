@@ -44,8 +44,33 @@
           data-draw-state-spinning="@Localizer["Home.Status.Spinning"]"
           data-draw-state-reduced="@Localizer["Home.Status.Revealing"]">
         <div asp-validation-summary="All" class="text-danger mb-3"></div>
+        <input type="hidden" name="drawOperationId" value="@Model.DrawOperationId" />
 
-        <fieldset class="meal-selector" disabled="@Model.IsBlocked">
+        <fieldset class="draw-mode-selector" disabled="@Model.IsBlocked" data-draw-mode-selector>
+            <legend>@Localizer["Home.Mode.Legend"]</legend>
+            <div class="draw-mode-options" role="radiogroup" aria-label="@Localizer["Home.Mode.Legend"]">
+                <input class="btn-check"
+                       type="radio"
+                       name="drawMode"
+                       id="draw-mode-normal"
+                       value="@DrawMode.Normal"
+                       checked="@(Model.DrawMode == DrawMode.Normal)" />
+                <label class="btn draw-mode-option" for="draw-mode-normal">@Localizer["Home.Mode.Normal"]</label>
+
+                <input class="btn-check"
+                       type="radio"
+                       name="drawMode"
+                       id="draw-mode-random"
+                       value="@DrawMode.Random"
+                       checked="@(Model.DrawMode == DrawMode.Random)" />
+                <label class="btn draw-mode-option" for="draw-mode-random">@Localizer["Home.Mode.Random"]</label>
+            </div>
+        </fieldset>
+
+        <fieldset class="meal-selector"
+                  disabled="@(Model.IsBlocked || Model.DrawMode == DrawMode.Random)"
+                  data-meal-selector
+                  data-server-blocked="@(Model.IsBlocked ? "true" : "false")">
             <legend>@Localizer["Home.MealSelector.Legend"]</legend>
             <div class="meal-options" role="radiogroup" aria-label="@Localizer["Home.MealSelector.Legend"]">
                 @foreach (var mealType in Model.MealTypes)
@@ -97,6 +122,7 @@
         <section class="draw-result" aria-labelledby="draw-result-title" data-result-card-id="@Model.Result.CardId">
             <p class="slot-kicker">@Localizer["Home.Result.Kicker"]</p>
             <h2 id="draw-result-title">@Model.Result.Name</h2>
+            <p class="draw-mode-badge">@(Model.Result.DrawMode == DrawMode.Random ? Localizer["Home.Mode.Random"] : Localizer["Home.Mode.Normal"])</p>
             <p class="meal-badge">@Model.Result.MealTypeDisplayName</p>
             <p>@Model.Result.Description</p>
             @if (Model.Result.LocalizedCard?.IsFallback == true)

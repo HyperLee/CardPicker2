@@ -24,6 +24,7 @@ public sealed class CardLibraryService : ICardLibraryService
     private readonly ILogger<CardLibraryService> _logger;
     private readonly MealCardLocalizationService _localizationService;
     private readonly CardLibraryFileCoordinator _fileCoordinator;
+    private readonly DrawCandidatePoolBuilder _candidatePoolBuilder;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CardLibraryService"/> class.
@@ -34,13 +35,15 @@ public sealed class CardLibraryService : ICardLibraryService
     /// <param name="logger">The structured logger.</param>
     /// <param name="localizationService">The localized card projection service.</param>
     /// <param name="fileCoordinator">The same-process file coordination gate.</param>
+    /// <param name="candidatePoolBuilder">The draw candidate-pool builder.</param>
     public CardLibraryService(
         IOptions<CardLibraryOptions> options,
         IMealCardRandomizer randomizer,
         DuplicateCardDetector duplicateDetector,
         ILogger<CardLibraryService> logger,
         MealCardLocalizationService? localizationService = null,
-        CardLibraryFileCoordinator? fileCoordinator = null)
+        CardLibraryFileCoordinator? fileCoordinator = null,
+        DrawCandidatePoolBuilder? candidatePoolBuilder = null)
     {
         _options = options.Value;
         _randomizer = randomizer;
@@ -48,6 +51,7 @@ public sealed class CardLibraryService : ICardLibraryService
         _logger = logger;
         _localizationService = localizationService ?? new MealCardLocalizationService();
         _fileCoordinator = fileCoordinator ?? new CardLibraryFileCoordinator();
+        _candidatePoolBuilder = candidatePoolBuilder ?? new DrawCandidatePoolBuilder();
     }
 
     /// <inheritdoc />
@@ -131,13 +135,26 @@ public sealed class CardLibraryService : ICardLibraryService
     /// <inheritdoc />
     public Task<DrawResult> DrawAsync(MealType mealType, CancellationToken cancellationToken = default)
     {
-        return DrawCoreAsync(mealType, SupportedLanguage.ZhTw, cancellationToken);
+        return DrawAsync(mealType, SupportedLanguage.ZhTw, cancellationToken);
     }
 
     /// <inheritdoc />
     public Task<DrawResult> DrawAsync(MealType mealType, SupportedLanguage language, CancellationToken cancellationToken = default)
     {
-        return DrawCoreAsync(mealType, language, cancellationToken);
+        return DrawCoreAsync(new DrawOperation
+        {
+            OperationId = Guid.NewGuid(),
+            Mode = DrawMode.Normal,
+            MealType = mealType,
+            CoinInserted = true,
+            RequestedLanguage = language
+        }, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<DrawResult> DrawAsync(DrawOperation operation, CancellationToken cancellationToken = default)
+    {
+        return DrawCoreAsync(operation, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -161,7 +178,7 @@ public sealed class CardLibraryService : ICardLibraryService
     private async Task<CardLibraryLoadResult> CreateSeedFileAsync(string filePath, CancellationToken cancellationToken)
     {
         var document = SeedMealCards.CreateDocument();
-        var validationError = ValidateDocument(document, requireCompleteEnglish: true);
+        var validationError = ValidateDocument(document, requireCompleteEnglish: false);
         if (validationError is not null)
         {
             _logger.LogCritical("Seed card data is invalid: {ValidationError}", validationError);
@@ -185,39 +202,106 @@ public sealed class CardLibraryService : ICardLibraryService
         return CardLibraryLoadResult.CreatedFromSeed(document);
     }
 
-    private async Task<DrawResult> DrawCoreAsync(MealType mealType, SupportedLanguage language, CancellationToken cancellationToken)
+    private async Task<DrawResult> DrawCoreAsync(DrawOperation operation, CancellationToken cancellationToken)
     {
-        if (!Enum.IsDefined(typeof(MealType), mealType))
+        if (!operation.HasValidOperationId)
         {
-            _logger.LogWarning("Draw rejected because meal type is invalid: {MealType}", mealType);
-            return DrawResult.Failure(mealType, "請先選擇早餐、午餐或晚餐。", "Draw.InvalidMealType");
+            _logger.LogWarning("Draw rejected because operation ID is empty");
+            return DrawResult.Failure(operation, "抽卡操作已失效，請重新整理後再試。", "Draw.InvalidOperationId");
         }
 
-        var loadResult = await LoadAsync(cancellationToken);
-        if (loadResult.IsBlocked || loadResult.Document is null)
+        if (!operation.HasValidMode)
         {
-            _logger.LogWarning("Draw blocked because card library is unavailable. Status: {LoadStatus}", loadResult.Status);
-            return DrawResult.Failure(mealType, loadResult.UserMessage, loadResult.MessageKey);
+            _logger.LogWarning("Draw rejected because mode is invalid");
+            return DrawResult.Failure(operation, "請選擇正常模式或隨機模式。", "Draw.InvalidMode");
         }
 
-        var pool = loadResult.Document.Cards
-            .Where(card => card.IsActive && card.MealType == mealType)
-            .ToList();
-        if (pool.Count == 0)
+        if (!operation.CoinInserted)
         {
-            _logger.LogWarning("Draw rejected because meal type {MealType} has no cards", mealType);
-            return DrawResult.Failure(mealType, "這個餐別目前沒有可抽取的餐點卡牌。", "Draw.EmptyMealPool");
+            _logger.LogWarning("Draw rejected because coin confirmation is missing");
+            return DrawResult.Failure(operation, "請先投幣再拉桿。", "Draw.CoinRequired");
         }
 
-        var selected = pool[_randomizer.NextIndex(pool.Count)];
-        _logger.LogInformation(
-            "Meal draw succeeded for {MealType} with card {CardId} from pool size {PoolCount}",
-            mealType,
-            selected.Id,
-            pool.Count);
+        if (!operation.HasValidMealType)
+        {
+            _logger.LogWarning("Draw rejected because meal type is invalid for {DrawMode}", operation.Mode);
+            return DrawResult.Failure(operation, "請先選擇早餐、午餐或晚餐。", "Draw.InvalidMealType");
+        }
 
-        var localizedCard = _localizationService.Project(selected, language);
-        return DrawResult.Success(mealType, selected, localizedCard, "已抽出餐點卡牌。", "Draw.Success");
+        return await _fileCoordinator.RunExclusiveAsync(async innerCancellationToken =>
+        {
+            var loadResult = await LoadAsync(innerCancellationToken);
+            if (loadResult.IsBlocked || loadResult.Document is null)
+            {
+                _logger.LogWarning("Draw blocked because card library is unavailable. Status: {LoadStatus}", loadResult.Status);
+                return DrawResult.Failure(operation, loadResult.UserMessage, loadResult.MessageKey);
+            }
+
+            var existingHistory = loadResult.Document.DrawHistory.FirstOrDefault(history => history.OperationId == operation.OperationId);
+            if (existingHistory is not null)
+            {
+                var replayCard = loadResult.Document.Cards.FirstOrDefault(card => card.Id == existingHistory.CardId);
+                if (replayCard is null)
+                {
+                    _logger.LogError("Draw replay failed because card {CardId} is missing", existingHistory.CardId);
+                    return DrawResult.Failure(operation, "原抽卡結果已無法顯示，請檢查卡牌庫。", "Draw.ReplayUnavailable");
+                }
+
+                _logger.LogInformation(
+                    "Draw operation {DrawOperationId} replayed card {CardId}",
+                    operation.OperationId,
+                    replayCard.Id);
+                var replayProjection = _localizationService.Project(replayCard, operation.RequestedLanguage);
+                return DrawResult.Success(operation, replayCard, replayProjection, "已重顯同一次抽卡結果。", "Draw.Replay", isReplay: true);
+            }
+
+            var pool = _candidatePoolBuilder.Build(operation, loadResult.Document.Cards);
+            if (pool.Cards.Count == 0)
+            {
+                _logger.LogWarning(
+                    "Draw rejected because candidate pool is empty for mode {DrawMode} and meal type {MealType}",
+                    operation.Mode,
+                    operation.MealType);
+                return DrawResult.Failure(operation, "目前沒有可抽取的餐點卡牌。", "Draw.EmptyPool");
+            }
+
+            var selected = pool.Cards[_randomizer.NextIndex(pool.Cards.Count)];
+            var history = new DrawHistoryRecord
+            {
+                Id = Guid.NewGuid(),
+                OperationId = operation.OperationId,
+                DrawMode = operation.Mode,
+                CardId = selected.Id,
+                MealTypeAtDraw = selected.MealType,
+                SucceededAtUtc = DateTimeOffset.UtcNow
+            };
+            var updatedDocument = new CardLibraryDocument
+            {
+                SchemaVersion = CardLibraryDocument.CurrentSchemaVersion,
+                Cards = loadResult.Document.Cards,
+                DrawHistory = loadResult.Document.DrawHistory.Concat(new[] { history }).ToList()
+            };
+
+            var writeResult = await TryWriteDocumentAsync(updatedDocument, innerCancellationToken);
+            if (writeResult is not null)
+            {
+                _logger.LogError(
+                    "Draw operation {DrawOperationId} failed while writing selected card {CardId}",
+                    operation.OperationId,
+                    selected.Id);
+                return DrawResult.Failure(operation, "抽卡結果暫時無法保存，請稍後再試。", "Draw.WriteFailed");
+            }
+
+            _logger.LogInformation(
+                "Draw operation {DrawOperationId} succeeded with mode {DrawMode}, card {CardId}, pool size {PoolCount}",
+                operation.OperationId,
+                operation.Mode,
+                selected.Id,
+                pool.Cards.Count);
+
+            var localizedCard = _localizationService.Project(selected, operation.RequestedLanguage);
+            return DrawResult.Success(operation, selected, localizedCard, "已抽出餐點卡牌。", "Draw.Success");
+        }, cancellationToken);
     }
 
     private async Task<IReadOnlyList<MealCard>> SearchCoreAsync(SearchCriteria criteria, CancellationToken cancellationToken)

@@ -60,6 +60,15 @@
   <data name="Home.Title" xml:space="preserve">
     <value>餐點抽卡機</value>
   </data>
+  <data name="Home.Mode.Legend" xml:space="preserve">
+    <value>選擇抽卡模式</value>
+  </data>
+  <data name="Home.Mode.Normal" xml:space="preserve">
+    <value>正常模式</value>
+  </data>
+  <data name="Home.Mode.Random" xml:space="preserve">
+    <value>隨機模式</value>
+  </data>
   <data name="Home.Status.ChooseMeal" xml:space="preserve">
     <value>請先選擇早餐、午餐或晚餐。</value>
   </data>
@@ -77,6 +86,9 @@
   </data>
   <data name="Home.Status.DrawSuccess" xml:space="preserve">
     <value>已抽出餐點卡牌。</value>
+  </data>
+  <data name="Home.Status.Replay" xml:space="preserve">
+    <value>已重顯同一次抽卡結果。</value>
   </data>
   <data name="Home.Status.ResultRestored" xml:space="preserve">
     <value>已保留目前抽卡結果。</value>

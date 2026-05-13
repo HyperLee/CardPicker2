@@ -60,6 +60,15 @@
   <data name="Home.Title" xml:space="preserve">
     <value>Meal Card Slot</value>
   </data>
+  <data name="Home.Mode.Legend" xml:space="preserve">
+    <value>Choose draw mode</value>
+  </data>
+  <data name="Home.Mode.Normal" xml:space="preserve">
+    <value>Normal mode</value>
+  </data>
+  <data name="Home.Mode.Random" xml:space="preserve">
+    <value>Random mode</value>
+  </data>
   <data name="Home.Status.ChooseMeal" xml:space="preserve">
     <value>Choose breakfast, lunch, or dinner first.</value>
   </data>
@@ -77,6 +86,9 @@
   </data>
   <data name="Home.Status.DrawSuccess" xml:space="preserve">
     <value>A meal card has been drawn.</value>
+  </data>
+  <data name="Home.Status.Replay" xml:space="preserve">
+    <value>The same draw result was shown again.</value>
   </data>
   <data name="Home.Status.ResultRestored" xml:space="preserve">
     <value>The current draw result was preserved.</value>

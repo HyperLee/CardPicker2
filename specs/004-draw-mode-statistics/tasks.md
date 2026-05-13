@@ -59,26 +59,26 @@
 
 > 先撰寫這些測試，確認在實作前失敗。
 
-- [ ] T019 [P] [US1] 新增 `DrawMode` 與 `DrawOperation` 模型失敗測試於 `tests/CardPicker2.UnitTests/Models/DrawModeTests.cs`，覆蓋 invalid mode、normal missing meal type、random ignores meal type、empty operation ID。
-- [ ] T020 [P] [US1] 新增候選池建構失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCandidatePoolBuilderTests.cs`，覆蓋 normal 只含選定餐別 active cards、random 包含全部 active cards、deleted cards 永遠排除、每張候選卡標稱機率為 `1/N`。
-- [ ] T021 [P] [US1] 新增服務抽卡模式失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryDrawModeTests.cs`，覆蓋 normal/random 成功、missing coin、invalid meal type、empty pool、blocked library、write failure 不新增 history。
-- [ ] T022 [P] [US1] 新增 idempotency 失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawIdempotencyTests.cs`，覆蓋相同 `DrawOperationId` replay 同一 card ID 且 `DrawHistory` 筆數不增加。
-- [ ] T023 [P] [US1] 新增首頁抽卡模式整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/DrawModePageTests.cs`，覆蓋 GET 顯示 mode controls/hidden operation ID、POST normal/random、Anti-Forgery、blocked state disable draw。
-- [ ] T024 [US1] 執行 `dotnet test CardPicker2.sln --filter "DrawMode|DrawIdempotency"`，確認 `CardPicker2.sln` 的 US1 新測試在實作前失敗。
+- [X] T019 [P] [US1] 新增 `DrawMode` 與 `DrawOperation` 模型失敗測試於 `tests/CardPicker2.UnitTests/Models/DrawModeTests.cs`，覆蓋 invalid mode、normal missing meal type、random ignores meal type、empty operation ID。
+- [X] T020 [P] [US1] 新增候選池建構失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCandidatePoolBuilderTests.cs`，覆蓋 normal 只含選定餐別 active cards、random 包含全部 active cards、deleted cards 永遠排除、每張候選卡標稱機率為 `1/N`。
+- [X] T021 [P] [US1] 新增服務抽卡模式失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryDrawModeTests.cs`，覆蓋 normal/random 成功、missing coin、invalid meal type、empty pool、blocked library、write failure 不新增 history。
+- [X] T022 [P] [US1] 新增 idempotency 失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawIdempotencyTests.cs`，覆蓋相同 `DrawOperationId` replay 同一 card ID 且 `DrawHistory` 筆數不增加。
+- [X] T023 [P] [US1] 新增首頁抽卡模式整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/DrawModePageTests.cs`，覆蓋 GET 顯示 mode controls/hidden operation ID、POST normal/random、Anti-Forgery、blocked state disable draw。
+- [X] T024 [US1] 執行 `dotnet test CardPicker2.sln --filter "DrawMode|DrawIdempotency"`，確認 `CardPicker2.sln` 的 US1 新測試在實作前失敗。
 
 ### 使用者故事 1 的實作
 
-- [ ] T025 [P] [US1] 建立候選池服務於 `CardPicker2/Services/DrawCandidatePoolBuilder.cs`，將 normal/random membership 與 nominal probability 從 PageModel 與 randomizer 中分離。
-- [ ] T026 [US1] 更新抽卡服務契約於 `CardPicker2/Services/ICardLibraryService.cs`，新增以 `DrawOperation` 執行 idempotent draw 的 method，保留或調整既有 `DrawAsync` 呼叫端相容性。
-- [ ] T027 [US1] 更新抽卡結果模型於 `CardPicker2/Models/DrawResult.cs`，加入 `OperationId`、`DrawMode`、`RequestedMealType`、`IsReplay`、`StatusKey` 與 localized card projection。
-- [ ] T028 [US1] 更新抽卡核心流程於 `CardPicker2/Services/CardLibraryService.cs`，在同一 coordinated read-modify-write 中驗證 operation、查找 existing history、建立候選池、呼叫 randomizer、append 一筆 `DrawHistoryRecord`、atomic write 成功後才回傳 success。
-- [ ] T029 [US1] 更新首頁 PageModel 於 `CardPicker2/Pages/Index.cshtml.cs`，bind `DrawMode`、`DrawOperationId`、`MealType`、`CoinInserted`，GET 產生新 operation ID，POST 只協調 service call 與 ModelState。
-- [ ] T030 [US1] 更新首頁 Razor UI 於 `CardPicker2/Pages/Index.cshtml`，新增正常/隨機模式控制、normal-only meal selector 狀態、hidden `DrawOperationId`、mode/result display 與 blocked-state disable 行為。
-- [ ] T031 [P] [US1] 新增或更新繁中抽卡模式資源於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 mode labels、operation validation、empty pool、replay、write failure 與 mode-specific result text。
-- [ ] T032 [P] [US1] 新增或更新英文抽卡模式資源於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保 US1 runtime UI 不顯示未翻譯 key。
-- [ ] T033 [P] [US1] 更新前端抽卡輔助於 `CardPicker2/wwwroot/js/site.js`，加入 mode switch progressive enhancement、快速連點 UI guard 與 reduced-motion-independent submit state。
-- [ ] T034 [P] [US1] 更新首頁 mode controls 樣式於 `CardPicker2/wwwroot/css/site.css`，確保 390x844、768x1024、1366x768 下 mode、meal、coin、lever 不重疊或水平溢出。
-- [ ] T035 [US1] 執行 `dotnet test CardPicker2.sln --filter "DrawMode|DrawIdempotency|DrawPage"`，確認 `CardPicker2.sln` 的 US1 測試通過。
+- [X] T025 [P] [US1] 建立候選池服務於 `CardPicker2/Services/DrawCandidatePoolBuilder.cs`，將 normal/random membership 與 nominal probability 從 PageModel 與 randomizer 中分離。
+- [X] T026 [US1] 更新抽卡服務契約於 `CardPicker2/Services/ICardLibraryService.cs`，新增以 `DrawOperation` 執行 idempotent draw 的 method，保留或調整既有 `DrawAsync` 呼叫端相容性。
+- [X] T027 [US1] 更新抽卡結果模型於 `CardPicker2/Models/DrawResult.cs`，加入 `OperationId`、`DrawMode`、`RequestedMealType`、`IsReplay`、`StatusKey` 與 localized card projection。
+- [X] T028 [US1] 更新抽卡核心流程於 `CardPicker2/Services/CardLibraryService.cs`，在同一 coordinated read-modify-write 中驗證 operation、查找 existing history、建立候選池、呼叫 randomizer、append 一筆 `DrawHistoryRecord`、atomic write 成功後才回傳 success。
+- [X] T029 [US1] 更新首頁 PageModel 於 `CardPicker2/Pages/Index.cshtml.cs`，bind `DrawMode`、`DrawOperationId`、`MealType`、`CoinInserted`，GET 產生新 operation ID，POST 只協調 service call 與 ModelState。
+- [X] T030 [US1] 更新首頁 Razor UI 於 `CardPicker2/Pages/Index.cshtml`，新增正常/隨機模式控制、normal-only meal selector 狀態、hidden `DrawOperationId`、mode/result display 與 blocked-state disable 行為。
+- [X] T031 [P] [US1] 新增或更新繁中抽卡模式資源於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 mode labels、operation validation、empty pool、replay、write failure 與 mode-specific result text。
+- [X] T032 [P] [US1] 新增或更新英文抽卡模式資源於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保 US1 runtime UI 不顯示未翻譯 key。
+- [X] T033 [P] [US1] 更新前端抽卡輔助於 `CardPicker2/wwwroot/js/site.js`，加入 mode switch progressive enhancement、快速連點 UI guard 與 reduced-motion-independent submit state。
+- [X] T034 [P] [US1] 更新首頁 mode controls 樣式於 `CardPicker2/wwwroot/css/site.css`，確保 390x844、768x1024、1366x768 下 mode、meal、coin、lever 不重疊或水平溢出。
+- [X] T035 [US1] 執行 `dotnet test CardPicker2.sln --filter "DrawMode|DrawIdempotency|DrawPage"`，確認 `CardPicker2.sln` 的 US1 測試通過。
 
 **檢查點**: US1 可作為 MVP 獨立展示，包含 normal/random、公平候選池與 idempotent draw history。
 

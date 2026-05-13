@@ -76,8 +76,18 @@
     }
 
     const selectedMeal = drawForm.querySelector('input[name="MealType"]:checked');
+    const selectedMode = drawForm.querySelector('input[name="drawMode"]:checked');
+    const operationId = drawForm.querySelector('input[name="drawOperationId"]');
     const coin = drawForm.querySelector('input[name="CoinInserted"]');
     const result = document.querySelector('[data-result-card-id]');
+
+    if (selectedMode instanceof HTMLInputElement) {
+      appendValue(url, 'drawMode', selectedMode.value);
+    }
+
+    if (operationId instanceof HTMLInputElement) {
+      appendValue(url, 'drawOperationId', operationId.value);
+    }
 
     if (selectedMeal instanceof HTMLInputElement) {
       appendValue(url, 'mealType', selectedMeal.value);
@@ -217,10 +227,25 @@
 
   const button = form.querySelector('[data-draw-submit]');
   const slotMachine = form.querySelector('[data-slot-machine]');
+  const mealSelector = form.querySelector('[data-meal-selector]');
+  const modeInputs = Array.from(form.querySelectorAll('input[name="drawMode"]'));
   const state = document.getElementById('draw-state');
   const spinningText = form.getAttribute('data-draw-state-spinning') || '';
   const reducedText = form.getAttribute('data-draw-state-reduced') || spinningText;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const syncMealSelector = () => {
+    const selectedMode = form.querySelector('input[name="drawMode"]:checked');
+    const isRandom = selectedMode instanceof HTMLInputElement && selectedMode.value === 'Random';
+    if (mealSelector instanceof HTMLFieldSetElement) {
+      mealSelector.disabled = isRandom || mealSelector.getAttribute('data-server-blocked') === 'true';
+    }
+  };
+
+  modeInputs.forEach((input) => {
+    input.addEventListener('change', syncMealSelector);
+  });
+  syncMealSelector();
 
   form.addEventListener('submit', () => {
     if (button instanceof HTMLButtonElement) {

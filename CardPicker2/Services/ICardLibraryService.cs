@@ -72,6 +72,14 @@ public interface ICardLibraryService
     Task<DrawResult> DrawAsync(MealType mealType, SupportedLanguage language, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Draws a card using normal or random mode with idempotent operation replay.
+    /// </summary>
+    /// <param name="operation">The submitted draw operation.</param>
+    /// <param name="cancellationToken">A token that cancels the operation.</param>
+    /// <returns>The draw result.</returns>
+    Task<DrawResult> DrawAsync(DrawOperation operation, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Creates a new card.
     /// </summary>
     /// <param name="input">The submitted card input.</param>

@@ -52,6 +52,7 @@ public class Program
         });
         builder.Services.AddSingleton<DuplicateCardDetector>();
         builder.Services.AddSingleton<CardLibraryFileCoordinator>();
+        builder.Services.AddSingleton<DrawCandidatePoolBuilder>();
         builder.Services.AddSingleton<LanguagePreferenceService>();
         builder.Services.AddSingleton<MealCardLocalizationService>();
         builder.Services.AddSingleton<IMealCardRandomizer, MealCardRandomizer>();
