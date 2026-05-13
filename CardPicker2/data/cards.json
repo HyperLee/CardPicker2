@@ -60,8 +60,8 @@
       "mealType": "Breakfast",
       "localizations": {
         "zh-TW": {
-          "name": "蔬菜起司蛋餅",
-          "description": "軟嫩蛋餅包入高麗菜、玉米與起司，早餐吃起來清爽有飽足感。",
+          "name": "\u852C\u83DC\u8D77\u53F8\u86CB\u9905",
+          "description": "\u8EDF\u5AE9\u86CB\u9905\u5305\u5165\u9AD8\u9E97\u83DC\u3001\u7389\u7C73\u8207\u8D77\u53F8\uFF0C\u65E9\u9910\u5403\u8D77\u4F86\u6E05\u723D\u6709\u98FD\u8DB3\u611F\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -78,8 +78,8 @@
       "mealType": "Breakfast",
       "localizations": {
         "zh-TW": {
-          "name": "火腿蛋三明治",
-          "description": "烤吐司夾火腿、煎蛋與生菜，適合趕時間時外帶。",
+          "name": "\u706B\u817F\u86CB\u4E09\u660E\u6CBB",
+          "description": "\u70E4\u5410\u53F8\u593E\u706B\u817F\u3001\u714E\u86CB\u8207\u751F\u83DC\uFF0C\u9069\u5408\u8D95\u6642\u9593\u6642\u5916\u5E36\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -96,8 +96,8 @@
       "mealType": "Breakfast",
       "localizations": {
         "zh-TW": {
-          "name": "飯糰豆漿",
-          "description": "紫米飯糰包油條、肉鬆與酸菜，搭配一杯溫豆漿。",
+          "name": "\u98EF\u7CF0\u8C46\u6F3F",
+          "description": "\u7D2B\u7C73\u98EF\u7CF0\u5305\u6CB9\u689D\u3001\u8089\u9B06\u8207\u9178\u83DC\uFF0C\u642D\u914D\u4E00\u676F\u6EAB\u8C46\u6F3F\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -114,8 +114,8 @@
       "mealType": "Breakfast",
       "localizations": {
         "zh-TW": {
-          "name": "蘿蔔糕加蛋",
-          "description": "煎到表面微酥的蘿蔔糕加蛋，搭配蒜蓉醬油。",
+          "name": "\u863F\u8514\u7CD5\u52A0\u86CB",
+          "description": "\u714E\u5230\u8868\u9762\u5FAE\u9165\u7684\u863F\u8514\u7CD5\u52A0\u86CB\uFF0C\u642D\u914D\u849C\u84C9\u91AC\u6CB9\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -132,8 +132,8 @@
       "mealType": "Breakfast",
       "localizations": {
         "zh-TW": {
-          "name": "燒餅油條",
-          "description": "酥香燒餅夾油條，搭配熱豆漿或米漿都合適。",
+          "name": "\u71D2\u9905\u6CB9\u689D",
+          "description": "\u9165\u9999\u71D2\u9905\u593E\u6CB9\u689D\uFF0C\u642D\u914D\u71B1\u8C46\u6F3F\u6216\u7C73\u6F3F\u90FD\u5408\u9069\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -150,8 +150,8 @@
       "mealType": "Breakfast",
       "localizations": {
         "zh-TW": {
-          "name": "地瓜優格碗",
-          "description": "蒸地瓜、原味優格、堅果與水果，適合想吃輕盈早餐時。",
+          "name": "\u5730\u74DC\u512A\u683C\u7897",
+          "description": "\u84B8\u5730\u74DC\u3001\u539F\u5473\u512A\u683C\u3001\u5805\u679C\u8207\u6C34\u679C\uFF0C\u9069\u5408\u60F3\u5403\u8F15\u76C8\u65E9\u9910\u6642\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -168,8 +168,8 @@
       "mealType": "Breakfast",
       "localizations": {
         "zh-TW": {
-          "name": "雞肉蔬菜粥",
-          "description": "雞肉絲與蔬菜熬成的溫粥，早上想吃熱食時很舒服。",
+          "name": "\u96DE\u8089\u852C\u83DC\u7CA5",
+          "description": "\u96DE\u8089\u7D72\u8207\u852C\u83DC\u71AC\u6210\u7684\u6EAB\u7CA5\uFF0C\u65E9\u4E0A\u60F3\u5403\u71B1\u98DF\u6642\u5F88\u8212\u670D\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -240,8 +240,8 @@
       "mealType": "Lunch",
       "localizations": {
         "zh-TW": {
-          "name": "日式豬排飯",
-          "description": "酥炸豬排鋪在白飯上，搭配高麗菜絲與味噌湯。",
+          "name": "\u65E5\u5F0F\u8C6C\u6392\u98EF",
+          "description": "\u9165\u70B8\u8C6C\u6392\u92EA\u5728\u767D\u98EF\u4E0A\uFF0C\u642D\u914D\u9AD8\u9E97\u83DC\u7D72\u8207\u5473\u564C\u6E6F\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -258,8 +258,8 @@
       "mealType": "Lunch",
       "localizations": {
         "zh-TW": {
-          "name": "蝦仁炒飯",
-          "description": "粒粒分明的蛋炒飯加入蝦仁與青蔥，午餐快速又有香氣。",
+          "name": "\u8766\u4EC1\u7092\u98EF",
+          "description": "\u7C92\u7C92\u5206\u660E\u7684\u86CB\u7092\u98EF\u52A0\u5165\u8766\u4EC1\u8207\u9752\u8525\uFF0C\u5348\u9910\u5FEB\u901F\u53C8\u6709\u9999\u6C23\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -276,8 +276,8 @@
       "mealType": "Lunch",
       "localizations": {
         "zh-TW": {
-          "name": "泰式打拋豬飯",
-          "description": "九層塔炒絞肉搭配白飯與煎蛋，口味鹹香微辣。",
+          "name": "\u6CF0\u5F0F\u6253\u62CB\u8C6C\u98EF",
+          "description": "\u4E5D\u5C64\u5854\u7092\u7D5E\u8089\u642D\u914D\u767D\u98EF\u8207\u714E\u86CB\uFF0C\u53E3\u5473\u9E79\u9999\u5FAE\u8FA3\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -294,8 +294,8 @@
       "mealType": "Lunch",
       "localizations": {
         "zh-TW": {
-          "name": "越南牛肉河粉",
-          "description": "清香牛骨湯、河粉與薄牛肉片，搭配豆芽和檸檬。",
+          "name": "\u8D8A\u5357\u725B\u8089\u6CB3\u7C89",
+          "description": "\u6E05\u9999\u725B\u9AA8\u6E6F\u3001\u6CB3\u7C89\u8207\u8584\u725B\u8089\u7247\uFF0C\u642D\u914D\u8C46\u82BD\u548C\u6AB8\u6AAC\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -312,8 +312,8 @@
       "mealType": "Lunch",
       "localizations": {
         "zh-TW": {
-          "name": "烤鮭魚定食",
-          "description": "烤鮭魚搭配白飯、味噌湯與小菜，午餐吃得均衡。",
+          "name": "\u70E4\u9BAD\u9B5A\u5B9A\u98DF",
+          "description": "\u70E4\u9BAD\u9B5A\u642D\u914D\u767D\u98EF\u3001\u5473\u564C\u6E6F\u8207\u5C0F\u83DC\uFF0C\u5348\u9910\u5403\u5F97\u5747\u8861\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -330,8 +330,8 @@
       "mealType": "Lunch",
       "localizations": {
         "zh-TW": {
-          "name": "三杯雞飯",
-          "description": "薑片、蒜頭與九層塔炒雞肉，搭配熱白飯。",
+          "name": "\u4E09\u676F\u96DE\u98EF",
+          "description": "\u8591\u7247\u3001\u849C\u982D\u8207\u4E5D\u5C64\u5854\u7092\u96DE\u8089\uFF0C\u642D\u914D\u71B1\u767D\u98EF\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -348,8 +348,8 @@
       "mealType": "Lunch",
       "localizations": {
         "zh-TW": {
-          "name": "菇菇蔬食便當",
-          "description": "杏鮑菇、青花菜與豆干搭配糙米飯，適合想吃蔬食午餐時。",
+          "name": "\u83C7\u83C7\u852C\u98DF\u4FBF\u7576",
+          "description": "\u674F\u9B91\u83C7\u3001\u9752\u82B1\u83DC\u8207\u8C46\u5E72\u642D\u914D\u7CD9\u7C73\u98EF\uFF0C\u9069\u5408\u60F3\u5403\u852C\u98DF\u5348\u9910\u6642\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -420,8 +420,8 @@
       "mealType": "Dinner",
       "localizations": {
         "zh-TW": {
-          "name": "麻油雞麵線",
-          "description": "麻油香氣的雞湯搭配麵線，天氣涼時很適合。",
+          "name": "\u9EBB\u6CB9\u96DE\u9EB5\u7DDA",
+          "description": "\u9EBB\u6CB9\u9999\u6C23\u7684\u96DE\u6E6F\u642D\u914D\u9EB5\u7DDA\uFF0C\u5929\u6C23\u6DBC\u6642\u5F88\u9069\u5408\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -438,8 +438,8 @@
       "mealType": "Dinner",
       "localizations": {
         "zh-TW": {
-          "name": "韓式拌飯",
-          "description": "白飯鋪上蔬菜、牛肉、泡菜與半熟蛋，拌入辣醬。",
+          "name": "\u97D3\u5F0F\u62CC\u98EF",
+          "description": "\u767D\u98EF\u92EA\u4E0A\u852C\u83DC\u3001\u725B\u8089\u3001\u6CE1\u83DC\u8207\u534A\u719F\u86CB\uFF0C\u62CC\u5165\u8FA3\u91AC\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -456,8 +456,8 @@
       "mealType": "Dinner",
       "localizations": {
         "zh-TW": {
-          "name": "紅酒燉牛肉",
-          "description": "牛肉、紅蘿蔔與洋蔥慢燉，搭配麵包或馬鈴薯泥。",
+          "name": "\u7D05\u9152\u71C9\u725B\u8089",
+          "description": "\u725B\u8089\u3001\u7D05\u863F\u8514\u8207\u6D0B\u8525\u6162\u71C9\uFF0C\u642D\u914D\u9EB5\u5305\u6216\u99AC\u9234\u85AF\u6CE5\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -474,8 +474,8 @@
       "mealType": "Dinner",
       "localizations": {
         "zh-TW": {
-          "name": "香煎鮭魚飯",
-          "description": "鮭魚煎到表皮酥香，搭配白飯、海苔與燙青菜。",
+          "name": "\u9999\u714E\u9BAD\u9B5A\u98EF",
+          "description": "\u9BAD\u9B5A\u714E\u5230\u8868\u76AE\u9165\u9999\uFF0C\u642D\u914D\u767D\u98EF\u3001\u6D77\u82D4\u8207\u71D9\u9752\u83DC\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -492,8 +492,8 @@
       "mealType": "Dinner",
       "localizations": {
         "zh-TW": {
-          "name": "滷肉飯套餐",
-          "description": "滷肉飯搭配滷蛋、青菜與貢丸湯，晚餐簡單滿足。",
+          "name": "\u6EF7\u8089\u98EF\u5957\u9910",
+          "description": "\u6EF7\u8089\u98EF\u642D\u914D\u6EF7\u86CB\u3001\u9752\u83DC\u8207\u8CA2\u4E38\u6E6F\uFF0C\u665A\u9910\u7C21\u55AE\u6EFF\u8DB3\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -510,8 +510,8 @@
       "mealType": "Dinner",
       "localizations": {
         "zh-TW": {
-          "name": "蔬菜豆腐鍋",
-          "description": "豆腐、菇類與時蔬煮成清爽鍋物，適合想吃暖胃晚餐時。",
+          "name": "\u852C\u83DC\u8C46\u8150\u934B",
+          "description": "\u8C46\u8150\u3001\u83C7\u985E\u8207\u6642\u852C\u716E\u6210\u6E05\u723D\u934B\u7269\uFF0C\u9069\u5408\u60F3\u5403\u6696\u80C3\u665A\u9910\u6642\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -528,8 +528,8 @@
       "mealType": "Dinner",
       "localizations": {
         "zh-TW": {
-          "name": "海鮮粥",
-          "description": "白粥加入魚片、蝦仁與蛤蜊，晚餐想吃清淡時很合適。",
+          "name": "\u6D77\u9BAE\u7CA5",
+          "description": "\u767D\u7CA5\u52A0\u5165\u9B5A\u7247\u3001\u8766\u4EC1\u8207\u86E4\u870A\uFF0C\u665A\u9910\u60F3\u5403\u6E05\u6DE1\u6642\u5F88\u5408\u9069\u3002",
           "isComplete": true
         },
         "en-US": {
@@ -646,6 +646,134 @@
       "cardId": "33333333-3333-3333-3333-333333333331",
       "mealTypeAtDraw": "Dinner",
       "succeededAtUtc": "2026-05-13T15:35:47.413724+00:00"
+    },
+    {
+      "id": "13ba8e3c-502f-4673-9b3e-90dafffa5e4e",
+      "operationId": "5d87c119-9987-44e7-b64d-cc859bb1c1d6",
+      "drawMode": "Random",
+      "cardId": "33333333-3333-3333-3333-333333333335",
+      "mealTypeAtDraw": "Dinner",
+      "succeededAtUtc": "2026-05-13T15:48:42.333524+00:00"
+    },
+    {
+      "id": "398f6993-5352-4d44-a518-0433f213abd1",
+      "operationId": "a3dac030-f2dd-457c-b589-e705f663edc1",
+      "drawMode": "Random",
+      "cardId": "33333333-3333-3333-3333-333333333338",
+      "mealTypeAtDraw": "Dinner",
+      "succeededAtUtc": "2026-05-13T15:48:44.42946+00:00"
+    },
+    {
+      "id": "ddf5aaaf-16b7-4b69-ba49-f85b32016eb6",
+      "operationId": "9ede5c8f-2ba4-4d60-91f6-4ba45bf084b8",
+      "drawMode": "Random",
+      "cardId": "22222222-2222-2222-2222-222222222221",
+      "mealTypeAtDraw": "Lunch",
+      "succeededAtUtc": "2026-05-13T15:48:45.903898+00:00"
+    },
+    {
+      "id": "fc254204-9eb2-4ede-9192-53999fe5d1ed",
+      "operationId": "bf34972d-ac69-4f3a-b40b-daa5b17bd9e2",
+      "drawMode": "Random",
+      "cardId": "22222222-2222-2222-2222-222222222225",
+      "mealTypeAtDraw": "Lunch",
+      "succeededAtUtc": "2026-05-13T15:48:47.904136+00:00"
+    },
+    {
+      "id": "257aa9a6-a031-4704-8c4b-dd4ab1dcf9f9",
+      "operationId": "70f271d6-74e8-468c-8bc5-def93e7198a7",
+      "drawMode": "Random",
+      "cardId": "22222222-2222-2222-2222-222222222226",
+      "mealTypeAtDraw": "Lunch",
+      "succeededAtUtc": "2026-05-13T15:48:49.009432+00:00"
+    },
+    {
+      "id": "300be85f-77fe-4ad1-a335-9c994c6a677e",
+      "operationId": "706e2a3a-1a0f-4e65-b0fa-4e91f31459b7",
+      "drawMode": "Random",
+      "cardId": "22222222-2222-2222-2222-222222222225",
+      "mealTypeAtDraw": "Lunch",
+      "succeededAtUtc": "2026-05-13T15:48:50.645974+00:00"
+    },
+    {
+      "id": "a354dd1e-a688-4a67-8517-b01fc17aab22",
+      "operationId": "6763c6a0-d1cd-4e6f-a4b7-251a0f7ec704",
+      "drawMode": "Random",
+      "cardId": "33333333-3333-3333-3333-333333333340",
+      "mealTypeAtDraw": "Dinner",
+      "succeededAtUtc": "2026-05-13T15:48:51.982474+00:00"
+    },
+    {
+      "id": "828a39df-1bb6-45a3-b2c4-35b65805b467",
+      "operationId": "45ed0747-e074-4bc1-b4cc-88b24ed0b07a",
+      "drawMode": "Random",
+      "cardId": "22222222-2222-2222-2222-222222222222",
+      "mealTypeAtDraw": "Lunch",
+      "succeededAtUtc": "2026-05-13T15:48:53.755924+00:00"
+    },
+    {
+      "id": "c813941c-ca46-4b1c-b515-147a1dafe8f9",
+      "operationId": "682f1451-9887-4cfc-a6a7-0eb30d1fc5f8",
+      "drawMode": "Random",
+      "cardId": "33333333-3333-3333-3333-333333333337",
+      "mealTypeAtDraw": "Dinner",
+      "succeededAtUtc": "2026-05-13T15:48:55.301789+00:00"
+    },
+    {
+      "id": "75c11752-2fd6-456e-9154-c931e262565f",
+      "operationId": "43453967-481d-484f-8bc6-0f2afd40d6f0",
+      "drawMode": "Normal",
+      "cardId": "11111111-1111-1111-1111-111111111112",
+      "mealTypeAtDraw": "Breakfast",
+      "succeededAtUtc": "2026-05-13T15:48:59.709+00:00"
+    },
+    {
+      "id": "192aae8e-7f04-4288-a7b4-2644cc270b0a",
+      "operationId": "08aadcdf-9399-4a13-bf14-3f90135365e9",
+      "drawMode": "Normal",
+      "cardId": "11111111-1111-1111-1111-111111111111",
+      "mealTypeAtDraw": "Breakfast",
+      "succeededAtUtc": "2026-05-13T15:49:01.24597+00:00"
+    },
+    {
+      "id": "4c9d4f4e-e4f1-413e-a340-fc4398bc9e96",
+      "operationId": "7fbad12f-e4d0-4c51-b565-7a637e7a1ac0",
+      "drawMode": "Normal",
+      "cardId": "11111111-1111-1111-1111-111111111112",
+      "mealTypeAtDraw": "Breakfast",
+      "succeededAtUtc": "2026-05-13T15:49:02.441427+00:00"
+    },
+    {
+      "id": "9b9a2ff8-3356-44ce-9448-5c0ed44c7496",
+      "operationId": "d37da26b-29d9-4bb2-8889-2c178615915e",
+      "drawMode": "Normal",
+      "cardId": "11111111-1111-1111-1111-111111111114",
+      "mealTypeAtDraw": "Breakfast",
+      "succeededAtUtc": "2026-05-13T15:49:03.693544+00:00"
+    },
+    {
+      "id": "5abae165-4741-411f-a359-ae7504694a20",
+      "operationId": "3b45fd46-f928-4943-a7e7-ca5b942655e5",
+      "drawMode": "Normal",
+      "cardId": "11111111-1111-1111-1111-111111111111",
+      "mealTypeAtDraw": "Breakfast",
+      "succeededAtUtc": "2026-05-13T15:49:05.088933+00:00"
+    },
+    {
+      "id": "5bbf4c30-39c5-4560-9b53-73b8d46666db",
+      "operationId": "64f0b6e8-a87b-4592-8ae7-844f7b3e2b1c",
+      "drawMode": "Normal",
+      "cardId": "11111111-1111-1111-1111-111111111118",
+      "mealTypeAtDraw": "Breakfast",
+      "succeededAtUtc": "2026-05-13T15:49:06.212347+00:00"
+    },
+    {
+      "id": "5a7a5355-51a1-4292-a8d3-c39bb6b5fd3e",
+      "operationId": "85063331-9fe1-46bd-a19f-a8ee46c6b5bc",
+      "drawMode": "Normal",
+      "cardId": "11111111-1111-1111-1111-111111111119",
+      "mealTypeAtDraw": "Breakfast",
+      "succeededAtUtc": "2026-05-13T15:49:07.288282+00:00"
     }
   ]
 }
