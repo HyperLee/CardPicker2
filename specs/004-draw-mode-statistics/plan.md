@@ -3,7 +3,7 @@
 **分支**: `004-draw-mode-statistics` | **日期**: 2026-05-13 | **規格**: [spec.md](./spec.md)
 **輸入**: 來自 `specs/004-draw-mode-statistics/spec.md` 的功能規格，並納入使用者提供的 .NET/Razor Pages 技術背景；其中資料檔 repo 路徑修正為實際專案路徑 `CardPicker2/data/cards.json`
 
-**Note**: This template is filled in by the `/speckit-plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
+**註記**: 本範本由 `/speckit-plan` 命令填寫；執行流程請參考 `.specify/templates/plan-template.md`。
 
 ## 摘要
 
@@ -25,35 +25,35 @@
 
 ## 憲章檢查
 
-*GATE: Phase 0 research 前 MUST 通過；Phase 1 design 後 MUST 重新檢查。*
+*閘門: 階段 0 研究前必須通過；階段 1 設計後必須重新檢查。*
 
-### 初始閘門，Phase 0 前
+### 初始閘門，階段 0 前
 
-| Gate | 憲章要求 | 狀態 | 證據或例外理由 |
+| 閘門 | 憲章要求 | 狀態 | 證據或例外理由 |
 |------|----------|------|----------------|
-| 文件語言 | 開發文件 MUST 使用繁體中文；runtime UI 依核准語系呈現 | PASS | 本計畫與 Phase 0/1 產物使用繁體中文；程式識別字可維持英文。 |
-| 程式碼品質 | C# 14、NRT、`.editorconfig`、清楚邊界與 XML 文件註解 | PASS | 新增模型與服務放在 `Models/`、`Services/`；PageModels 不承載公平性、統計或 persistence 規則；所有新增或變更的公開 API 需補 XML 文件註解，且每個公開 API 註解都包含 `<example>`/`<code>`。 |
-| 測試優先 | 行為、資料規則、驗證邏輯與使用者流程變更 MUST 先寫失敗測試 | PASS | `tasks.md` 必須先建立 draw mode、candidate pool、公平性、history persistence、idempotency、statistics、delete retention、security headers 與 reduced motion 測試，再實作。 |
-| UX 一致性 | Bootstrap 5、`site.css`、RWD、可操作錯誤回饋與 WCAG 2.1 AA | PASS | 模式選擇、統計表、空狀態、deleted badge 與鼓勵文案都使用既有設計語言；390x844、768x1024、1366x768 需驗證不溢出。 |
-| 效能 | 主要頁面與核心互動 MUST 有效能預算 | PASS | 統計由本機 JSON 歷史在服務層投影；單機資料量小，仍需避免重複 I/O 與同步阻塞；handler p95 < 200ms。 |
-| 可觀察性 | 結構化日誌記錄關鍵事件且不得洩漏敏感資料 | PASS | 記錄 startup/load、schema migration、draw success、repeat replay、validation failure、write failure、blocked recovery；不得記錄完整 JSON、秘密、stack trace 或系統提示。 |
-| 安全 | Server validation、Anti-Forgery、HTTPS/HSTS/CSP | PASS | `POST /?handler=Draw`、card create/edit/delete 與 language/theme forms 維持 Anti-Forgery；production HSTS/CSP 不降級。 |
-| 資料完整性 | 卡牌、抽卡結果與多步驟操作 MUST 正確、原子且可驗證 | PASS | 抽卡結果與歷史紀錄同一原子寫入；寫入失敗不得宣告成功；同一 operation id 重複提交只 replay 原結果。 |
+| 文件語言 | 開發文件必須使用繁體中文；runtime UI 依核准語系呈現 | 通過 | 本計畫與階段 0/1 產物使用繁體中文；程式識別字可維持英文。 |
+| 程式碼品質 | C# 14、NRT、`.editorconfig`、清楚邊界與 XML 文件註解 | 通過 | 新增模型與服務放在 `Models/`、`Services/`；PageModels 不承載公平性、統計或 persistence 規則；所有新增或變更的公開 API 需補 XML 文件註解，且每個公開 API 註解都包含 `<example>`/`<code>`。 |
+| 測試優先 | 行為、資料規則、驗證邏輯與使用者流程變更必須先寫失敗測試 | 通過 | `tasks.md` 必須先建立 draw mode、candidate pool、公平性、history persistence、idempotency、statistics、delete retention、security headers 與 reduced motion 測試，再實作。 |
+| UX 一致性 | Bootstrap 5、`site.css`、RWD、可操作錯誤回饋與 WCAG 2.1 AA | 通過 | 模式選擇、統計表、空狀態、deleted badge 與鼓勵文案都使用既有設計語言；390x844、768x1024、1366x768 需驗證不溢出。 |
+| 效能 | 主要頁面與核心互動必須有效能預算 | 通過 | 統計由本機 JSON 歷史在服務層投影；單機資料量小，仍需避免重複 I/O 與同步阻塞；handler p95 < 200ms。 |
+| 可觀察性 | 結構化日誌記錄關鍵事件且不得洩漏敏感資料 | 通過 | 記錄 startup/load、schema migration、draw success、repeat replay、validation failure、write failure、blocked recovery；不得記錄完整 JSON、秘密、stack trace 或系統提示。 |
+| 安全 | Server validation、Anti-Forgery、HTTPS/HSTS/CSP | 通過 | `POST /?handler=Draw`、card create/edit/delete 與 language/theme forms 維持 Anti-Forgery；production HSTS/CSP 不降級。 |
+| 資料完整性 | 卡牌、抽卡結果與多步驟操作必須正確、原子且可驗證 | 通過 | 抽卡結果與歷史紀錄同一原子寫入；寫入失敗不得宣告成功；同一 operation id 重複提交只 replay 原結果。 |
 
-### Phase 1 設計後複查
+### 階段 1 設計後複查
 
-| Gate | 狀態 | 設計證據 |
+| 閘門 | 狀態 | 設計證據 |
 |------|------|----------|
-| 文件語言 | PASS | `research.md`、`data-model.md`、`quickstart.md` 與 `contracts/ui-contract.md` 均為繁體中文。 |
-| 程式碼品質 | PASS | `data-model.md` 定義 `DrawMode`、`DrawOperation`、`DrawHistoryRecord`、`CardDrawStatistic`、`DrawStatisticsSummary`、schema v3 與狀態轉換；契約限制 PageModel 與 service 職責。 |
-| 測試優先 | PASS | `quickstart.md` 明確列出先跑失敗測試的 filter 與測試範圍；`tasks.md` 產生時須保持測試任務在實作前。 |
-| UX 一致性 | PASS | UI 契約要求正常/隨機模式、統計表、空狀態、deleted 狀態、reduced motion 與禁用狀態在桌面/行動可操作且不誤導機率。 |
-| 效能 | PASS | 統計不持久化 aggregate，避免寫入時維護多份狀態；單次 request 由歷史投影，必要時在服務層同一 load 結果中重用資料。 |
-| 可觀察性 | PASS | 契約列出允許記錄事件與禁止內容；repeat replay 與 write failure 都有明確 log level。 |
-| 安全 | PASS | 所有 state-changing forms 維持 Anti-Forgery；CSP/HSTS 測試保留；錯誤與復原訊息不得包含內部資料。 |
-| 資料完整性 | PASS | schema v3、per-process file lock、operation id unique、atomic append history、deleted card retention 與 statistics projection 都有資料模型與契約。 |
+| 文件語言 | 通過 | `research.md`、`data-model.md`、`quickstart.md` 與 `contracts/ui-contract.md` 均為繁體中文。 |
+| 程式碼品質 | 通過 | `data-model.md` 定義 `DrawMode`、`DrawOperation`、`DrawHistoryRecord`、`CardDrawStatistic`、`DrawStatisticsSummary`、schema v3 與狀態轉換；契約限制 PageModel 與 service 職責。 |
+| 測試優先 | 通過 | `quickstart.md` 明確列出先跑失敗測試的 filter 與測試範圍；`tasks.md` 產生時須保持測試任務在實作前。 |
+| UX 一致性 | 通過 | UI 契約要求正常/隨機模式、統計表、空狀態、deleted 狀態、reduced motion 與禁用狀態在桌面/行動可操作且不誤導機率。 |
+| 效能 | 通過 | 統計不持久化 aggregate，避免寫入時維護多份狀態；單次 request 由歷史投影，必要時在服務層同一 load 結果中重用資料。 |
+| 可觀察性 | 通過 | 契約列出允許記錄事件與禁止內容；repeat replay 與 write failure 都有明確 log level。 |
+| 安全 | 通過 | 所有 state-changing forms 維持 Anti-Forgery；CSP/HSTS 測試保留；錯誤與復原訊息不得包含內部資料。 |
+| 資料完整性 | 通過 | schema v3、per-process file lock、operation id unique、atomic append history、deleted card retention 與 statistics projection 都有資料模型與契約。 |
 
-**Complexity Review**: 無 FAIL 或 WAIVED；不需要憲章例外。
+**複雜度審查**: 無失敗或豁免項目；不需要憲章例外。
 
 ## 專案結構
 
@@ -69,10 +69,10 @@ specs/004-draw-mode-statistics/
 │   └── ui-contract.md
 ├── checklists/
 │   └── requirements.md
-└── tasks.md              # Phase 2 輸出，由 /speckit-tasks 產生
+└── tasks.md              # 階段 2 輸出，由 /speckit-tasks 產生
 ```
 
-### 原始碼，repository root
+### 原始碼，儲存庫根目錄
 
 ```text
 CardPicker2/
