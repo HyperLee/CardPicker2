@@ -16,6 +16,11 @@ public sealed class SearchCriteria
     public MealType? MealType { get; set; }
 
     /// <summary>
+    /// Gets or sets the language used for visible-name search.
+    /// </summary>
+    public SupportedLanguage CurrentLanguage { get; set; } = SupportedLanguage.ZhTw;
+
+    /// <summary>
     /// Gets the trimmed keyword, or <see langword="null"/> when empty.
     /// </summary>
     public string? NormalizedKeyword

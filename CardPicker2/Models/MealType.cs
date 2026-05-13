@@ -33,6 +33,28 @@ public static class MealTypeExtensions
     /// <returns>A Traditional Chinese label.</returns>
     public static string ToDisplayName(this MealType mealType)
     {
+        return mealType.ToDisplayName(SupportedLanguage.ZhTw);
+    }
+
+    /// <summary>
+    /// Returns the localized display name for the meal type.
+    /// </summary>
+    /// <param name="mealType">The meal type to display.</param>
+    /// <param name="language">The current language.</param>
+    /// <returns>A localized meal type label.</returns>
+    public static string ToDisplayName(this MealType mealType, SupportedLanguage language)
+    {
+        if (language == SupportedLanguage.EnUs)
+        {
+            return mealType switch
+            {
+                MealType.Breakfast => "Breakfast",
+                MealType.Lunch => "Lunch",
+                MealType.Dinner => "Dinner",
+                _ => "Unknown meal type"
+            };
+        }
+
         return mealType switch
         {
             MealType.Breakfast => "早餐",

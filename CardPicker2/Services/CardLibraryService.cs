@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -23,6 +22,7 @@ public sealed class CardLibraryService : ICardLibraryService
     private readonly IMealCardRandomizer _randomizer;
     private readonly DuplicateCardDetector _duplicateDetector;
     private readonly ILogger<CardLibraryService> _logger;
+    private readonly MealCardLocalizationService _localizationService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CardLibraryService"/> class.
@@ -31,16 +31,19 @@ public sealed class CardLibraryService : ICardLibraryService
     /// <param name="randomizer">The random index generator used for draw fairness.</param>
     /// <param name="duplicateDetector">The duplicate detector.</param>
     /// <param name="logger">The structured logger.</param>
+    /// <param name="localizationService">The localized card projection service.</param>
     public CardLibraryService(
         IOptions<CardLibraryOptions> options,
         IMealCardRandomizer randomizer,
         DuplicateCardDetector duplicateDetector,
-        ILogger<CardLibraryService> logger)
+        ILogger<CardLibraryService> logger,
+        MealCardLocalizationService? localizationService = null)
     {
         _options = options.Value;
         _randomizer = randomizer;
         _duplicateDetector = duplicateDetector;
         _logger = logger;
+        _localizationService = localizationService ?? new MealCardLocalizationService();
     }
 
     /// <inheritdoc />
@@ -66,7 +69,7 @@ public sealed class CardLibraryService : ICardLibraryService
         CardLibraryDocument? document;
         try
         {
-            document = JsonSerializer.Deserialize<CardLibraryDocument>(json, JsonOptions);
+            document = DeserializeDocument(json);
         }
         catch (JsonException ex)
         {
@@ -82,9 +85,10 @@ public sealed class CardLibraryService : ICardLibraryService
         }
 
         _logger.LogInformation(
-            "Card library loaded from {CardLibraryPath} with {CardCount} cards",
+            "Card library loaded from {CardLibraryPath} with {CardCount} cards using schema {SchemaVersion}",
             filePath,
-            document!.Cards.Count);
+            document!.Cards.Count,
+            document.SchemaVersion);
         return CardLibraryLoadResult.Ready(document);
     }
 
@@ -101,15 +105,35 @@ public sealed class CardLibraryService : ICardLibraryService
     }
 
     /// <inheritdoc />
+    public async Task<IReadOnlyList<LocalizedMealCardView>> SearchLocalizedAsync(SearchCriteria criteria, CancellationToken cancellationToken = default)
+    {
+        var cards = await SearchCoreAsync(criteria, cancellationToken);
+        return _localizationService.ProjectMany(cards, criteria.CurrentLanguage);
+    }
+
+    /// <inheritdoc />
     public Task<MealCard?> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return FindByIdCoreAsync(id, cancellationToken);
     }
 
     /// <inheritdoc />
+    public async Task<LocalizedMealCardView?> FindLocalizedByIdAsync(Guid id, SupportedLanguage language, CancellationToken cancellationToken = default)
+    {
+        var card = await FindByIdCoreAsync(id, cancellationToken);
+        return card is null ? null : _localizationService.Project(card, language);
+    }
+
+    /// <inheritdoc />
     public Task<DrawResult> DrawAsync(MealType mealType, CancellationToken cancellationToken = default)
     {
-        return DrawCoreAsync(mealType, cancellationToken);
+        return DrawCoreAsync(mealType, SupportedLanguage.ZhTw, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<DrawResult> DrawAsync(MealType mealType, SupportedLanguage language, CancellationToken cancellationToken = default)
+    {
+        return DrawCoreAsync(mealType, language, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -157,19 +181,19 @@ public sealed class CardLibraryService : ICardLibraryService
         return CardLibraryLoadResult.CreatedFromSeed(document);
     }
 
-    private async Task<DrawResult> DrawCoreAsync(MealType mealType, CancellationToken cancellationToken)
+    private async Task<DrawResult> DrawCoreAsync(MealType mealType, SupportedLanguage language, CancellationToken cancellationToken)
     {
         if (!Enum.IsDefined(typeof(MealType), mealType))
         {
             _logger.LogWarning("Draw rejected because meal type is invalid: {MealType}", mealType);
-            return DrawResult.Failure(mealType, "請先選擇早餐、午餐或晚餐。");
+            return DrawResult.Failure(mealType, "請先選擇早餐、午餐或晚餐。", "Draw.InvalidMealType");
         }
 
         var loadResult = await LoadAsync(cancellationToken);
         if (loadResult.IsBlocked || loadResult.Document is null)
         {
             _logger.LogWarning("Draw blocked because card library is unavailable. Status: {LoadStatus}", loadResult.Status);
-            return DrawResult.Failure(mealType, loadResult.UserMessage);
+            return DrawResult.Failure(mealType, loadResult.UserMessage, loadResult.MessageKey);
         }
 
         var pool = loadResult.Document.Cards
@@ -178,7 +202,7 @@ public sealed class CardLibraryService : ICardLibraryService
         if (pool.Count == 0)
         {
             _logger.LogWarning("Draw rejected because meal type {MealType} has no cards", mealType);
-            return DrawResult.Failure(mealType, "這個餐別目前沒有可抽取的餐點卡牌。");
+            return DrawResult.Failure(mealType, "這個餐別目前沒有可抽取的餐點卡牌。", "Draw.EmptyMealPool");
         }
 
         var selected = pool[_randomizer.NextIndex(pool.Count)];
@@ -188,7 +212,8 @@ public sealed class CardLibraryService : ICardLibraryService
             selected.Id,
             pool.Count);
 
-        return DrawResult.Success(mealType, selected);
+        var localizedCard = _localizationService.Project(selected, language);
+        return DrawResult.Success(mealType, selected, localizedCard, "已抽出餐點卡牌。", "Draw.Success");
     }
 
     private async Task<IReadOnlyList<MealCard>> SearchCoreAsync(SearchCriteria criteria, CancellationToken cancellationToken)
@@ -208,7 +233,10 @@ public sealed class CardLibraryService : ICardLibraryService
         var keyword = criteria.NormalizedKeyword;
         if (!string.IsNullOrEmpty(keyword))
         {
-            query = query.Where(card => card.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+            query = query.Where(card =>
+                _localizationService.Project(card, criteria.CurrentLanguage)
+                    .DisplayName
+                    .Contains(keyword, StringComparison.OrdinalIgnoreCase));
         }
 
         if (criteria.MealType is not null)
@@ -218,7 +246,7 @@ public sealed class CardLibraryService : ICardLibraryService
 
         return query
             .OrderBy(card => card.MealType)
-            .ThenBy(card => card.Name, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(card => _localizationService.Project(card, criteria.CurrentLanguage).DisplayName, StringComparer.OrdinalIgnoreCase)
             .ToList();
     }
 
@@ -254,7 +282,7 @@ public sealed class CardLibraryService : ICardLibraryService
             return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.Duplicate, "已有相同餐點名稱、餐別與描述的卡牌。");
         }
 
-        var card = new MealCard(Guid.NewGuid(), normalized.Name!, normalized.MealType!.Value, normalized.Description!);
+        var card = new MealCard(Guid.NewGuid(), normalized.MealType!.Value, normalized.ToLocalizations());
         var updatedDocument = new CardLibraryDocument
         {
             SchemaVersion = CardLibraryDocument.CurrentSchemaVersion,
@@ -292,7 +320,7 @@ public sealed class CardLibraryService : ICardLibraryService
             return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.Duplicate, "已有相同餐點名稱、餐別與描述的卡牌。");
         }
 
-        var updatedCard = new MealCard(id, normalized.Name!, normalized.MealType!.Value, normalized.Description!);
+        var updatedCard = new MealCard(id, normalized.MealType!.Value, normalized.ToLocalizations());
         var cards = loadResult.Document.Cards
             .Select(card => card.Id == id ? updatedCard : card)
             .ToList();
@@ -332,6 +360,13 @@ public sealed class CardLibraryService : ICardLibraryService
 
     private async Task<CardLibraryMutationResult?> TryWriteDocumentAsync(CardLibraryDocument document, CancellationToken cancellationToken)
     {
+        var validationError = ValidateDocument(document);
+        if (validationError is not null)
+        {
+            _logger.LogError("Card library write rejected because the new document is invalid: {ValidationError}", validationError);
+            return CardLibraryMutationResult.Failure(CardLibraryMutationStatus.ValidationFailed, "卡牌資料不完整，請確認雙語欄位皆已填寫。");
+        }
+
         try
         {
             await WriteDocumentAsync(GetLibraryFilePath(), document, cancellationToken);
@@ -346,8 +381,12 @@ public sealed class CardLibraryService : ICardLibraryService
 
     private static bool IsValidInput(MealCardInputModel input)
     {
-        var validationResults = new List<ValidationResult>();
-        return Validator.TryValidateObject(input, new ValidationContext(input), validationResults, validateAllProperties: true);
+        var validationResults = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+        return System.ComponentModel.DataAnnotations.Validator.TryValidateObject(
+            input,
+            new System.ComponentModel.DataAnnotations.ValidationContext(input),
+            validationResults,
+            validateAllProperties: true);
     }
 
     private async Task WriteDocumentAsync(string filePath, CardLibraryDocument document, CancellationToken cancellationToken)
@@ -393,6 +432,42 @@ public sealed class CardLibraryService : ICardLibraryService
             : _options.LibraryFilePath;
     }
 
+    private static CardLibraryDocument? DeserializeDocument(string json)
+    {
+        using var jsonDocument = JsonDocument.Parse(json);
+        var root = jsonDocument.RootElement;
+        if (!root.TryGetProperty("schemaVersion", out var schemaVersionElement) ||
+            !schemaVersionElement.TryGetInt32(out var schemaVersion) ||
+            !root.TryGetProperty("cards", out var cardsElement) ||
+            cardsElement.ValueKind != JsonValueKind.Array)
+        {
+            return null;
+        }
+
+        return schemaVersion switch
+        {
+            CardLibraryDocument.LegacySchemaVersion => ConvertLegacyDocument(JsonSerializer.Deserialize<LegacyCardLibraryDocument>(json, JsonOptions)),
+            CardLibraryDocument.CurrentSchemaVersion => JsonSerializer.Deserialize<CardLibraryDocument>(json, JsonOptions),
+            _ => new CardLibraryDocument { SchemaVersion = schemaVersion, Cards = Array.Empty<MealCard>() }
+        };
+    }
+
+    private static CardLibraryDocument? ConvertLegacyDocument(LegacyCardLibraryDocument? legacyDocument)
+    {
+        if (legacyDocument?.Cards is null)
+        {
+            return null;
+        }
+
+        return new CardLibraryDocument
+        {
+            SchemaVersion = CardLibraryDocument.LegacySchemaVersion,
+            Cards = legacyDocument.Cards
+                .Select(card => new MealCard(card.Id, card.Name ?? string.Empty, card.MealType, card.Description ?? string.Empty))
+                .ToList()
+        };
+    }
+
     private string? ValidateDocument(CardLibraryDocument? document)
     {
         if (document is null)
@@ -400,7 +475,7 @@ public sealed class CardLibraryService : ICardLibraryService
             return "Document is null.";
         }
 
-        if (document.SchemaVersion != CardLibraryDocument.CurrentSchemaVersion)
+        if (document.SchemaVersion is not CardLibraryDocument.LegacySchemaVersion and not CardLibraryDocument.CurrentSchemaVersion)
         {
             return "Unsupported schema version.";
         }
@@ -410,6 +485,7 @@ public sealed class CardLibraryService : ICardLibraryService
             return "Cards collection is missing.";
         }
 
+        var requireCompleteEnglish = document.SchemaVersion == CardLibraryDocument.CurrentSchemaVersion;
         var seenIds = new HashSet<Guid>();
         foreach (var card in document.Cards)
         {
@@ -423,31 +499,27 @@ public sealed class CardLibraryService : ICardLibraryService
                 return "Duplicate card ID.";
             }
 
-            if (string.IsNullOrWhiteSpace(card.Name))
-            {
-                return "Card name is missing.";
-            }
-
             if (!Enum.IsDefined(typeof(MealType), card.MealType))
             {
                 return "Card meal type is invalid.";
             }
 
-            if (string.IsNullOrWhiteSpace(card.Description))
+            foreach (var cultureName in card.Localizations.Keys)
             {
-                return "Card description is missing.";
+                if (!SupportedLanguage.TryGet(cultureName, out _))
+                {
+                    return "Card localization culture is unsupported.";
+                }
             }
 
-            var validationResults = new List<ValidationResult>();
-            var input = new MealCardInputModel
+            if (!card.HasCompleteContent(SupportedLanguage.ZhTw))
             {
-                Name = card.Name,
-                MealType = card.MealType,
-                Description = card.Description
-            };
-            if (!Validator.TryValidateObject(input, new ValidationContext(input), validationResults, validateAllProperties: true))
+                return "Card Traditional Chinese content is missing.";
+            }
+
+            if (requireCompleteEnglish && !card.HasCompleteContent(SupportedLanguage.EnUs))
             {
-                return "Card input validation failed.";
+                return "Card English content is missing.";
             }
 
             if (_duplicateDetector.HasDuplicate(document.Cards, card))
@@ -457,5 +529,23 @@ public sealed class CardLibraryService : ICardLibraryService
         }
 
         return null;
+    }
+
+    private sealed class LegacyCardLibraryDocument
+    {
+        public int SchemaVersion { get; init; }
+
+        public IReadOnlyList<LegacyMealCard>? Cards { get; init; }
+    }
+
+    private sealed class LegacyMealCard
+    {
+        public Guid Id { get; init; }
+
+        public string? Name { get; init; }
+
+        public MealType MealType { get; init; }
+
+        public string? Description { get; init; }
     }
 }

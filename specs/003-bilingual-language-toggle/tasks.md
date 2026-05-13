@@ -31,31 +31,31 @@
 
 ### Tests First
 
-- [ ] T006 [P] 新增 `SupportedLanguage` 與 culture cookie fallback 單元測試 `tests/CardPicker2.UnitTests/Services/LanguagePreferenceServiceTests.cs`
-- [ ] T007 [P] 新增卡牌目前語系投影與英文缺漏 fallback 單元測試 `tests/CardPicker2.UnitTests/Services/MealCardLocalizationServiceTests.cs`
-- [ ] T008 [P] 新增 schema v1 migration、schema v2 seed、corrupted/unsupported preserve 單元測試 `tests/CardPicker2.UnitTests/Services/CardLibraryLocalizationTests.cs`
-- [ ] T009 [P] 擴充雙語與 fallback duplicate detection 單元測試 `tests/CardPicker2.UnitTests/Services/DuplicateCardDetectorTests.cs`
+- [X] T006 [P] 新增 `SupportedLanguage` 與 culture cookie fallback 單元測試 `tests/CardPicker2.UnitTests/Services/LanguagePreferenceServiceTests.cs`
+- [X] T007 [P] 新增卡牌目前語系投影與英文缺漏 fallback 單元測試 `tests/CardPicker2.UnitTests/Services/MealCardLocalizationServiceTests.cs`
+- [X] T008 [P] 新增 schema v1 migration、schema v2 seed、corrupted/unsupported preserve 單元測試 `tests/CardPicker2.UnitTests/Services/CardLibraryLocalizationTests.cs`
+- [X] T009 [P] 擴充雙語與 fallback duplicate detection 單元測試 `tests/CardPicker2.UnitTests/Services/DuplicateCardDetectorTests.cs`
 
 ### Implementation
 
-- [ ] T010 建立支援語系白名單模型與 `HtmlLang` 對應 `CardPicker2/Models/SupportedLanguage.cs`
-- [ ] T011 建立語系偏好模型與 cookie 狀態 `CardPicker2/Models/LanguagePreference.cs`
-- [ ] T012 建立單一語系餐點內容模型 `CardPicker2/Models/MealCardLocalizedContent.cs`
-- [ ] T013 建立目前語系卡牌顯示投影模型 `CardPicker2/Models/LocalizedMealCardView.cs`
-- [ ] T014 更新卡牌模型以使用 `zh-TW`/`en-US` localizations 與翻譯缺漏狀態 `CardPicker2/Models/MealCard.cs`
-- [ ] T015 更新 JSON root schema 為 v2 並保留 v1 載入支援所需 metadata `CardPicker2/Models/CardLibraryDocument.cs`
-- [ ] T016 更新卡牌輸入模型為 `NameZhTw`、`DescriptionZhTw`、`NameEnUs`、`DescriptionEnUs` 與 localized validation `CardPicker2/Models/MealCardInputModel.cs`
-- [ ] T017 更新搜尋條件以包含目前語系與 visible-name 搜尋規則 `CardPicker2/Models/SearchCriteria.cs`
-- [ ] T018 更新抽卡結果以保存 `CardId`、`MealType`、localized card projection 與 message key `CardPicker2/Models/DrawResult.cs`
-- [ ] T019 實作語系偏好 service，處理 cookie 建立、白名單驗證與 safe returnUrl `CardPicker2/Services/LanguagePreferenceService.cs`
-- [ ] T020 實作卡牌本地化投影 service，集中處理 fallback、missing translation 與餐別顯示 `CardPicker2/Services/MealCardLocalizationService.cs`
-- [ ] T021 更新 duplicate detector 為兩語系 visible name+description 比對 `CardPicker2/Services/DuplicateCardDetector.cs`
-- [ ] T022 更新預設種子資料為每餐別至少三張完整雙語卡牌 `CardPicker2/Services/SeedMealCards.cs`
-- [ ] T023 更新卡牌載入流程以讀取 v1/v2、缺檔建立 v2、corrupted/unsupported 保留原檔並 block operations `CardPicker2/Services/CardLibraryService.cs`
-- [ ] T024 更新卡牌服務介面以支援 localized projection、draw result card ID 與雙語 mutation contract `CardPicker2/Services/ICardLibraryService.cs`
-- [ ] T025 更新載入與 mutation result 以攜帶安全 message key/arguments 而非硬編碼單語訊息 `CardPicker2/Services/CardLibraryLoadResult.cs`
-- [ ] T026 更新 mutation result 以支援 localized success/failure message key 與雙語 card payload `CardPicker2/Services/CardLibraryMutationResult.cs`
-- [ ] T027 註冊 ASP.NET Core localization、view/DataAnnotations localization、cookie-only request culture provider 與語系服務 `CardPicker2/Program.cs`
+- [X] T010 建立支援語系白名單模型與 `HtmlLang` 對應 `CardPicker2/Models/SupportedLanguage.cs`
+- [X] T011 建立語系偏好模型與 cookie 狀態 `CardPicker2/Models/LanguagePreference.cs`
+- [X] T012 建立單一語系餐點內容模型 `CardPicker2/Models/MealCardLocalizedContent.cs`
+- [X] T013 建立目前語系卡牌顯示投影模型 `CardPicker2/Models/LocalizedMealCardView.cs`
+- [X] T014 更新卡牌模型以使用 `zh-TW`/`en-US` localizations 與翻譯缺漏狀態 `CardPicker2/Models/MealCard.cs`
+- [X] T015 更新 JSON root schema 為 v2 並保留 v1 載入支援所需 metadata `CardPicker2/Models/CardLibraryDocument.cs`
+- [X] T016 更新卡牌輸入模型為 `NameZhTw`、`DescriptionZhTw`、`NameEnUs`、`DescriptionEnUs` 與 localized validation `CardPicker2/Models/MealCardInputModel.cs`
+- [X] T017 更新搜尋條件以包含目前語系與 visible-name 搜尋規則 `CardPicker2/Models/SearchCriteria.cs`
+- [X] T018 更新抽卡結果以保存 `CardId`、`MealType`、localized card projection 與 message key `CardPicker2/Models/DrawResult.cs`
+- [X] T019 實作語系偏好 service，處理 cookie 建立、白名單驗證與 safe returnUrl `CardPicker2/Services/LanguagePreferenceService.cs`
+- [X] T020 實作卡牌本地化投影 service，集中處理 fallback、missing translation 與餐別顯示 `CardPicker2/Services/MealCardLocalizationService.cs`
+- [X] T021 更新 duplicate detector 為兩語系 visible name+description 比對 `CardPicker2/Services/DuplicateCardDetector.cs`
+- [X] T022 更新預設種子資料為每餐別至少三張完整雙語卡牌 `CardPicker2/Services/SeedMealCards.cs`
+- [X] T023 更新卡牌載入流程以讀取 v1/v2、缺檔建立 v2、corrupted/unsupported 保留原檔並 block operations `CardPicker2/Services/CardLibraryService.cs`
+- [X] T024 更新卡牌服務介面以支援 localized projection、draw result card ID 與雙語 mutation contract `CardPicker2/Services/ICardLibraryService.cs`
+- [X] T025 更新載入與 mutation result 以攜帶安全 message key/arguments 而非硬編碼單語訊息 `CardPicker2/Services/CardLibraryLoadResult.cs`
+- [X] T026 更新 mutation result 以支援 localized success/failure message key 與雙語 card payload `CardPicker2/Services/CardLibraryMutationResult.cs`
+- [X] T027 註冊 ASP.NET Core localization、view/DataAnnotations localization、cookie-only request culture provider 與語系服務 `CardPicker2/Program.cs`
 
 **Checkpoint**: localization middleware、雙語資料模型、schema migration 與投影服務已可由後續故事使用。
 

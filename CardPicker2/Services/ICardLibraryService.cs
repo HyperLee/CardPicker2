@@ -30,6 +30,14 @@ public interface ICardLibraryService
     Task<IReadOnlyList<MealCard>> SearchAsync(SearchCriteria criteria, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Searches cards and returns current-language projections.
+    /// </summary>
+    /// <param name="criteria">The search criteria.</param>
+    /// <param name="cancellationToken">A token that cancels the operation.</param>
+    /// <returns>The matching localized card projections.</returns>
+    Task<IReadOnlyList<LocalizedMealCardView>> SearchLocalizedAsync(SearchCriteria criteria, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Finds one card by immutable ID.
     /// </summary>
     /// <param name="id">The card ID.</param>
@@ -38,12 +46,30 @@ public interface ICardLibraryService
     Task<MealCard?> FindByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Finds one card by immutable ID and returns a current-language projection.
+    /// </summary>
+    /// <param name="id">The card ID.</param>
+    /// <param name="language">The projection language.</param>
+    /// <param name="cancellationToken">A token that cancels the operation.</param>
+    /// <returns>The localized card, or <see langword="null"/> when not found.</returns>
+    Task<LocalizedMealCardView?> FindLocalizedByIdAsync(Guid id, SupportedLanguage language, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Draws a card for the selected meal type.
     /// </summary>
     /// <param name="mealType">The selected meal type.</param>
     /// <param name="cancellationToken">A token that cancels the operation.</param>
     /// <returns>The draw result.</returns>
     Task<DrawResult> DrawAsync(MealType mealType, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Draws a card and projects the result for the current language.
+    /// </summary>
+    /// <param name="mealType">The selected meal type.</param>
+    /// <param name="language">The projection language.</param>
+    /// <param name="cancellationToken">A token that cancels the operation.</param>
+    /// <returns>The draw result.</returns>
+    Task<DrawResult> DrawAsync(MealType mealType, SupportedLanguage language, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Creates a new card.

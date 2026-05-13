@@ -1,10 +1,156 @@
+using System.Text.Json.Serialization;
+
 namespace CardPicker2.Models;
 
 /// <summary>
 /// Represents one persisted meal option that can be browsed, searched, edited, deleted, or drawn.
 /// </summary>
-/// <param name="Id">The immutable system-generated card identifier.</param>
-/// <param name="Name">The user-visible meal name.</param>
-/// <param name="MealType">The meal period this card belongs to.</param>
-/// <param name="Description">The complete meal description.</param>
-public sealed record MealCard(Guid Id, string Name, MealType MealType, string Description);
+public sealed class MealCard
+{
+    /// <summary>
+    /// Initializes a new empty instance for JSON deserialization.
+    /// </summary>
+    public MealCard()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a card from legacy single-language content.
+    /// </summary>
+    /// <param name="id">The immutable system-generated card identifier.</param>
+    /// <param name="name">The Traditional Chinese meal name.</param>
+    /// <param name="mealType">The meal period this card belongs to.</param>
+    /// <param name="description">The Traditional Chinese meal description.</param>
+    public MealCard(Guid id, string name, MealType mealType, string description)
+        : this(
+            id,
+            mealType,
+            new Dictionary<string, MealCardLocalizedContent>
+            {
+                [SupportedLanguage.ZhTw.CultureName] = new(name, description)
+            })
+    {
+    }
+
+    /// <summary>
+    /// Initializes a card with explicit localized content.
+    /// </summary>
+    /// <param name="id">The immutable system-generated card identifier.</param>
+    /// <param name="mealType">The meal period this card belongs to.</param>
+    /// <param name="localizations">The localized card content keyed by supported culture name.</param>
+    public MealCard(Guid id, MealType mealType, IDictionary<string, MealCardLocalizedContent> localizations)
+    {
+        Id = id;
+        MealType = mealType;
+        Localizations = new Dictionary<string, MealCardLocalizedContent>(localizations, StringComparer.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Gets or initializes the immutable system-generated card identifier.
+    /// </summary>
+    public Guid Id { get; init; }
+
+    /// <summary>
+    /// Gets or initializes the meal period this card belongs to.
+    /// </summary>
+    public MealType MealType { get; init; }
+
+    /// <summary>
+    /// Gets or initializes localized content keyed by supported culture name.
+    /// </summary>
+    public Dictionary<string, MealCardLocalizedContent> Localizations { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Gets the Traditional Chinese meal name for legacy callers.
+    /// </summary>
+    [JsonIgnore]
+    public string Name => GetContent(SupportedLanguage.ZhTw).Name;
+
+    /// <summary>
+    /// Gets the Traditional Chinese meal description for legacy callers.
+    /// </summary>
+    [JsonIgnore]
+    public string Description => GetContent(SupportedLanguage.ZhTw).Description;
+
+    /// <summary>
+    /// Gets the card translation status.
+    /// </summary>
+    [JsonIgnore]
+    public MealCardTranslationStatus TranslationStatus =>
+        HasCompleteContent(SupportedLanguage.EnUs)
+            ? MealCardTranslationStatus.Complete
+            : MealCardTranslationStatus.MissingEnglish;
+
+    /// <summary>
+    /// Gets content for a language, falling back to Traditional Chinese when the requested language is missing.
+    /// </summary>
+    /// <param name="language">The requested language.</param>
+    /// <returns>The localized or fallback content.</returns>
+    public MealCardLocalizedContent GetContent(SupportedLanguage language)
+    {
+        if (HasCompleteContent(language))
+        {
+            return Localizations[language.CultureName].Normalize();
+        }
+
+        if (HasCompleteContent(SupportedLanguage.ZhTw))
+        {
+            return Localizations[SupportedLanguage.ZhTw.CultureName].Normalize();
+        }
+
+        return new MealCardLocalizedContent();
+    }
+
+    /// <summary>
+    /// Reports whether the card has complete content for a language.
+    /// </summary>
+    /// <param name="language">The language to inspect.</param>
+    /// <returns><see langword="true"/> when name and description are present.</returns>
+    public bool HasCompleteContent(SupportedLanguage language)
+    {
+        return Localizations.TryGetValue(language.CultureName, out var content) && content.IsComplete;
+    }
+
+    /// <summary>
+    /// Gets all supported culture names that are missing complete content.
+    /// </summary>
+    /// <returns>A list of missing culture names.</returns>
+    public IReadOnlyList<string> GetMissingTranslationCultures()
+    {
+        return SupportedLanguage.All
+            .Where(language => !HasCompleteContent(language))
+            .Select(language => language.CultureName)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Creates a normalized copy of this card.
+    /// </summary>
+    /// <returns>A card with trimmed localized content.</returns>
+    public MealCard Normalize()
+    {
+        return new MealCard(
+            Id,
+            MealType,
+            Localizations.ToDictionary(
+                pair => pair.Key,
+                pair => pair.Value.Normalize(),
+                StringComparer.OrdinalIgnoreCase));
+    }
+}
+
+/// <summary>
+/// Enumerates whether a card has complete bilingual content.
+/// </summary>
+public enum MealCardTranslationStatus
+{
+    /// <summary>
+    /// Both Traditional Chinese and English content are complete.
+    /// </summary>
+    Complete,
+
+    /// <summary>
+    /// English content is missing and should fall back to Traditional Chinese.
+    /// </summary>
+    MissingEnglish
+}

@@ -1,6 +1,10 @@
 using System.Security.Cryptography;
+using System.Globalization;
 
+using CardPicker2.Models;
 using CardPicker2.Services;
+
+using Microsoft.AspNetCore.Localization;
 
 using Serilog;
 
@@ -20,7 +24,27 @@ public class Program
         });
 
         // Add services to the container.
-        builder.Services.AddRazorPages();
+        builder.Services.AddLocalization(options =>
+        {
+            options.ResourcesPath = "Resources";
+        });
+        builder.Services
+            .AddRazorPages()
+            .AddViewLocalization()
+            .AddDataAnnotationsLocalization();
+        builder.Services.Configure<RequestLocalizationOptions>(options =>
+        {
+            var supportedCultures = SupportedLanguage.All
+                .Select(language => new CultureInfo(language.CultureName))
+                .ToList();
+            options.DefaultRequestCulture = new RequestCulture(SupportedLanguage.ZhTw.CultureName, SupportedLanguage.ZhTw.CultureName);
+            options.SupportedCultures = supportedCultures;
+            options.SupportedUICultures = supportedCultures;
+            options.RequestCultureProviders = new List<IRequestCultureProvider>
+            {
+                new CookieRequestCultureProvider()
+            };
+        });
         builder.Services.AddHsts(options =>
         {
             options.ExcludedHosts.Clear();
@@ -30,6 +54,8 @@ public class Program
             options.LibraryFilePath = Path.Combine(builder.Environment.ContentRootPath, "data", "cards.json");
         });
         builder.Services.AddSingleton<DuplicateCardDetector>();
+        builder.Services.AddSingleton<LanguagePreferenceService>();
+        builder.Services.AddSingleton<MealCardLocalizationService>();
         builder.Services.AddSingleton<IMealCardRandomizer, MealCardRandomizer>();
         builder.Services.AddScoped<ICardLibraryService, CardLibraryService>();
 
@@ -57,6 +83,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseRequestLocalization();
 
         app.UseRouting();
 

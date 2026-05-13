@@ -7,11 +7,15 @@ namespace CardPicker2.Services;
 /// </summary>
 /// <param name="Status">The mutation state.</param>
 /// <param name="Card">The affected card when the mutation succeeds and one is available.</param>
-/// <param name="UserMessage">A Traditional Chinese message suitable for UI feedback.</param>
+/// <param name="UserMessage">A user-facing message suitable for UI feedback.</param>
+/// <param name="MessageKey">A stable message key for localization-aware UI.</param>
+/// <param name="MessageArguments">Safe message arguments for localization-aware UI.</param>
 public sealed record CardLibraryMutationResult(
     CardLibraryMutationStatus Status,
     MealCard? Card,
-    string UserMessage)
+    string UserMessage,
+    string MessageKey = "",
+    IReadOnlyList<object>? MessageArguments = null)
 {
     /// <summary>
     /// Gets a value indicating whether the mutation succeeded.
@@ -26,7 +30,7 @@ public sealed record CardLibraryMutationResult(
     /// <returns>A successful mutation result.</returns>
     public static CardLibraryMutationResult Success(MealCard? card, string message)
     {
-        return new CardLibraryMutationResult(CardLibraryMutationStatus.Succeeded, card, message);
+        return new CardLibraryMutationResult(CardLibraryMutationStatus.Succeeded, card, message, "Mutation.Succeeded");
     }
 
     /// <summary>
@@ -37,7 +41,7 @@ public sealed record CardLibraryMutationResult(
     /// <returns>A failed mutation result.</returns>
     public static CardLibraryMutationResult Failure(CardLibraryMutationStatus status, string message)
     {
-        return new CardLibraryMutationResult(status, null, message);
+        return new CardLibraryMutationResult(status, null, message, $"Mutation.{status}");
     }
 
     /// <summary>
@@ -47,7 +51,7 @@ public sealed record CardLibraryMutationResult(
     /// <returns>A failed mutation result.</returns>
     public static CardLibraryMutationResult NotAvailable(string message)
     {
-        return new CardLibraryMutationResult(CardLibraryMutationStatus.WriteFailed, null, message);
+        return new CardLibraryMutationResult(CardLibraryMutationStatus.WriteFailed, null, message, "Mutation.NotAvailable");
     }
 }
 
