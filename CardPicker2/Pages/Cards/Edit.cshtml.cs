@@ -24,6 +24,8 @@ public sealed class EditModel : PageModel
 
     public bool IsBlocked => LibraryState?.IsBlocked == true;
 
+    public bool MissingEnglishTranslation { get; private set; }
+
     public async Task OnGetAsync(Guid id, CancellationToken cancellationToken)
     {
         await LoadForEditAsync(id, cancellationToken);
@@ -79,9 +81,16 @@ public sealed class EditModel : PageModel
 
         Input = new MealCardInputModel
         {
-            Name = card.Name,
+            NameZhTw = card.GetContent(SupportedLanguage.ZhTw).Name,
+            DescriptionZhTw = card.GetContent(SupportedLanguage.ZhTw).Description,
+            NameEnUs = card.HasCompleteContent(SupportedLanguage.EnUs)
+                ? card.GetContent(SupportedLanguage.EnUs).Name
+                : null,
+            DescriptionEnUs = card.HasCompleteContent(SupportedLanguage.EnUs)
+                ? card.GetContent(SupportedLanguage.EnUs).Description
+                : null,
             MealType = card.MealType,
-            Description = card.Description
         };
+        MissingEnglishTranslation = !card.HasCompleteContent(SupportedLanguage.EnUs);
     }
 }

@@ -1,26 +1,44 @@
 @model CardPicker2.Models.MealCardInputModel
-@using CardPicker2.Models
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+@{
+    var currentLanguage = SupportedLanguage.FromCultureNameOrDefault(CultureInfo.CurrentUICulture.Name);
+}
 
-<div class="mb-3">
-    <label asp-for="Name" class="form-label">餐點名稱</label>
-    <input asp-for="Name" class="form-control" maxlength="100" />
-    <span asp-validation-for="Name" class="text-danger"></span>
+<div class="bilingual-card-fields">
+    <div class="mb-3">
+        <label asp-for="NameZhTw" class="form-label">@Localizer["Form.NameZhTw"]</label>
+        <input asp-for="NameZhTw" class="form-control" maxlength="100" />
+        <span asp-validation-for="NameZhTw" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DescriptionZhTw" class="form-label">@Localizer["Form.DescriptionZhTw"]</label>
+        <textarea asp-for="DescriptionZhTw" class="form-control" rows="4" maxlength="500"></textarea>
+        <span asp-validation-for="DescriptionZhTw" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NameEnUs" class="form-label">@Localizer["Form.NameEnUs"]</label>
+        <input asp-for="NameEnUs" class="form-control" maxlength="100" />
+        <span asp-validation-for="NameEnUs" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DescriptionEnUs" class="form-label">@Localizer["Form.DescriptionEnUs"]</label>
+        <textarea asp-for="DescriptionEnUs" class="form-control" rows="4" maxlength="500"></textarea>
+        <span asp-validation-for="DescriptionEnUs" class="text-danger"></span>
+    </div>
 </div>
 
 <div class="mb-3">
-    <label asp-for="MealType" class="form-label">餐別</label>
+    <label asp-for="MealType" class="form-label">@Localizer["Form.MealType"]</label>
     <select asp-for="MealType" class="form-select">
-        <option value="">請選擇餐別</option>
+        <option value="">@Localizer["Form.SelectMealType"]</option>
         @foreach (var mealType in Enum.GetValues<MealType>())
         {
-            <option value="@mealType">@mealType.ToDisplayName()</option>
+            <option value="@mealType">@mealType.ToDisplayName(currentLanguage)</option>
         }
     </select>
     <span asp-validation-for="MealType" class="text-danger"></span>
-</div>
-
-<div class="mb-3">
-    <label asp-for="Description" class="form-label">描述</label>
-    <textarea asp-for="Description" class="form-control" rows="5" maxlength="500"></textarea>
-    <span asp-validation-for="Description" class="text-danger"></span>
 </div>

@@ -177,6 +177,48 @@
   <data name="Error.RequestId" xml:space="preserve">
     <value>Request ID:</value>
   </data>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Form.NameZhTw" xml:space="preserve">
+    <value>Traditional Chinese meal name</value>
+  </data>
+  <data name="Form.DescriptionZhTw" xml:space="preserve">
+    <value>Traditional Chinese meal description</value>
+  </data>
+  <data name="Form.NameEnUs" xml:space="preserve">
+    <value>English meal name</value>
+  </data>
+  <data name="Form.DescriptionEnUs" xml:space="preserve">
+    <value>English meal description</value>
+  </data>
+  <data name="Form.MealType" xml:space="preserve">
+    <value>Meal type</value>
+  </data>
+  <data name="Form.SelectMealType" xml:space="preserve">
+    <value>Choose a meal type</value>
+  </data>
+  <data name="Create.Kicker" xml:space="preserve">
+    <value>Card management</value>
+  </data>
+  <data name="Create.Title" xml:space="preserve">
+    <value>Add meal card</value>
+  </data>
+  <data name="Create.Submit" xml:space="preserve">
+    <value>Add card</value>
+  </data>
+  <data name="Edit.Kicker" xml:space="preserve">
+    <value>Card management</value>
+  </data>
+  <data name="Edit.Title" xml:space="preserve">
+    <value>Edit meal card</value>
+  </data>
+  <data name="Edit.Submit" xml:space="preserve">
+    <value>Save changes</value>
+  </data>
+  <data name="Edit.MissingEnglishPrompt" xml:space="preserve">
+    <value>This card needs an English name and description.</value>
+  </data>
   <data name="Meal.Breakfast" xml:space="preserve">
     <value>Breakfast</value>
   </data>

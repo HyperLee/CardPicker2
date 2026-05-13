@@ -129,24 +129,24 @@
 
 ### Tests for User Story 3
 
-- [ ] T056 [P] [US3] 更新雙語 required fields、invalid meal type 與 localized validation 單元測試 `tests/CardPicker2.UnitTests/Models/MealCardInputModelTests.cs`
-- [ ] T057 [P] [US3] 新增 create/edit/delete 雙語欄位、fallback prompt 與 localized messages 整合測試 `tests/CardPicker2.IntegrationTests/Pages/LocalizedCardManagementPageTests.cs`
-- [ ] T058 [P] [US3] 新增語系 cookie 回訪保留、無效 cookie fallback 與 cookie 不可用 graceful behavior 整合測試 `tests/CardPicker2.IntegrationTests/Pages/LanguagePreferencePersistenceTests.cs`
-- [ ] T059 [P] [US3] 新增 schema v1 fallback、補齊英文後寫入 schema v2 與 atomic write 保護整合測試 `tests/CardPicker2.IntegrationTests/Pages/CardLibraryLocalizationPersistenceTests.cs`
+- [X] T056 [P] [US3] 更新雙語 required fields、invalid meal type 與 localized validation 單元測試 `tests/CardPicker2.UnitTests/Models/MealCardInputModelTests.cs`
+- [X] T057 [P] [US3] 新增 create/edit/delete 雙語欄位、fallback prompt 與 localized messages 整合測試 `tests/CardPicker2.IntegrationTests/Pages/LocalizedCardManagementPageTests.cs`
+- [X] T058 [P] [US3] 新增語系 cookie 回訪保留、無效 cookie fallback 與 cookie 不可用 graceful behavior 整合測試 `tests/CardPicker2.IntegrationTests/Pages/LanguagePreferencePersistenceTests.cs`
+- [X] T059 [P] [US3] 新增 schema v1 fallback、補齊英文後寫入 schema v2 與 atomic write 保護整合測試 `tests/CardPicker2.IntegrationTests/Pages/CardLibraryLocalizationPersistenceTests.cs`
 
 ### Implementation for User Story 3
 
-- [ ] T060 [US3] 更新卡牌表單 partial 為繁中/英文 name/description 欄位、localized labels 與 validation spans `CardPicker2/Pages/Cards/_CardForm.cshtml`
-- [ ] T061 [US3] 更新建立卡牌 view 的 localized title、blocked recovery 與雙語 submit/cancel controls `CardPicker2/Pages/Cards/Create.cshtml`
-- [ ] T062 [US3] 更新建立卡牌 PageModel 以處理雙語 input、localized ModelState、duplicate failure 與 success redirect `CardPicker2/Pages/Cards/Create.cshtml.cs`
-- [ ] T063 [US3] 更新編輯卡牌 view 的 localized title、fallback prompt、雙語欄位與 submit/cancel controls `CardPicker2/Pages/Cards/Edit.cshtml`
-- [ ] T064 [US3] 更新編輯卡牌 PageModel 以載入 v1 fallback、要求補齊英文、拒絕 duplicate 並保留原卡 `CardPicker2/Pages/Cards/Edit.cshtml.cs`
-- [ ] T065 [US3] 更新詳情頁 delete handler 的 localized confirmation、failure、success 與 state preservation hooks `CardPicker2/Pages/Cards/Details.cshtml.cs`
-- [ ] T066 [US3] 更新 create/update/delete mutation 以驗證雙語欄位、跨語系 duplicate、schema v2 atomic write 與 localized result keys `CardPicker2/Services/CardLibraryService.cs`
-- [ ] T067 [US3] 更新 runtime seed JSON 為 schema v2 完整雙語資料 `CardPicker2/data/cards.json`
-- [ ] T068 [US3] 擴充表單語系切換 transient state 保存，涵蓋 create/edit validation 與未送出欄位 `CardPicker2/wwwroot/js/site.js`
-- [ ] T069 [US3] 補齊 create/edit/delete、雙語欄位、duplicate、required-field 與 preference persistence resource keys `CardPicker2/Resources/SharedResource.zh-TW.resx`
-- [ ] T070 [US3] 補齊 create/edit/delete、雙語欄位、duplicate、required-field 與 preference persistence 英文 resource keys `CardPicker2/Resources/SharedResource.en-US.resx`
+- [X] T060 [US3] 更新卡牌表單 partial 為繁中/英文 name/description 欄位、localized labels 與 validation spans `CardPicker2/Pages/Cards/_CardForm.cshtml`
+- [X] T061 [US3] 更新建立卡牌 view 的 localized title、blocked recovery 與雙語 submit/cancel controls `CardPicker2/Pages/Cards/Create.cshtml`
+- [X] T062 [US3] 更新建立卡牌 PageModel 以處理雙語 input、localized ModelState、duplicate failure 與 success redirect `CardPicker2/Pages/Cards/Create.cshtml.cs`
+- [X] T063 [US3] 更新編輯卡牌 view 的 localized title、fallback prompt、雙語欄位與 submit/cancel controls `CardPicker2/Pages/Cards/Edit.cshtml`
+- [X] T064 [US3] 更新編輯卡牌 PageModel 以載入 v1 fallback、要求補齊英文、拒絕 duplicate 並保留原卡 `CardPicker2/Pages/Cards/Edit.cshtml.cs`
+- [X] T065 [US3] 更新詳情頁 delete handler 的 localized confirmation、failure、success 與 state preservation hooks `CardPicker2/Pages/Cards/Details.cshtml.cs`
+- [X] T066 [US3] 更新 create/update/delete mutation 以驗證雙語欄位、跨語系 duplicate、schema v2 atomic write 與 localized result keys `CardPicker2/Services/CardLibraryService.cs`
+- [X] T067 [US3] 更新 runtime seed JSON 為 schema v2 完整雙語資料 `CardPicker2/data/cards.json`
+- [X] T068 [US3] 擴充表單語系切換 transient state 保存，涵蓋 create/edit validation 與未送出欄位 `CardPicker2/wwwroot/js/site.js`
+- [X] T069 [US3] 補齊 create/edit/delete、雙語欄位、duplicate、required-field 與 preference persistence resource keys `CardPicker2/Resources/SharedResource.zh-TW.resx`
+- [X] T070 [US3] 補齊 create/edit/delete、雙語欄位、duplicate、required-field 與 preference persistence 英文 resource keys `CardPicker2/Resources/SharedResource.en-US.resx`
 
 **Checkpoint**: 所有使用者故事都可獨立運作，新增與編輯後的卡牌具備完整雙語內容，偏好可於回訪保留。
 

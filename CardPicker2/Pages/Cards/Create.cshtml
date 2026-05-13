@@ -1,24 +1,26 @@
 @page
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
 @model CardPicker2.Pages.Cards.CreateModel
 @{
-    ViewData["Title"] = "新增餐點卡牌";
+    ViewData["Title"] = Localizer["Create.Title"];
 }
 
 <section class="card-form-page" aria-labelledby="create-card-title">
-    <p class="slot-kicker">卡牌管理</p>
-    <h1 id="create-card-title">新增餐點卡牌</h1>
+    <p class="slot-kicker">@Localizer["Create.Kicker"]</p>
+    <h1 id="create-card-title">@Localizer["Create.Title"]</h1>
 
     @if (Model.IsBlocked)
     {
         <div class="alert alert-danger" role="alert">@Model.LibraryState?.UserMessage</div>
     }
 
-    <form method="post" class="card-form">
+    <form method="post" class="card-form" data-language-preserve-form="card-create">
         <div asp-validation-summary="All" class="text-danger mb-3"></div>
         <fieldset disabled="@Model.IsBlocked">
             <partial name="_CardForm" for="Input" />
-            <button type="submit" class="btn btn-danger">新增卡牌</button>
-            <a class="btn btn-outline-secondary" asp-page="/Cards/Index">取消</a>
+            <button type="submit" class="btn btn-danger">@Localizer["Create.Submit"]</button>
+            <a class="btn btn-outline-secondary" asp-page="/Cards/Index">@Localizer["Common.Cancel"]</a>
         </fieldset>
     </form>
 </section>

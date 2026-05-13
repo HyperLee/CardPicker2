@@ -1,59 +1,131 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "cards": [
     {
       "id": "11111111-1111-1111-1111-111111111111",
-      "name": "鮪魚蛋餅",
       "mealType": "Breakfast",
-      "description": "附近早餐店的鮪魚蛋餅，加一杯無糖豆漿。"
+      "localizations": {
+        "zh-TW": {
+          "name": "鮪魚蛋餅",
+          "description": "附近早餐店的鮪魚蛋餅，加一杯無糖豆漿。"
+        },
+        "en-US": {
+          "name": "Tuna Egg Pancake",
+          "description": "A tuna egg pancake from the nearby breakfast shop with unsweetened soy milk."
+        }
+      }
     },
     {
       "id": "11111111-1111-1111-1111-111111111112",
-      "name": "鹹粥小菜",
       "mealType": "Breakfast",
-      "description": "溫熱鹹粥搭配滷蛋與青菜，適合想吃清爽早餐時。"
+      "localizations": {
+        "zh-TW": {
+          "name": "鹹粥小菜",
+          "description": "溫熱鹹粥搭配滷蛋與青菜，適合想吃清爽早餐時。"
+        },
+        "en-US": {
+          "name": "Savory Rice Porridge",
+          "description": "Warm savory rice porridge with a braised egg and greens for a lighter breakfast."
+        }
+      }
     },
     {
       "id": "11111111-1111-1111-1111-111111111113",
-      "name": "花生厚片",
       "mealType": "Breakfast",
-      "description": "烤到邊緣酥脆的花生厚片，搭配熱紅茶。"
+      "localizations": {
+        "zh-TW": {
+          "name": "花生厚片",
+          "description": "烤到邊緣酥脆的花生厚片，搭配熱紅茶。"
+        },
+        "en-US": {
+          "name": "Peanut Thick Toast",
+          "description": "Crisp-edged thick toast with peanut spread and hot black tea."
+        }
+      }
     },
     {
       "id": "22222222-2222-2222-2222-222222222221",
-      "name": "清燉牛肉麵",
       "mealType": "Lunch",
-      "description": "湯頭清爽的牛肉麵，午餐想吃熱食時很穩定。"
+      "localizations": {
+        "zh-TW": {
+          "name": "清燉牛肉麵",
+          "description": "湯頭清爽的牛肉麵，午餐想吃熱食時很穩定。"
+        },
+        "en-US": {
+          "name": "Clear Broth Beef Noodle Soup",
+          "description": "A steady hot lunch with clear broth, beef, and noodles."
+        }
+      }
     },
     {
       "id": "22222222-2222-2222-2222-222222222222",
-      "name": "雞腿便當",
       "mealType": "Lunch",
-      "description": "烤雞腿便當搭配三樣配菜，適合需要吃飽的中午。"
+      "localizations": {
+        "zh-TW": {
+          "name": "雞腿便當",
+          "description": "烤雞腿便當搭配三樣配菜，適合需要吃飽的中午。"
+        },
+        "en-US": {
+          "name": "Chicken Leg Bento",
+          "description": "Roasted chicken leg bento with three sides for a filling lunch."
+        }
+      }
     },
     {
       "id": "22222222-2222-2222-2222-222222222223",
-      "name": "番茄義大利麵",
       "mealType": "Lunch",
-      "description": "酸甜番茄醬汁與蔬菜，適合想換口味的午餐。"
+      "localizations": {
+        "zh-TW": {
+          "name": "番茄義大利麵",
+          "description": "酸甜番茄醬汁與蔬菜，適合想換口味的午餐。"
+        },
+        "en-US": {
+          "name": "Tomato Pasta",
+          "description": "Sweet-tart tomato sauce and vegetables when lunch needs a change of pace."
+        }
+      }
     },
     {
       "id": "33333333-3333-3333-3333-333333333331",
-      "name": "壽喜燒鍋",
       "mealType": "Dinner",
-      "description": "晚餐吃暖鍋，搭配青菜、豆腐與薄切牛肉。"
+      "localizations": {
+        "zh-TW": {
+          "name": "壽喜燒鍋",
+          "description": "晚餐吃暖鍋，搭配青菜、豆腐與薄切牛肉。"
+        },
+        "en-US": {
+          "name": "Sukiyaki Hot Pot",
+          "description": "A warm dinner pot with greens, tofu, and thinly sliced beef."
+        }
+      }
     },
     {
       "id": "33333333-3333-3333-3333-333333333332",
-      "name": "蒜香雞肉飯",
       "mealType": "Dinner",
-      "description": "蒜香煎雞腿配白飯與燙青菜，晚餐簡單但有份量。"
+      "localizations": {
+        "zh-TW": {
+          "name": "蒜香雞肉飯",
+          "description": "蒜香煎雞腿配白飯與燙青菜，晚餐簡單但有份量。"
+        },
+        "en-US": {
+          "name": "Garlic Chicken Rice",
+          "description": "Garlic pan-seared chicken with rice and blanched greens for a simple dinner."
+        }
+      }
     },
     {
       "id": "33333333-3333-3333-3333-333333333333",
-      "name": "蔬菜咖哩",
       "mealType": "Dinner",
-      "description": "馬鈴薯、紅蘿蔔與菇類的蔬菜咖哩，適合不想吃太油時。"
+      "localizations": {
+        "zh-TW": {
+          "name": "蔬菜咖哩",
+          "description": "馬鈴薯、紅蘿蔔與菇類的蔬菜咖哩，適合不想吃太油時。"
+        },
+        "en-US": {
+          "name": "Vegetable Curry",
+          "description": "A lighter curry with potatoes, carrots, and mushrooms."
+        }
+      }
     }
   ]
 }

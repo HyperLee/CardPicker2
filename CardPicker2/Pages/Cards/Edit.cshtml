@@ -1,25 +1,32 @@
 @page "/Cards/Edit/{id:guid}"
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
 @model CardPicker2.Pages.Cards.EditModel
 @{
-    ViewData["Title"] = "編輯餐點卡牌";
+    ViewData["Title"] = Localizer["Edit.Title"];
 }
 
 <section class="card-form-page" aria-labelledby="edit-card-title">
-    <p class="slot-kicker">卡牌管理</p>
-    <h1 id="edit-card-title">編輯餐點卡牌</h1>
+    <p class="slot-kicker">@Localizer["Edit.Kicker"]</p>
+    <h1 id="edit-card-title">@Localizer["Edit.Title"]</h1>
 
     @if (!string.IsNullOrWhiteSpace(Model.Message))
     {
         <div class="alert @(Model.IsBlocked ? "alert-danger" : "alert-warning")" role="alert">@Model.Message</div>
     }
 
+    @if (Model.MissingEnglishTranslation)
+    {
+        <div class="alert alert-warning" role="status">@Localizer["Edit.MissingEnglishPrompt"]</div>
+    }
+
     @if (!Model.IsBlocked && Response.StatusCode != StatusCodes.Status404NotFound)
     {
-        <form method="post" class="card-form">
+        <form method="post" class="card-form" data-language-preserve-form="card-edit">
             <div asp-validation-summary="All" class="text-danger mb-3"></div>
             <partial name="_CardForm" for="Input" />
-            <button type="submit" class="btn btn-danger">儲存變更</button>
-            <a class="btn btn-outline-secondary" asp-page="/Cards/Index">取消</a>
+            <button type="submit" class="btn btn-danger">@Localizer["Edit.Submit"]</button>
+            <a class="btn btn-outline-secondary" asp-page="/Cards/Index">@Localizer["Common.Cancel"]</a>
         </form>
     }
 </section>

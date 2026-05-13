@@ -1,4 +1,63 @@
 ﻿(() => {
+  const storagePrefix = 'cardpicker.language.form.';
+  const preserveForms = Array.from(document.querySelectorAll('[data-language-preserve-form]'));
+
+  const formStorageKey = (form) => {
+    const scope = form.getAttribute('data-language-preserve-form') || 'form';
+    return `${storagePrefix}${window.location.pathname}:${scope}`;
+  };
+
+  const readFieldValues = (form) => {
+    const values = {};
+    const fields = Array.from(form.querySelectorAll('input[name], textarea[name], select[name]'));
+    fields.forEach((field) => {
+      if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement)) {
+        return;
+      }
+
+      if (field instanceof HTMLInputElement && (field.type === 'hidden' || field.name === '__RequestVerificationToken')) {
+        return;
+      }
+
+      if (field instanceof HTMLInputElement && (field.type === 'checkbox' || field.type === 'radio')) {
+        values[field.name] = field.checked ? field.value : '';
+        return;
+      }
+
+      values[field.name] = field.value;
+    });
+    return values;
+  };
+
+  const restoreFieldValues = () => {
+    preserveForms.forEach((form) => {
+      try {
+        const key = formStorageKey(form);
+        const raw = window.sessionStorage?.getItem(key);
+        if (!raw) {
+          return;
+        }
+
+        const values = JSON.parse(raw);
+        Object.entries(values).forEach(([name, value]) => {
+          const fields = Array.from(form.querySelectorAll(`[name="${CSS.escape(name)}"]`));
+          fields.forEach((field) => {
+            if (field instanceof HTMLInputElement && (field.type === 'checkbox' || field.type === 'radio')) {
+              field.checked = field.value === value;
+            } else if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement) {
+              field.value = value;
+            }
+          });
+        });
+        window.sessionStorage?.removeItem(key);
+      } catch {
+        // State preservation is best-effort and must not block form use.
+      }
+    });
+  };
+
+  restoreFieldValues();
+
   const forms = Array.from(document.querySelectorAll('[data-language-switcher]'));
   if (forms.length === 0) {
     return;
@@ -35,6 +94,14 @@
 
   forms.forEach((form) => {
     form.addEventListener('submit', () => {
+      preserveForms.forEach((preserveForm) => {
+        try {
+          window.sessionStorage?.setItem(formStorageKey(preserveForm), JSON.stringify(readFieldValues(preserveForm)));
+        } catch {
+          // State preservation is best-effort and must not block language switching.
+        }
+      });
+
       const returnInput = form.querySelector('input[name="returnUrl"]');
       if (!(returnInput instanceof HTMLInputElement)) {
         return;

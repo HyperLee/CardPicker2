@@ -29,9 +29,11 @@ public sealed class MealCardInputModelTests
     {
         var input = new MealCardInputModel
         {
-            Name = "鮪魚蛋餅",
+            NameZhTw = "鮪魚蛋餅",
+            DescriptionZhTw = "附近早餐店的鮪魚蛋餅。",
+            NameEnUs = "Tuna Egg Pancake",
+            DescriptionEnUs = "A tuna egg pancake.",
             MealType = (MealType)999,
-            Description = "附近早餐店的鮪魚蛋餅。"
         };
 
         var results = Validate(input);
@@ -39,6 +41,24 @@ public sealed class MealCardInputModelTests
         Assert.Contains(results, result =>
             result.MemberNames.Contains(nameof(MealCardInputModel.MealType)) &&
             result.ErrorMessage?.Contains("餐別", StringComparison.Ordinal) == true);
+    }
+
+    [Fact]
+    public void Validate_WithMissingEnglishFields_ReturnsBilingualFieldErrors()
+    {
+        var input = new MealCardInputModel
+        {
+            NameZhTw = "鮪魚蛋餅",
+            DescriptionZhTw = "附近早餐店的鮪魚蛋餅。",
+            NameEnUs = "",
+            DescriptionEnUs = " ",
+            MealType = MealType.Breakfast
+        };
+
+        var results = Validate(input);
+
+        Assert.Contains(results, result => result.MemberNames.Contains(nameof(MealCardInputModel.NameEnUs)));
+        Assert.Contains(results, result => result.MemberNames.Contains(nameof(MealCardInputModel.DescriptionEnUs)));
     }
 
     private static List<ValidationResult> Validate(MealCardInputModel input)
