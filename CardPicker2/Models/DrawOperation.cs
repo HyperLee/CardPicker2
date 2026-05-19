@@ -11,7 +11,8 @@ namespace CardPicker2.Models;
 ///     Mode = DrawMode.Normal,
 ///     MealType = MealType.Lunch,
 ///     CoinInserted = true,
-///     RequestedLanguage = SupportedLanguage.ZhTw
+///     RequestedLanguage = SupportedLanguage.ZhTw,
+///     RotationCooldown = RotationCooldownSettings.Default
 /// };
 /// </code>
 /// </example>
@@ -48,6 +49,11 @@ public sealed class DrawOperation
     public CardFilterCriteria? Filters { get; init; }
 
     /// <summary>
+    /// Gets or initializes per-draw recent-repeat avoidance settings.
+    /// </summary>
+    public RotationCooldownSettings RotationCooldown { get; init; } = RotationCooldownSettings.Default;
+
+    /// <summary>
     /// Gets a value indicating whether <see cref="OperationId"/> can be persisted.
     /// </summary>
     public bool HasValidOperationId => OperationId != Guid.Empty;
@@ -72,5 +78,5 @@ public sealed class DrawOperation
     /// <summary>
     /// Gets a value indicating whether the operation has enough valid input to reach the candidate pool.
     /// </summary>
-    public bool CanAttemptDraw => HasValidOperationId && HasValidMode && HasValidMealType && CoinInserted;
+    public bool CanAttemptDraw => HasValidOperationId && HasValidMode && HasValidMealType && CoinInserted && RotationCooldown.IsValid;
 }

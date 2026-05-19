@@ -62,6 +62,37 @@ public sealed class LocalizationResourceTests
         }
     }
 
+    [Fact]
+    public void SharedResources_ContainRotationCooldownLabelsValidationSummariesAndEmptyStates()
+    {
+        var zhKeys = ReadKeys("CardPicker2/Resources/SharedResource.zh-TW.resx");
+        var enKeys = ReadKeys("CardPicker2/Resources/SharedResource.en-US.resx");
+        var requiredKeys = new[]
+        {
+            "Rotation.Label.AvoidRecentRepeats",
+            "Rotation.Label.RecentDrawCount",
+            "Rotation.Hint.RecentDrawCountRange",
+            "Rotation.Hint.ZeroDisables",
+            "Rotation.Summary.Applied",
+            "Rotation.Summary.Disabled",
+            "Rotation.Summary.PreRotationCount",
+            "Rotation.Summary.ExcludedCount",
+            "Rotation.Summary.PostRotationCount",
+            "Rotation.Empty.AfterCooldown",
+            "Rotation.Validation.InvalidRecentDrawCount",
+            "Rotation.History.MissingSnapshot",
+            "Rotation.Log.InvalidSettings",
+            "Rotation.Log.Applied",
+            "Rotation.Log.ReplayMissingSnapshot"
+        };
+
+        foreach (var key in requiredKeys)
+        {
+            Assert.Contains(key, zhKeys);
+            Assert.Contains(key, enKeys);
+        }
+    }
+
     private static SortedSet<string> ReadKeys(string path)
     {
         var document = XDocument.Load(Path.Combine(GetRepositoryRoot(), path));

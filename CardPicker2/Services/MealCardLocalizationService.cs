@@ -49,6 +49,45 @@ public sealed class MealCardLocalizationService
         return cards.Select(card => Project(card, language)).ToList();
     }
 
+    /// <summary>
+    /// Formats a rotation snapshot as localized count-only summary items.
+    /// </summary>
+    /// <param name="snapshot">The persisted rotation snapshot.</param>
+    /// <param name="language">The requested display language.</param>
+    /// <returns>Localized rotation summary items that do not expose excluded card names.</returns>
+    /// <example>
+    /// <code>
+    /// var items = localizationService.CreateRotationSummary(snapshot, SupportedLanguage.EnUs);
+    /// </code>
+    /// </example>
+    public IReadOnlyList<string> CreateRotationSummary(RotationSnapshot snapshot, SupportedLanguage language)
+    {
+        if (language == SupportedLanguage.EnUs)
+        {
+            return new[]
+            {
+                snapshot.AvoidRecentRepeats && snapshot.RecentDrawCount > 0
+                    ? "Recent-repeat avoidance applied"
+                    : "Recent-repeat avoidance not applied",
+                $"Recent draws: {snapshot.RecentDrawCount}",
+                $"Before cooldown: {snapshot.PreRotationCandidateCount}",
+                $"Excluded: {snapshot.ExcludedCandidateCount}",
+                $"After cooldown: {snapshot.PostRotationCandidateCount}"
+            };
+        }
+
+        return new[]
+        {
+            snapshot.AvoidRecentRepeats && snapshot.RecentDrawCount > 0
+                ? "已套用避免最近重複"
+                : "本次未套用避免最近重複",
+            $"最近次數：{snapshot.RecentDrawCount}",
+            $"輪替前：{snapshot.PreRotationCandidateCount}",
+            $"近期排除：{snapshot.ExcludedCandidateCount}",
+            $"輪替後：{snapshot.PostRotationCandidateCount}"
+        };
+    }
+
     private static IReadOnlyList<string> CreateMetadataBadges(MealCardDecisionMetadata? metadata, SupportedLanguage language)
     {
         var normalized = metadata?.Normalize();

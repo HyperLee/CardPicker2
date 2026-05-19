@@ -44,6 +44,10 @@ public sealed class ThemeModeResponsiveTests : IClassFixture<ThemeBrowserFixture
         }
 
         await page.GotoAsync($"{ThemeBrowserFixture.BaseUrl}/");
+        await ThemeModeBrowserTests.WaitForThemeAsync(page, mode, null, 1000);
+        await page.WaitForFunctionAsync(
+            "selectedMode => document.querySelector(`input[name=\"theme-mode\"][value=\"${selectedMode}\"]`)?.checked === true",
+            mode);
         await page.Keyboard.PressAsync("Tab");
         var focusOutlineVisible = await page.EvaluateAsync<bool>(
             @"() => {

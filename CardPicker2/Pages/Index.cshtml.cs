@@ -45,6 +45,12 @@ public class IndexModel : PageModel
     [BindProperty(SupportsGet = true)]
     public List<string> Tags { get; set; } = new();
 
+    [BindProperty(SupportsGet = true)]
+    public bool AvoidRecentRepeats { get; set; } = RotationCooldownSettings.Default.AvoidRecentRepeats;
+
+    [BindProperty(SupportsGet = true)]
+    public int RecentDrawCount { get; set; } = RotationCooldownSettings.Default.RecentDrawCount;
+
     public IReadOnlyList<MealType> MealTypes { get; } = Enum.GetValues<MealType>();
 
     public IReadOnlyList<PriceRange> PriceRangeOptions { get; } = Enum.GetValues<PriceRange>();
@@ -83,6 +89,8 @@ public class IndexModel : PageModel
         List<DietaryPreference>? dietaryPreferences,
         SpiceLevel? maxSpiceLevel,
         List<string>? tags,
+        bool? avoidRecentRepeats,
+        int? recentDrawCount,
         CancellationToken cancellationToken)
     {
         MealType = mealType;
@@ -92,6 +100,8 @@ public class IndexModel : PageModel
         DietaryPreferences = dietaryPreferences ?? new List<DietaryPreference>();
         MaxSpiceLevel = maxSpiceLevel;
         Tags = tags ?? new List<string>();
+        AvoidRecentRepeats = avoidRecentRepeats ?? RotationCooldownSettings.Default.AvoidRecentRepeats;
+        RecentDrawCount = recentDrawCount ?? RotationCooldownSettings.Default.RecentDrawCount;
         CurrentFilterSummary = CreateLocalizedFilterSummary(BuildCriteria());
         DrawMode = drawMode is DrawMode submittedMode && Enum.IsDefined(typeof(DrawMode), submittedMode)
             ? submittedMode
@@ -138,6 +148,17 @@ public class IndexModel : PageModel
 
         OperationState = DrawOperationState.Spinning;
         DrawOperationId = DrawOperationId == Guid.Empty ? Guid.NewGuid() : DrawOperationId;
+        var rotationSettings = CreateRotationSettings();
+        if (HasInvalidRecentDrawCount(rotationSettings))
+        {
+            Statistics = await _cardLibraryService.GetDrawStatisticsAsync(CurrentLanguage, cancellationToken);
+            OperationState = DrawOperationState.Blocked;
+            CurrentFilterSummary = CreateLocalizedFilterSummary(BuildCriteria());
+            StatusMessage = _localizer["Rotation.Validation.InvalidRecentDrawCount"];
+            ModelState.AddModelError(nameof(RecentDrawCount), StatusMessage);
+            return;
+        }
+
         var operation = new DrawOperation
         {
             OperationId = DrawOperationId,
@@ -145,7 +166,8 @@ public class IndexModel : PageModel
             MealType = MealType,
             CoinInserted = CoinInserted,
             RequestedLanguage = CurrentLanguage,
-            Filters = BuildCriteria().ForDrawMode(DrawMode)
+            Filters = BuildCriteria().ForDrawMode(DrawMode),
+            RotationCooldown = rotationSettings
         };
         Result = await _cardLibraryService.DrawAsync(operation, cancellationToken);
         Statistics = await _cardLibraryService.GetDrawStatisticsAsync(CurrentLanguage, cancellationToken);
@@ -168,6 +190,10 @@ public class IndexModel : PageModel
             else if (Result.StatusKey == "Draw.CoinRequired")
             {
                 ModelState.AddModelError(nameof(CoinInserted), Result.UserMessage);
+            }
+            else if (Result.StatusKey == "Rotation.Validation.InvalidRecentDrawCount")
+            {
+                ModelState.AddModelError(nameof(RecentDrawCount), StatusMessage);
             }
             else
             {
@@ -278,8 +304,20 @@ public class IndexModel : PageModel
             "Metadata.Filter.EmptyPool" => _localizer["Metadata.Filter.EmptyPool"],
             "Metadata.InvalidEnum" => _localizer["Metadata.Validation.InvalidEnum"],
             "Metadata.InvalidTag" => _localizer["Metadata.Validation.InvalidTag"],
+            "Rotation.Empty.AfterCooldown" => _localizer["Rotation.Empty.AfterCooldown"],
+            "Rotation.Validation.InvalidRecentDrawCount" => _localizer["Rotation.Validation.InvalidRecentDrawCount"],
             _ => fallback
         };
+    }
+
+    private RotationCooldownSettings CreateRotationSettings()
+    {
+        return new RotationCooldownSettings(AvoidRecentRepeats, RecentDrawCount);
+    }
+
+    private bool HasInvalidRecentDrawCount(RotationCooldownSettings settings)
+    {
+        return !settings.IsValid || ModelState[nameof(RecentDrawCount)]?.Errors.Count > 0;
     }
 
     private static IReadOnlyList<string> SplitTags(IEnumerable<string>? values)

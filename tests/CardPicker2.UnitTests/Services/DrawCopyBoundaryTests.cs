@@ -15,10 +15,18 @@ public sealed class DrawCopyBoundaryTests
             "連抽加成",
             "付費",
             "賭金",
+            "偏好加權",
+            "價值分級",
+            "冷卻後更幸運",
             "guaranteed pull",
             "higher chance next time",
             "paid boost",
-            "rarity"
+            "rarity",
+            "preference weighting",
+            "weighted preference",
+            "value tier",
+            "cooldown luck",
+            "boosted odds"
         };
 
         foreach (var term in forbiddenTerms)

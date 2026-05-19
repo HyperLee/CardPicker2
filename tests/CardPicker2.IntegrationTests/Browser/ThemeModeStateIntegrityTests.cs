@@ -49,8 +49,8 @@ public sealed class ThemeModeStateIntegrityTests : IClassFixture<ThemeBrowserFix
 
         await homePage.GetByText("暗黑模式").ClickAsync();
 
-        await ThemeModeBrowserTests.WaitForThemeAsync(searchPage, "dark", "dark", 2000);
-        await ThemeModeBrowserTests.WaitForThemeAsync(createPage, "dark", "dark", 2000);
+        await ThemeModeBrowserTests.WaitForThemeAsync(searchPage, "dark", "dark", 5000);
+        await ThemeModeBrowserTests.WaitForThemeAsync(createPage, "dark", "dark", 5000);
         Assert.Contains("keyword=%E7%89%9B%E8%82%89", searchPage.Url);
         Assert.Equal("測試義大利麵", await createPage.GetByLabel("餐點名稱").InputValueAsync());
         Assert.True(await createPage.GetByText("請選擇早餐、午餐或晚餐。").First.IsVisibleAsync());

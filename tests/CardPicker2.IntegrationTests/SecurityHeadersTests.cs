@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.RegularExpressions;
 
 using CardPicker2.IntegrationTests.Infrastructure;
 using CardPicker2.Models;
@@ -63,6 +64,8 @@ public sealed class SecurityHeadersTests
 
     [Theory]
     [InlineData("/?tags=便當&dietaryPreferences=TakeoutFriendly")]
+    [InlineData("/?avoidRecentRepeats=true&recentDrawCount=3")]
+    [InlineData("/?drawMode=Random&avoidRecentRepeats=false&recentDrawCount=0")]
     [InlineData("/Cards?tags=便當&priceRange=Low")]
     [InlineData("/Cards/Create")]
     public async Task ProductionMetadataSurfaces_IncludeSecurityHeaders(string path)
@@ -77,6 +80,55 @@ public sealed class SecurityHeadersTests
 
         AssertProductionSecurityHeaders(response);
         AssertContentSecurityPolicyAllowsThemeBootstrap(GetContentSecurityPolicy(response));
+    }
+
+    [Fact]
+    public async Task HomeSecurityForms_RenderAntiForgeryForRotationDrawAndLanguageSwitch()
+    {
+        await using var factory = new DrawFeatureWebApplicationFactory();
+        var client = factory.CreateClient();
+
+        var html = await client.GetStringAsync("/?avoidRecentRepeats=true&recentDrawCount=3");
+
+        Assert.Contains("data-language-preserve-form=\"home-draw\"", html, StringComparison.Ordinal);
+        Assert.Contains("data-language-switcher", html, StringComparison.Ordinal);
+        Assert.Contains("data-theme-mode-selector", html, StringComparison.Ordinal);
+        Assert.True(
+            Regex.Matches(html, "name=\"__RequestVerificationToken\"", RegexOptions.IgnoreCase).Count >= 2,
+            "Home must render anti-forgery tokens for the rotation draw form and language switch form.");
+    }
+
+    [Fact]
+    public async Task PostRotationDraw_WithoutAntiForgeryToken_ReturnsBadRequest()
+    {
+        await using var factory = new DrawFeatureWebApplicationFactory();
+        var client = factory.CreateClient();
+
+        var response = await client.PostAsync("/?handler=Draw", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["DrawMode"] = nameof(DrawMode.Random),
+            ["CoinInserted"] = "true",
+            ["DrawOperationId"] = Guid.NewGuid().ToString(),
+            ["AvoidRecentRepeats"] = "true",
+            ["RecentDrawCount"] = "3"
+        }));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task PostLanguageSwitch_WithoutAntiForgeryToken_ReturnsBadRequest()
+    {
+        await using var factory = new DrawFeatureWebApplicationFactory();
+        var client = factory.CreateClient();
+
+        var response = await client.PostAsync("/Language?handler=Set", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["culture"] = SupportedLanguage.EnUs.CultureName,
+            ["returnUrl"] = "/?avoidRecentRepeats=true&recentDrawCount=3"
+        }));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]

@@ -161,6 +161,45 @@ public sealed class CardLibrarySchemaVersionTests
     }
 
     [Fact]
+    public async Task LoadAsync_WhenSchemaV4HistoryMissingRotationSnapshot_DoesNotBlockOrBackfill()
+    {
+        using var library = TempCardLibrary.Create();
+        await WriteJsonAsync(library.FilePath, DrawFeatureTestData.SchemaV4Document(
+            drawHistory: new[]
+            {
+                DrawFeatureTestData.DrawHistoryWithoutRotationSnapshot()
+            }));
+        var service = CreateService(library.FilePath);
+
+        var result = await service.LoadAsync();
+
+        Assert.Equal(CardLibraryLoadStatus.Ready, result.Status);
+        var history = Assert.Single(result.Document!.DrawHistory);
+        Assert.Null(history.RotationSnapshot);
+        Assert.DoesNotContain("rotationSnapshot", await File.ReadAllTextAsync(library.FilePath));
+    }
+
+    [Fact]
+    public async Task LoadAsync_WhenSchemaV4HistoryHasInvalidRotationSnapshot_BlocksAndPreservesOriginalFile()
+    {
+        using var library = TempCardLibrary.Create();
+        var original = DrawFeatureTestData.Serialize(DrawFeatureTestData.SchemaV4Document(
+            drawHistory: new[]
+            {
+                DrawFeatureTestData.DrawHistoryWithRotationSnapshot(
+                    rotationSnapshot: DrawFeatureTestData.InvalidRotationSnapshotCountEquation())
+            }));
+        await File.WriteAllTextAsync(library.FilePath, original);
+        var service = CreateService(library.FilePath);
+
+        var result = await service.LoadAsync();
+
+        Assert.Equal(CardLibraryLoadStatus.BlockedCorruptFile, result.Status);
+        Assert.True(result.IsBlocked);
+        Assert.Equal(original, await File.ReadAllTextAsync(library.FilePath));
+    }
+
+    [Fact]
     public async Task LoadAsync_WhenJsonIsMissing_CreatesSchemaV4SeedWithEmptyHistoryAndMetadata()
     {
         using var library = TempCardLibrary.Create();

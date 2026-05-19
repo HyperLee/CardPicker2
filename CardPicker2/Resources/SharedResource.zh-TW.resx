@@ -384,4 +384,49 @@
   <data name="Home.Result.MetadataSummary" xml:space="preserve">
     <value>餐點決策資訊</value>
   </data>
+  <data name="Rotation.Label.AvoidRecentRepeats" xml:space="preserve">
+    <value>避免最近重複</value>
+  </data>
+  <data name="Rotation.Label.RecentDrawCount" xml:space="preserve">
+    <value>排除最近成功抽卡次數</value>
+  </data>
+  <data name="Rotation.Hint.RecentDrawCountRange" xml:space="preserve">
+    <value>可輸入 0 到 10；預設排除最近 3 次成功抽卡。</value>
+  </data>
+  <data name="Rotation.Hint.ZeroDisables" xml:space="preserve">
+    <value>N=0 時不排除近期紀錄。</value>
+  </data>
+  <data name="Rotation.Summary.Applied" xml:space="preserve">
+    <value>已套用避免最近重複。</value>
+  </data>
+  <data name="Rotation.Summary.Disabled" xml:space="preserve">
+    <value>本次未套用避免最近重複。</value>
+  </data>
+  <data name="Rotation.Summary.PreRotationCount" xml:space="preserve">
+    <value>輪替前候選池：{0} 張</value>
+  </data>
+  <data name="Rotation.Summary.ExcludedCount" xml:space="preserve">
+    <value>近期排除：{0} 張</value>
+  </data>
+  <data name="Rotation.Summary.PostRotationCount" xml:space="preserve">
+    <value>輪替後候選池：{0} 張</value>
+  </data>
+  <data name="Rotation.Empty.AfterCooldown" xml:space="preserve">
+    <value>避免最近重複排除了所有目前符合條件的餐點。請降低 N、關閉避免最近重複，或調整其他條件。</value>
+  </data>
+  <data name="Rotation.Validation.InvalidRecentDrawCount" xml:space="preserve">
+    <value>排除次數必須是 0 到 10 的整數。</value>
+  </data>
+  <data name="Rotation.History.MissingSnapshot" xml:space="preserve">
+    <value>此筆舊紀錄未保存輪替摘要。</value>
+  </data>
+  <data name="Rotation.Log.InvalidSettings" xml:space="preserve">
+    <value>rotation-invalid-settings</value>
+  </data>
+  <data name="Rotation.Log.Applied" xml:space="preserve">
+    <value>rotation-applied</value>
+  </data>
+  <data name="Rotation.Log.ReplayMissingSnapshot" xml:space="preserve">
+    <value>rotation-replay-missing-snapshot</value>
+  </data>
 </root>

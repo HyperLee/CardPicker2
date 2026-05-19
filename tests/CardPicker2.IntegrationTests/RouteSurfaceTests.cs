@@ -13,7 +13,12 @@ public sealed class RouteSurfaceTests
     [InlineData("/api/metadata")]
     [InlineData("/api/filters")]
     [InlineData("/api/card-metadata")]
+    [InlineData("/api/rotation-cooldown")]
+    [InlineData("/api/rotation")]
+    [InlineData("/api/cooldown")]
+    [InlineData("/api/draw-rotation")]
     [InlineData("/draws")]
+    [InlineData("/rotation-cooldown")]
     public async Task DrawFeature_DoesNotExposeExternalJsonApiEndpoints(string path)
     {
         await using var factory = new WebApplicationFactory<Program>();
@@ -29,6 +34,8 @@ public sealed class RouteSurfaceTests
 
     [Theory]
     [InlineData("/")]
+    [InlineData("/?avoidRecentRepeats=true&recentDrawCount=3")]
+    [InlineData("/?drawMode=Random&avoidRecentRepeats=false&recentDrawCount=0")]
     [InlineData("/Cards")]
     [InlineData("/Cards?tags=%E4%BE%BF%E7%95%B6&priceRange=Low")]
     [InlineData("/Cards/Create")]

@@ -18,7 +18,14 @@ public static class DrawFeatureTestData
     public static readonly Guid DeletedCardId = Guid.Parse("44444444-4444-4444-4444-444444444441");
     public static readonly Guid FirstOperationId = Guid.Parse("55555555-5555-5555-5555-555555555551");
     public static readonly Guid ReplayOperationId = Guid.Parse("55555555-5555-5555-5555-555555555552");
+    public static readonly Guid RotationOperationId = Guid.Parse("55555555-5555-5555-5555-555555555553");
+    public static readonly Guid SameTimestampOlderOperationId = Guid.Parse("55555555-5555-5555-5555-555555555554");
+    public static readonly Guid SameTimestampNewerOperationId = Guid.Parse("55555555-5555-5555-5555-555555555555");
+    public static readonly Guid DeletedCardOperationId = Guid.Parse("55555555-5555-5555-5555-555555555556");
     public static readonly Guid HistoryRecordId = Guid.Parse("66666666-6666-6666-6666-666666666661");
+    public static readonly Guid OlderHistoryRecordId = Guid.Parse("66666666-6666-6666-6666-666666666662");
+    public static readonly Guid NewerHistoryRecordId = Guid.Parse("66666666-6666-6666-6666-666666666663");
+    public static readonly Guid DeletedCardHistoryRecordId = Guid.Parse("66666666-6666-6666-6666-666666666664");
 
     public static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
     {
@@ -305,6 +312,100 @@ public static class DrawFeatureTestData
             cardId = cardId ?? BreakfastCardId,
             mealTypeAtDraw,
             succeededAtUtc = succeededAtUtc ?? KnownTimestamp()
+        };
+    }
+
+    public static object DrawHistoryWithRotationSnapshot(
+        Guid? id = null,
+        Guid? operationId = null,
+        string drawMode = "Normal",
+        Guid? cardId = null,
+        string mealTypeAtDraw = "Breakfast",
+        DateTimeOffset? succeededAtUtc = null,
+        object? rotationSnapshot = null)
+    {
+        return new
+        {
+            id = id ?? HistoryRecordId,
+            operationId = operationId ?? RotationOperationId,
+            drawMode,
+            cardId = cardId ?? BreakfastCardId,
+            mealTypeAtDraw,
+            succeededAtUtc = succeededAtUtc ?? KnownTimestamp(),
+            rotationSnapshot = rotationSnapshot ?? ValidRotationSnapshot()
+        };
+    }
+
+    public static object DrawHistoryWithoutRotationSnapshot(
+        Guid? id = null,
+        Guid? operationId = null,
+        string drawMode = "Normal",
+        Guid? cardId = null,
+        string mealTypeAtDraw = "Breakfast",
+        DateTimeOffset? succeededAtUtc = null)
+    {
+        return DrawHistory(id, operationId, drawMode, cardId, mealTypeAtDraw, succeededAtUtc);
+    }
+
+    public static IReadOnlyList<object> SameTimestampDrawHistoryInPersistenceOrder()
+    {
+        var timestamp = KnownTimestamp();
+
+        return new[]
+        {
+            DrawHistoryWithRotationSnapshot(
+                id: OlderHistoryRecordId,
+                operationId: SameTimestampOlderOperationId,
+                cardId: LunchCardId,
+                mealTypeAtDraw: "Lunch",
+                succeededAtUtc: timestamp),
+            DrawHistoryWithRotationSnapshot(
+                id: NewerHistoryRecordId,
+                operationId: SameTimestampNewerOperationId,
+                cardId: LowPriceLunchCardId,
+                mealTypeAtDraw: "Lunch",
+                succeededAtUtc: timestamp)
+        };
+    }
+
+    public static IReadOnlyList<object> DeletedCardDrawHistory()
+    {
+        return new[]
+        {
+            DrawHistoryWithRotationSnapshot(
+                id: DeletedCardHistoryRecordId,
+                operationId: DeletedCardOperationId,
+                cardId: DeletedCardId,
+                mealTypeAtDraw: "Dinner",
+                succeededAtUtc: KnownTimestamp().AddMinutes(1))
+        };
+    }
+
+    public static object ValidRotationSnapshot(
+        bool avoidRecentRepeats = true,
+        int recentDrawCount = 3,
+        int preRotationCandidateCount = 5,
+        int excludedCandidateCount = 2)
+    {
+        return new
+        {
+            avoidRecentRepeats,
+            recentDrawCount,
+            preRotationCandidateCount,
+            excludedCandidateCount,
+            postRotationCandidateCount = preRotationCandidateCount - excludedCandidateCount
+        };
+    }
+
+    public static object InvalidRotationSnapshotCountEquation()
+    {
+        return new
+        {
+            avoidRecentRepeats = true,
+            recentDrawCount = 3,
+            preRotationCandidateCount = 5,
+            excludedCandidateCount = 2,
+            postRotationCandidateCount = 4
         };
     }
 

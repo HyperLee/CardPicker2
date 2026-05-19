@@ -42,4 +42,29 @@ public sealed class MealCardDecisionMetadataTests
             },
             normalized.DietaryPreferences);
     }
+
+    [Fact]
+    public void NormalizeTags_ReturnsEmptyCollectionForNullInput()
+    {
+        var normalized = MealCardDecisionMetadata.NormalizeTags(null);
+
+        Assert.Empty(normalized);
+    }
+
+    [Fact]
+    public void IsEmpty_ReturnsTrueOnlyWhenAllDecisionFieldsAreUnset()
+    {
+        var empty = new MealCardDecisionMetadata();
+        var populated = new MealCardDecisionMetadata
+        {
+            Tags = new[] { "快速" },
+            PriceRange = PriceRange.Low,
+            PreparationTimeRange = PreparationTimeRange.Quick,
+            DietaryPreferences = new[] { DietaryPreference.Light },
+            SpiceLevel = SpiceLevel.None
+        };
+
+        Assert.True(empty.IsEmpty());
+        Assert.False(populated.IsEmpty());
+    }
 }

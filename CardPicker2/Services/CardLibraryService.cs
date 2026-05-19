@@ -33,6 +33,7 @@ public sealed class CardLibraryService : ICardLibraryService
     private readonly DrawStatisticsService _statisticsService;
     private readonly MealCardMetadataValidator _metadataValidator;
     private readonly MealCardFilterService _filterService;
+    private readonly DrawRotationCooldownService _rotationCooldownService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CardLibraryService"/> class.
@@ -46,6 +47,8 @@ public sealed class CardLibraryService : ICardLibraryService
     /// <param name="candidatePoolBuilder">The draw candidate-pool builder.</param>
     /// <param name="statisticsService">The draw statistics projection service.</param>
     /// <param name="metadataValidator">The decision metadata validator.</param>
+    /// <param name="filterService">The shared card metadata filter service.</param>
+    /// <param name="rotationCooldownService">The recent-repeat rotation cooldown service.</param>
     public CardLibraryService(
         IOptions<CardLibraryOptions> options,
         IMealCardRandomizer randomizer,
@@ -56,7 +59,8 @@ public sealed class CardLibraryService : ICardLibraryService
         DrawCandidatePoolBuilder? candidatePoolBuilder = null,
         DrawStatisticsService? statisticsService = null,
         MealCardMetadataValidator? metadataValidator = null,
-        MealCardFilterService? filterService = null)
+        MealCardFilterService? filterService = null,
+        DrawRotationCooldownService? rotationCooldownService = null)
     {
         _options = options.Value;
         _randomizer = randomizer;
@@ -68,6 +72,7 @@ public sealed class CardLibraryService : ICardLibraryService
         _statisticsService = statisticsService ?? new DrawStatisticsService(_localizationService);
         _metadataValidator = metadataValidator ?? new MealCardMetadataValidator();
         _filterService = filterService ?? new MealCardFilterService();
+        _rotationCooldownService = rotationCooldownService ?? new DrawRotationCooldownService();
     }
 
     /// <inheritdoc />
@@ -273,6 +278,15 @@ public sealed class CardLibraryService : ICardLibraryService
             return DrawResult.Failure(operation, "決策資訊選項不支援。", filterValidationError);
         }
 
+        if (!operation.RotationCooldown.IsValid)
+        {
+            _logger.LogWarning(
+                "Draw rejected because rotation cooldown settings are invalid. Recent draw count must be between {MinRecentDrawCount} and {MaxRecentDrawCount}",
+                RotationCooldownSettings.MinRecentDrawCount,
+                RotationCooldownSettings.MaxRecentDrawCount);
+            return DrawResult.Failure(operation, "排除次數必須是 0 到 10 的整數。", "Rotation.Validation.InvalidRecentDrawCount");
+        }
+
         return await _fileCoordinator.RunExclusiveAsync(async innerCancellationToken =>
         {
             var loadResult = await LoadAsync(innerCancellationToken);
@@ -293,11 +307,27 @@ public sealed class CardLibraryService : ICardLibraryService
                 }
 
                 _logger.LogInformation(
-                    "Draw operation {DrawOperationId} replayed card {CardId}",
+                    "Draw operation {DrawOperationId} replayed card {CardId}. Rotation snapshot present: {RotationSnapshotPresent}",
                     operation.OperationId,
-                    replayCard.Id);
+                    replayCard.Id,
+                    existingHistory.RotationSnapshot is not null);
                 var replayProjection = _localizationService.Project(replayCard, operation.RequestedLanguage);
-                return DrawResult.Success(operation, replayCard, replayProjection, "已重顯同一次抽卡結果。", "Draw.Replay", isReplay: true);
+                return DrawResult.Success(
+                    operation,
+                    replayCard,
+                    replayProjection,
+                    "已重顯同一次抽卡結果。",
+                    "Draw.Replay",
+                    isReplay: true,
+                    rotationSettings: existingHistory.RotationSnapshot is null
+                        ? operation.RotationCooldown
+                        : new RotationCooldownSettings(
+                            existingHistory.RotationSnapshot.AvoidRecentRepeats,
+                            existingHistory.RotationSnapshot.RecentDrawCount),
+                    rotationSnapshot: existingHistory.RotationSnapshot,
+                    rotationSummaryKey: existingHistory.RotationSnapshot is null
+                        ? "Rotation.History.MissingSnapshot"
+                        : "Rotation.Summary.Applied");
             }
 
             var pool = _candidatePoolBuilder.Build(operation, loadResult.Document.Cards);
@@ -324,10 +354,51 @@ public sealed class CardLibraryService : ICardLibraryService
                     operation.Mode == DrawMode.Normal ? operation.MealType : null,
                     AppliedFilters: pool.AppliedFilters,
                     FilterSummary: CreateFilterSummary(pool.AppliedFilters),
-                    FilteredPoolSize: 0);
+                    FilteredPoolSize: 0,
+                    RotationSettings: operation.RotationCooldown,
+                    CandidatePoolEmptyReason: CandidatePoolEmptyReason.BaseCandidatePoolEmpty);
             }
 
-            var selected = pool.Cards[_randomizer.NextIndex(pool.Cards.Count)];
+            var rotationPool = _rotationCooldownService.Apply(pool.Cards, loadResult.Document.DrawHistory, operation.RotationCooldown);
+            _logger.LogInformation(
+                "Rotation cooldown applied for operation {DrawOperationId}. Enabled: {AvoidRecentRepeats}, recent count: {RecentDrawCount}, pre-rotation pool size: {PreRotationPoolCount}, excluded: {ExcludedCount}, post-rotation pool size: {PostRotationPoolCount}",
+                operation.OperationId,
+                rotationPool.Settings.AvoidRecentRepeats,
+                rotationPool.Settings.RecentDrawCount,
+                rotationPool.Snapshot.PreRotationCandidateCount,
+                rotationPool.Snapshot.ExcludedCandidateCount,
+                rotationPool.Snapshot.PostRotationCandidateCount);
+
+            if (rotationPool.PostRotationCards.Count == 0)
+            {
+                _logger.LogWarning(
+                    "Draw rejected because rotation cooldown emptied the candidate pool for operation {DrawOperationId}. Pre: {PreRotationCount}, excluded: {ExcludedCount}",
+                    operation.OperationId,
+                    rotationPool.Snapshot.PreRotationCandidateCount,
+                    rotationPool.Snapshot.ExcludedCandidateCount);
+                return new DrawResult(
+                    false,
+                    operation.MealType ?? default,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "避免最近重複排除了所有目前符合條件的餐點。",
+                    null,
+                    "Rotation.Empty.AfterCooldown",
+                    operation.OperationId,
+                    operation.Mode,
+                    operation.Mode == DrawMode.Normal ? operation.MealType : null,
+                    AppliedFilters: pool.AppliedFilters,
+                    FilterSummary: CreateFilterSummary(pool.AppliedFilters),
+                    FilteredPoolSize: 0,
+                    RotationSettings: operation.RotationCooldown,
+                    RotationSnapshot: rotationPool.Snapshot,
+                    CandidatePoolEmptyReason: CandidatePoolEmptyReason.RotationCandidatePoolEmpty,
+                    RotationSummaryKey: "Rotation.Empty.AfterCooldown");
+            }
+
+            var selected = rotationPool.PostRotationCards[_randomizer.NextIndex(rotationPool.PostRotationCards.Count)];
             var history = new DrawHistoryRecord
             {
                 Id = Guid.NewGuid(),
@@ -335,7 +406,8 @@ public sealed class CardLibraryService : ICardLibraryService
                 DrawMode = operation.Mode,
                 CardId = selected.Id,
                 MealTypeAtDraw = selected.MealType,
-                SucceededAtUtc = DateTimeOffset.UtcNow
+                SucceededAtUtc = DateTimeOffset.UtcNow,
+                RotationSnapshot = rotationPool.Snapshot
             };
             var updatedDocument = new CardLibraryDocument
             {
@@ -348,18 +420,22 @@ public sealed class CardLibraryService : ICardLibraryService
             if (writeResult is not null)
             {
                 _logger.LogError(
-                    "Draw operation {DrawOperationId} failed while writing selected card {CardId}",
+                    "Draw operation {DrawOperationId} failed while writing selected card {CardId}. Rotation excluded {ExcludedCount}, post-rotation pool size {PostRotationPoolCount}",
                     operation.OperationId,
-                    selected.Id);
+                    selected.Id,
+                    rotationPool.Snapshot.ExcludedCandidateCount,
+                    rotationPool.Snapshot.PostRotationCandidateCount);
                 return DrawResult.Failure(operation, "抽卡結果暫時無法保存，請稍後再試。", "Draw.WriteFailed");
             }
 
             _logger.LogInformation(
-                "Draw operation {DrawOperationId} succeeded with mode {DrawMode}, card {CardId}, pool size {PoolCount}",
+                "Draw operation {DrawOperationId} succeeded with mode {DrawMode}, card {CardId}, pool size {PoolCount}, rotation excluded {ExcludedCount}, post-rotation pool size {PostRotationPoolCount}",
                 operation.OperationId,
                 operation.Mode,
                 selected.Id,
-                pool.Cards.Count);
+                pool.Cards.Count,
+                rotationPool.Snapshot.ExcludedCandidateCount,
+                rotationPool.Snapshot.PostRotationCandidateCount);
 
             var localizedCard = _localizationService.Project(selected, operation.RequestedLanguage);
             return DrawResult.Success(
@@ -368,9 +444,14 @@ public sealed class CardLibraryService : ICardLibraryService
                 localizedCard,
                 "已抽出餐點卡牌。",
                 "Draw.Success",
-                filteredPoolSize: pool.Cards.Count,
+                filteredPoolSize: rotationPool.PostRotationCards.Count,
                 appliedFilters: pool.AppliedFilters,
-                filterSummary: CreateFilterSummary(pool.AppliedFilters));
+                filterSummary: CreateFilterSummary(pool.AppliedFilters),
+                rotationSettings: operation.RotationCooldown,
+                rotationSnapshot: rotationPool.Snapshot,
+                rotationSummaryKey: rotationPool.Settings.IsActive
+                    ? "Rotation.Summary.Applied"
+                    : "Rotation.Summary.Disabled");
         }, cancellationToken);
     }
 
@@ -960,6 +1041,11 @@ public sealed class CardLibraryService : ICardLibraryService
             if (record.SucceededAtUtc == default)
             {
                 return "Draw history success time is missing.";
+            }
+
+            if (record.RotationSnapshot is RotationSnapshot snapshot && !snapshot.IsValid)
+            {
+                return snapshot.ValidationKey;
             }
         }
 

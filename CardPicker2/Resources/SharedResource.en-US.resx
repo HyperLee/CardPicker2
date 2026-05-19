@@ -384,4 +384,49 @@
   <data name="Home.Result.MetadataSummary" xml:space="preserve">
     <value>Meal decision metadata</value>
   </data>
+  <data name="Rotation.Label.AvoidRecentRepeats" xml:space="preserve">
+    <value>Avoid recent repeats</value>
+  </data>
+  <data name="Rotation.Label.RecentDrawCount" xml:space="preserve">
+    <value>Recent successful draws to exclude</value>
+  </data>
+  <data name="Rotation.Hint.RecentDrawCountRange" xml:space="preserve">
+    <value>Enter 0 to 10; the default excludes the last 3 successful draws.</value>
+  </data>
+  <data name="Rotation.Hint.ZeroDisables" xml:space="preserve">
+    <value>N=0 does not exclude recent records.</value>
+  </data>
+  <data name="Rotation.Summary.Applied" xml:space="preserve">
+    <value>Recent-repeat avoidance was applied.</value>
+  </data>
+  <data name="Rotation.Summary.Disabled" xml:space="preserve">
+    <value>Recent-repeat avoidance was not applied for this draw.</value>
+  </data>
+  <data name="Rotation.Summary.PreRotationCount" xml:space="preserve">
+    <value>Before cooldown: {0} cards</value>
+  </data>
+  <data name="Rotation.Summary.ExcludedCount" xml:space="preserve">
+    <value>Excluded as recent: {0} cards</value>
+  </data>
+  <data name="Rotation.Summary.PostRotationCount" xml:space="preserve">
+    <value>After cooldown: {0} cards</value>
+  </data>
+  <data name="Rotation.Empty.AfterCooldown" xml:space="preserve">
+    <value>Recent-repeat avoidance excluded every meal that currently matches. Lower N, turn off recent-repeat avoidance, or adjust the other filters.</value>
+  </data>
+  <data name="Rotation.Validation.InvalidRecentDrawCount" xml:space="preserve">
+    <value>The recent draw count must be an integer from 0 to 10.</value>
+  </data>
+  <data name="Rotation.History.MissingSnapshot" xml:space="preserve">
+    <value>This older record did not save a rotation summary.</value>
+  </data>
+  <data name="Rotation.Log.InvalidSettings" xml:space="preserve">
+    <value>rotation-invalid-settings</value>
+  </data>
+  <data name="Rotation.Log.Applied" xml:space="preserve">
+    <value>rotation-applied</value>
+  </data>
+  <data name="Rotation.Log.ReplayMissingSnapshot" xml:space="preserve">
+    <value>rotation-replay-missing-snapshot</value>
+  </data>
 </root>

@@ -12,7 +12,8 @@ namespace CardPicker2.Models;
 ///     DrawMode = DrawMode.Normal,
 ///     CardId = selectedCard.Id,
 ///     MealTypeAtDraw = selectedCard.MealType,
-///     SucceededAtUtc = DateTimeOffset.UtcNow
+///     SucceededAtUtc = DateTimeOffset.UtcNow,
+///     RotationSnapshot = RotationSnapshot.Create(RotationCooldownSettings.Default, 4, 1)
 /// };
 /// </code>
 /// </example>
@@ -47,4 +48,9 @@ public sealed class DrawHistoryRecord
     /// Gets or initializes the UTC time when the successful draw was persisted.
     /// </summary>
     public DateTimeOffset SucceededAtUtc { get; init; }
+
+    /// <summary>
+    /// Gets or initializes the optional rotation cooldown summary saved for this draw.
+    /// </summary>
+    public RotationSnapshot? RotationSnapshot { get; init; }
 }

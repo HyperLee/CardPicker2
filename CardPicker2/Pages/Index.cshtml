@@ -33,14 +33,16 @@
 
     @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
     {
-        var alertClass = Model.OperationState == DrawOperationState.Blocked ? "alert-danger" : "alert-info";
-        <div class="alert @alertClass" role="status" id="draw-state">@Model.StatusMessage</div>
+        var isRotationEmpty = Model.Result?.StatusKey == "Rotation.Empty.AfterCooldown";
+        var alertClass = isRotationEmpty ? "alert-warning rotation-empty" : (Model.OperationState == DrawOperationState.Blocked ? "alert-danger" : "alert-info");
+        <div class="alert @alertClass" role="status" id="draw-state" data-rotation-empty-alert="@(isRotationEmpty ? "true" : null)">@Model.StatusMessage</div>
     }
 
     <form method="post"
           asp-page-handler="Draw"
           class="slot-console"
           data-draw-form
+          data-language-preserve-form="home-draw"
           data-draw-state-spinning="@Localizer["Home.Status.Spinning"]"
           data-draw-state-reduced="@Localizer["Home.Status.Revealing"]">
         <div asp-validation-summary="All" class="text-danger mb-3"></div>
@@ -163,6 +165,29 @@
             }
         </fieldset>
 
+        <fieldset class="rotation-cooldown-panel" disabled="@Model.IsBlocked" data-rotation-cooldown-panel>
+            <legend>@Localizer["Rotation.Label.AvoidRecentRepeats"]</legend>
+            <div class="rotation-cooldown-grid">
+                <div class="form-check form-switch rotation-toggle">
+                    <input asp-for="AvoidRecentRepeats" class="form-check-input" />
+                    <label asp-for="AvoidRecentRepeats" class="form-check-label">@Localizer["Rotation.Label.AvoidRecentRepeats"]</label>
+                </div>
+                <div class="rotation-count-field">
+                    <label asp-for="RecentDrawCount" class="form-label">@Localizer["Rotation.Label.RecentDrawCount"]</label>
+                    <input asp-for="RecentDrawCount"
+                           class="form-control"
+                           type="number"
+                           min="@RotationCooldownSettings.MinRecentDrawCount"
+                           max="@RotationCooldownSettings.MaxRecentDrawCount"
+                           step="1"
+                           inputmode="numeric" />
+                    <div class="form-text">@Localizer["Rotation.Hint.RecentDrawCountRange"]</div>
+                    <div class="form-text">@Localizer["Rotation.Hint.ZeroDisables"]</div>
+                    <span asp-validation-for="RecentDrawCount" class="text-danger"></span>
+                </div>
+            </div>
+        </fieldset>
+
         <div class="slot-machine" aria-label="@Localizer["Home.Slot.Aria"]" data-slot-machine>
             <div class="slot-reel">
                 @foreach (var symbol in slotColumnOne)
@@ -217,6 +242,29 @@
                         <span class="metadata-badge" data-metadata-badge>@badge</span>
                     }
                 </div>
+            }
+            @if (Model.Result.RotationSnapshot is RotationSnapshot snapshot)
+            {
+                <dl class="rotation-summary" data-rotation-summary>
+                    <div>
+                        <dt>@(snapshot.AvoidRecentRepeats && snapshot.RecentDrawCount > 0 ? Localizer["Rotation.Summary.Applied"] : Localizer["Rotation.Summary.Disabled"])</dt>
+                        <dd>@Localizer["Rotation.Label.RecentDrawCount"]: @snapshot.RecentDrawCount</dd>
+                    </div>
+                    <div>
+                        <dt>@Localizer["Rotation.Summary.PreRotationCount", snapshot.PreRotationCandidateCount]</dt>
+                        <dd>@Localizer["Rotation.Summary.ExcludedCount", snapshot.ExcludedCandidateCount]</dd>
+                    </div>
+                    <div>
+                        <dt>@Localizer["Rotation.Summary.PostRotationCount", snapshot.PostRotationCandidateCount]</dt>
+                        <dd>@Localizer["Rotation.Hint.ZeroDisables"]</dd>
+                    </div>
+                </dl>
+            }
+            else if (Model.Result.RotationSummaryKey == "Rotation.History.MissingSnapshot")
+            {
+                <p class="rotation-summary-missing" data-rotation-summary>
+                    @Localizer["Rotation.History.MissingSnapshot"]
+                </p>
             }
         </section>
     }

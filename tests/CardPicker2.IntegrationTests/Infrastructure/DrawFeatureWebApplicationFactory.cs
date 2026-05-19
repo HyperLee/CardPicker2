@@ -70,6 +70,8 @@ public sealed partial class DrawFeatureWebApplicationFactory : WebApplicationFac
         IEnumerable<string>? dietaryPreferences = null,
         string? maxSpiceLevel = null,
         IEnumerable<string>? tags = null,
+        bool? avoidRecentRepeats = null,
+        string? recentDrawCount = null,
         string tokenPath = "/")
     {
         var token = await GetAntiForgeryTokenAsync(client, tokenPath);
@@ -83,7 +85,30 @@ public sealed partial class DrawFeatureWebApplicationFactory : WebApplicationFac
             preparationTimeRange,
             dietaryPreferences,
             maxSpiceLevel,
-            tags));
+            tags,
+            avoidRecentRepeats,
+            recentDrawCount));
+    }
+
+    public async Task<FormUrlEncodedContent> CreateSameOperationReplayContentAsync(
+        HttpClient client,
+        Guid drawOperationId,
+        string drawMode = "Normal",
+        string? mealType = "Lunch",
+        bool coinInserted = true,
+        bool? avoidRecentRepeats = null,
+        string? recentDrawCount = null,
+        string tokenPath = "/")
+    {
+        return await CreateFilteredDrawContentAsync(
+            client,
+            drawMode,
+            mealType,
+            coinInserted,
+            drawOperationId,
+            avoidRecentRepeats: avoidRecentRepeats,
+            recentDrawCount: recentDrawCount,
+            tokenPath: tokenPath);
     }
 
     public static IReadOnlyList<KeyValuePair<string, string>> CreateFilteredDrawPayload(
@@ -96,7 +121,9 @@ public sealed partial class DrawFeatureWebApplicationFactory : WebApplicationFac
         string? preparationTimeRange = null,
         IEnumerable<string>? dietaryPreferences = null,
         string? maxSpiceLevel = null,
-        IEnumerable<string>? tags = null)
+        IEnumerable<string>? tags = null,
+        bool? avoidRecentRepeats = null,
+        string? recentDrawCount = null)
     {
         var payload = new List<KeyValuePair<string, string>>
         {
@@ -112,6 +139,8 @@ public sealed partial class DrawFeatureWebApplicationFactory : WebApplicationFac
         AddOptional(payload, "MaxSpiceLevel", maxSpiceLevel);
         AddRepeated(payload, "DietaryPreferences", dietaryPreferences);
         AddRepeated(payload, "Tags", tags);
+        AddOptional(payload, "AvoidRecentRepeats", avoidRecentRepeats?.ToString().ToLowerInvariant());
+        AddOptional(payload, "RecentDrawCount", recentDrawCount);
 
         return payload;
     }

@@ -106,6 +106,8 @@
     const preparationTimeRange = drawForm.querySelector('[name="PreparationTimeRange"]');
     const maxSpiceLevel = drawForm.querySelector('[name="MaxSpiceLevel"]');
     const tags = drawForm.querySelector('[name="Tags"]');
+    const avoidRecentRepeats = drawForm.querySelector('[name="AvoidRecentRepeats"]');
+    const recentDrawCount = drawForm.querySelector('[name="RecentDrawCount"]');
     const dietaryPreferences = Array.from(drawForm.querySelectorAll('input[name="DietaryPreferences"]:checked'))
       .filter((input) => input instanceof HTMLInputElement)
       .map((input) => input.value);
@@ -141,6 +143,14 @@
 
     if (tags instanceof HTMLInputElement) {
       appendRepeatedValues(url, 'tags', tags.value.split(',').map((value) => value.trim()));
+    }
+
+    if (avoidRecentRepeats instanceof HTMLInputElement) {
+      appendValue(url, 'avoidRecentRepeats', avoidRecentRepeats.checked ? 'true' : 'false');
+    }
+
+    if (recentDrawCount instanceof HTMLInputElement) {
+      appendValue(url, 'recentDrawCount', recentDrawCount.value);
     }
 
     appendRepeatedValues(url, 'dietaryPreferences', dietaryPreferences);

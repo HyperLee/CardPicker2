@@ -19,6 +19,10 @@ namespace CardPicker2.Models;
 /// <param name="AppliedFilters">The filters applied to the candidate pool.</param>
 /// <param name="FilterSummary">A localized summary of the applied filters.</param>
 /// <param name="FilteredPoolSize">The number of cards in the filtered candidate pool.</param>
+/// <param name="RotationSettings">The submitted rotation cooldown settings.</param>
+/// <param name="RotationSnapshot">The persisted or projected rotation summary.</param>
+/// <param name="CandidatePoolEmptyReason">The empty-pool reason when a draw fails before selection.</param>
+/// <param name="RotationSummaryKey">The stable localized summary key for rotation display.</param>
 /// <example>
 /// <code>
 /// var result = DrawResult.Failure(operation, "Coin required.", "Draw.CoinRequired");
@@ -40,7 +44,11 @@ public sealed record DrawResult(
     bool IsReplay = false,
     CardFilterCriteria? AppliedFilters = null,
     FilterSummary? FilterSummary = null,
-    int? FilteredPoolSize = null)
+    int? FilteredPoolSize = null,
+    RotationCooldownSettings? RotationSettings = null,
+    RotationSnapshot? RotationSnapshot = null,
+    CandidatePoolEmptyReason? CandidatePoolEmptyReason = null,
+    string? RotationSummaryKey = null)
 {
     /// <summary>
     /// Gets the display name of the selected card meal type.
@@ -122,7 +130,10 @@ public sealed record DrawResult(
         bool isReplay = false,
         int? filteredPoolSize = null,
         CardFilterCriteria? appliedFilters = null,
-        FilterSummary? filterSummary = null)
+        FilterSummary? filterSummary = null,
+        RotationCooldownSettings? rotationSettings = null,
+        RotationSnapshot? rotationSnapshot = null,
+        string? rotationSummaryKey = null)
     {
         var requestedMealType = operation.Mode == DrawMode.Normal ? operation.MealType : null;
         return new DrawResult(
@@ -141,7 +152,10 @@ public sealed record DrawResult(
             isReplay,
             appliedFilters,
             filterSummary,
-            filteredPoolSize);
+            filteredPoolSize,
+            rotationSettings ?? operation.RotationCooldown,
+            rotationSnapshot,
+            RotationSummaryKey: rotationSummaryKey);
     }
 
     /// <summary>
@@ -189,6 +203,10 @@ public sealed record DrawResult(
             operation.OperationId,
             operation.Mode,
             requestedMealType,
-            AppliedFilters: operation.Filters?.ForDrawMode(operation.Mode));
+            AppliedFilters: operation.Filters?.ForDrawMode(operation.Mode),
+            RotationSettings: operation.RotationCooldown,
+            CandidatePoolEmptyReason: statusKey == "Rotation.Validation.InvalidRecentDrawCount"
+                ? global::CardPicker2.Models.CandidatePoolEmptyReason.InvalidRotationSettings
+                : null);
     }
 }

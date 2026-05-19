@@ -154,6 +154,89 @@ public sealed class DrawLoggingTests
     }
 
     [Fact]
+    public async Task RotationCooldown_LogsLifecycleReplayAndWriteFailureWithoutRawPayloads()
+    {
+        using var invalidSettingsLibrary = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV4Document());
+        var invalidSettingsLogger = new CapturingLogger<CardLibraryService>();
+        await CreateService(invalidSettingsLibrary.FilePath, invalidSettingsLogger)
+            .DrawAsync(new DrawOperation
+            {
+                OperationId = Guid.NewGuid(),
+                Mode = DrawMode.Random,
+                CoinInserted = true,
+                RequestedLanguage = SupportedLanguage.ZhTw,
+                RotationCooldown = new RotationCooldownSettings(true, 11)
+            });
+
+        using var successLibrary = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV4Document(
+            drawHistory: new[]
+            {
+                DrawFeatureTestData.DrawHistoryWithRotationSnapshot(
+                    cardId: DrawFeatureTestData.LunchCardId,
+                    mealTypeAtDraw: "Lunch",
+                    succeededAtUtc: DrawFeatureTestData.KnownTimestamp().AddMinutes(1))
+            }));
+        var successLogger = new CapturingLogger<CardLibraryService>();
+        var successService = CreateService(successLibrary.FilePath, successLogger);
+        var successOperation = CreateOperation(DrawMode.Normal, MealType.Lunch);
+
+        await successService.DrawAsync(successOperation);
+        await successService.DrawAsync(successOperation);
+
+        using var legacyReplayLibrary = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV4Document(
+            drawHistory: new[]
+            {
+                DrawFeatureTestData.DrawHistoryWithoutRotationSnapshot(
+                    operationId: DrawFeatureTestData.ReplayOperationId,
+                    cardId: DrawFeatureTestData.LunchCardId,
+                    mealTypeAtDraw: "Lunch")
+            }));
+        var legacyReplayLogger = new CapturingLogger<CardLibraryService>();
+        await CreateService(legacyReplayLibrary.FilePath, legacyReplayLogger)
+            .DrawAsync(CreateOperation(DrawMode.Normal, MealType.Lunch, DrawFeatureTestData.ReplayOperationId));
+
+        using var emptyAfterRotationLibrary = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV4Document(
+            drawHistory: new[]
+            {
+                DrawFeatureTestData.DrawHistoryWithRotationSnapshot(
+                    cardId: DrawFeatureTestData.BreakfastCardId,
+                    mealTypeAtDraw: "Breakfast",
+                    succeededAtUtc: DrawFeatureTestData.KnownTimestamp().AddMinutes(2)),
+                DrawFeatureTestData.DrawHistoryWithRotationSnapshot(
+                    id: DrawFeatureTestData.OlderHistoryRecordId,
+                    operationId: DrawFeatureTestData.SameTimestampOlderOperationId,
+                    cardId: DrawFeatureTestData.SecondBreakfastCardId,
+                    mealTypeAtDraw: "Breakfast",
+                    succeededAtUtc: DrawFeatureTestData.KnownTimestamp().AddMinutes(1))
+            }));
+        var emptyAfterRotationLogger = new CapturingLogger<CardLibraryService>();
+        await CreateService(emptyAfterRotationLibrary.FilePath, emptyAfterRotationLogger)
+            .DrawAsync(CreateOperation(
+                DrawMode.Normal,
+                MealType.Breakfast,
+                rotationCooldown: new RotationCooldownSettings(true, 2)));
+
+        using var writeFailureLibrary = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV4Document());
+        Directory.CreateDirectory(writeFailureLibrary.FilePath + ".tmp");
+        var writeFailureLogger = new CapturingLogger<CardLibraryService>();
+        await CreateService(writeFailureLibrary.FilePath, writeFailureLogger)
+            .DrawAsync(CreateOperation(DrawMode.Normal, MealType.Lunch));
+
+        Assert.Contains(invalidSettingsLogger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("rotation cooldown settings are invalid", StringComparison.Ordinal));
+        Assert.Contains(successLogger.Entries, entry => entry.Level == LogLevel.Information && entry.Message.Contains("Rotation cooldown applied", StringComparison.Ordinal));
+        Assert.Contains(successLogger.Entries, entry => entry.Level == LogLevel.Information && entry.Message.Contains("rotation excluded", StringComparison.Ordinal));
+        Assert.Contains(successLogger.Entries, entry => entry.Level == LogLevel.Information && entry.Message.Contains("Rotation snapshot present: True", StringComparison.Ordinal));
+        Assert.Contains(legacyReplayLogger.Entries, entry => entry.Level == LogLevel.Information && entry.Message.Contains("Rotation snapshot present: False", StringComparison.Ordinal));
+        Assert.Contains(emptyAfterRotationLogger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("rotation cooldown emptied the candidate pool", StringComparison.Ordinal));
+        Assert.Contains(writeFailureLogger.Entries, entry => entry.Level == LogLevel.Error && entry.Message.Contains("post-rotation pool size", StringComparison.Ordinal));
+        AssertNoSensitivePayloads(invalidSettingsLogger);
+        AssertNoSensitivePayloads(successLogger);
+        AssertNoSensitivePayloads(legacyReplayLogger);
+        AssertNoSensitivePayloads(emptyAfterRotationLogger);
+        AssertNoSensitivePayloads(writeFailureLogger);
+    }
+
+    [Fact]
     public async Task DeleteAsync_WithHistory_LogsRetainedDeletedCardWithoutRawPayloads()
     {
         using var library = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV3Document(
@@ -169,15 +252,20 @@ public sealed class DrawLoggingTests
         AssertNoSensitivePayloads(logger);
     }
 
-    private static DrawOperation CreateOperation(DrawMode mode, MealType? mealType)
+    private static DrawOperation CreateOperation(
+        DrawMode mode,
+        MealType? mealType,
+        Guid? operationId = null,
+        RotationCooldownSettings? rotationCooldown = null)
     {
         return new DrawOperation
         {
-            OperationId = Guid.NewGuid(),
+            OperationId = operationId ?? Guid.NewGuid(),
             Mode = mode,
             MealType = mealType,
             CoinInserted = true,
-            RequestedLanguage = SupportedLanguage.ZhTw
+            RequestedLanguage = SupportedLanguage.ZhTw,
+            RotationCooldown = rotationCooldown ?? RotationCooldownSettings.Default
         };
     }
 
@@ -205,6 +293,7 @@ public sealed class DrawLoggingTests
         Assert.DoesNotContain("schemaVersion", text, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("localizations", text, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("system prompt", text, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("StackTrace", text, StringComparison.OrdinalIgnoreCase);
     }
 
     private sealed class FixedMealCardRandomizer : IMealCardRandomizer

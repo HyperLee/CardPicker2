@@ -60,6 +60,55 @@ public sealed class CardLibraryFilteredDrawTests
         Assert.Empty((await ReadDocumentAsync(library.FilePath)).DrawHistory);
     }
 
+    [Theory]
+    [MemberData(nameof(InvalidFilterCriteria))]
+    public async Task DrawAsync_WithInvalidMetadataFilter_DoesNotAppendHistory(CardFilterCriteria filters, string expectedStatusKey)
+    {
+        using var library = await TempCardLibrary.CreateWithSchemaV4Async();
+        var service = CreateService(library.FilePath, new SequenceMealCardRandomizer(0));
+
+        var result = await service.DrawAsync(new DrawOperation
+        {
+            OperationId = Guid.NewGuid(),
+            Mode = DrawMode.Random,
+            CoinInserted = true,
+            Filters = filters
+        });
+
+        Assert.False(result.Succeeded);
+        Assert.Equal(expectedStatusKey, result.StatusKey);
+        Assert.Empty((await ReadDocumentAsync(library.FilePath)).DrawHistory);
+    }
+
+    public static IEnumerable<object[]> InvalidFilterCriteria()
+    {
+        yield return new object[]
+        {
+            new CardFilterCriteria { MealType = (MealType)999 },
+            "Draw.InvalidMealType"
+        };
+        yield return new object[]
+        {
+            new CardFilterCriteria { PriceRange = (PriceRange)999 },
+            "Metadata.InvalidEnum"
+        };
+        yield return new object[]
+        {
+            new CardFilterCriteria { PreparationTimeRange = (PreparationTimeRange)999 },
+            "Metadata.InvalidEnum"
+        };
+        yield return new object[]
+        {
+            new CardFilterCriteria { MaxSpiceLevel = (SpiceLevel)999 },
+            "Metadata.InvalidEnum"
+        };
+        yield return new object[]
+        {
+            new CardFilterCriteria { DietaryPreferences = new[] { (DietaryPreference)999 } },
+            "Metadata.InvalidEnum"
+        };
+    }
+
     private static CardLibraryService CreateService(string filePath, IMealCardRandomizer randomizer)
     {
         return new CardLibraryService(
