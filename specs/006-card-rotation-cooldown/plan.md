@@ -96,6 +96,7 @@ CardPicker2/
 │   ├── RotationCooldownSettings.cs    # avoid recent repeats + N validation
 │   ├── RotationSnapshot.cs            # persisted minimal summary on successful history
 │   ├── RotationCandidatePool.cs       # pre/post rotation pool projection
+│   ├── CandidatePoolEmptyReason.cs    # base/metadata empty、rotation empty、invalid settings
 │   ├── DrawHistoryRecord.cs           # optional RotationSnapshot
 │   ├── DrawOperation.cs               # submitted RotationCooldownSettings
 │   ├── DrawResult.cs                  # result/empty/replay rotation summary

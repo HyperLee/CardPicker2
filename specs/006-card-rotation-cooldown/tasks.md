@@ -36,6 +36,9 @@
 - [ ] T008 [P] 新增輪替服務基礎失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawRotationCooldownServiceTests.cs`，覆蓋最近 N 筆成功歷史排序、同 timestamp 以持久化順序較後者較新、card ID 去重、deleted/missing IDs 只在存在於候選池時排除。
 - [ ] T009 [P] 新增 schema v4 optional 快照相容失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibrarySchemaVersionTests.cs`，覆蓋 existing history missing `rotationSnapshot` 不 blocked、不回填，invalid snapshot count equation 會 block 並保留原檔。
 - [ ] T010 [P] 新增輪替雙語 resource 失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/LocalizationResourceTests.cs`，覆蓋 `zh-TW` 與 `en-US` cooldown labels、N range hint、success summary、empty-after-rotation、invalid N、old-history-missing-snapshot keys 不缺漏。
+
+**Foundation 紅燈檢查**: 在開始 T011 到 T022 任一實作任務前，先執行 `dotnet test CardPicker2.sln --filter "RotationCooldownSettings|RotationSnapshot|DrawRotationCooldownService|SchemaV4|LocalizationResource"`，確認 T006 到 T010 新增測試因尚未實作而失敗；若測試未失敗或失敗原因不符合預期，先修正測試設計再進入實作。
+
 - [ ] T011 [P] 建立輪替設定模型於 `CardPicker2/Models/RotationCooldownSettings.cs`，包含 `AvoidRecentRepeats`、`RecentDrawCount`、`IsActive`、default factory 與 0..10 validation，並補 XML 文件註解含 `<example>`/`<code>`。
 - [ ] T012 [P] 建立輪替快照模型於 `CardPicker2/Models/RotationSnapshot.cs`，包含是否啟用、N 值、輪替前候選池數、排除數、輪替後候選池數與 validation helper，並補 XML 文件註解含 `<example>`/`<code>`。
 - [ ] T013 [P] 建立輪替候選池模型於 `CardPicker2/Models/RotationCandidatePool.cs`，包含 pre-rotation cards、post-rotation cards、excluded card IDs、settings、snapshot 與 nominal probability helpers。
@@ -67,7 +70,7 @@
 - [ ] T024 [P] [US1] 新增輪替候選池 membership 失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawRotationCooldownServiceTests.cs`，覆蓋 Normal 先餐別再 metadata 再 rotation、Random 忽略餐別再 metadata 再 rotation、最近 N 筆同 card ID 只排除一次。
 - [ ] T025 [P] [US1] 新增輪替抽卡服務失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryRotationDrawTests.cs`，覆蓋啟用 N=3 排除近期候選、N=0 與關閉防重複完全回到 005 candidate pool、輪替後 M 張時每張標稱機率 `1/M`。
 - [ ] T026 [P] [US1] 新增輪替 replay 失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawIdempotencyRotationTests.cs`，覆蓋相同 `DrawOperationId` replay 原 card ID 與原 `RotationSnapshot`，不得因目前 N、最新 history 或最新 filters 重新抽卡。
-- [ ] T027 [P] [US1] 新增首頁輪替抽卡整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/RotationCooldownDrawPageTests.cs`，覆蓋 GET 預設 toggle 啟用、N=3、POST Normal/Random cooldown fields、success summary、Anti-Forgery 與 blocked state disable draw。
+- [ ] T027 [P] [US1] 新增首頁輪替抽卡整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/RotationCooldownDrawPageTests.cs`，覆蓋 GET 預設 toggle 啟用、N=3、新首頁 GET/應用程式重新啟動後不保留先前防重複偏好、POST Normal/Random cooldown fields、僅顯示數量的 success summary、Anti-Forgery 與 blocked state disable draw。
 - [ ] T028 [US1] 執行 `dotnet test CardPicker2.sln --filter "DrawRotationCooldownService|CardLibraryRotationDraw|DrawIdempotencyRotation|RotationCooldownDrawPage"`，確認 `CardPicker2.sln` 的 US1 新測試在實作前失敗。
 
 ### 使用者故事 1 的實作
@@ -76,12 +79,12 @@
 - [ ] T030 [US1] 更新抽卡服務契約於 `CardPicker2/Services/ICardLibraryService.cs`，明確支援含 `RotationCooldownSettings` 的 `DrawOperation` 與 replay `RotationSnapshot` 回傳。
 - [ ] T031 [US1] 更新抽卡核心流程於 `CardPicker2/Services/CardLibraryService.cs`，在 replay 檢查之後建立 005 pool、套用 `DrawRotationCooldownService`、從 post-rotation pool uniform random、append `DrawHistoryRecord` + `RotationSnapshot` 同一 atomic write。
 - [ ] T032 [US1] 更新首頁 PageModel 於 `CardPicker2/Pages/Index.cshtml.cs`，bind `avoidRecentRepeats` 與 `recentDrawCount`，server-side 驗證 0..10，建立 `RotationCooldownSettings` 並保存 draw failure/success form state。
-- [ ] T033 [US1] 更新首頁 Razor UI 於 `CardPicker2/Pages/Index.cshtml`，加入「避免最近重複」toggle、N input、range hint、success rotation summary 與 hidden/replay state，且 Random mode 不使用 meal type 限制。
+- [ ] T033 [US1] 更新首頁 Razor UI 於 `CardPicker2/Pages/Index.cshtml`，加入「避免最近重複」toggle、N input、range hint、僅顯示數量的 success rotation summary 與 hidden/replay state，且 Random mode 不使用 meal type 限制。
 - [ ] T034 [US1] 更新 localized card/result projection 於 `CardPicker2/Services/MealCardLocalizationService.cs`，加入 success rotation summary display model 與 `RotationSnapshot` count formatting。
 - [ ] T035 [P] [US1] 新增或更新繁中首頁輪替文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 default enabled label、N=0 說明、套用摘要、排除數與輪替後候選池大小。
 - [ ] T036 [P] [US1] 新增或更新英文首頁輪替文案於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保 success summary 在英文語系下無未翻譯 key。
 - [ ] T037 [P] [US1] 更新首頁輪替 responsive 樣式於 `CardPicker2/wwwroot/css/site.css`，確保 cooldown control、N input、filter panel、slot/result summary 在 390x844、768x1024、1366x768 不重疊或水平溢出。
-- [ ] T038 [P] [US1] 更新首頁輪替 progressive enhancement 於 `CardPicker2/wwwroot/js/site.js`，支援語系/主題切換前暫存 cooldown toggle 與 N 值、N input UX guard、快速連點 guard，且不決定候選池或結果。
+- [ ] T038 [P] [US1] 更新首頁輪替 progressive enhancement 於 `CardPicker2/wwwroot/js/site.js`，支援語系/主題切換前暫存 cooldown toggle 與 N 值、N input UX guard、快速連點 guard，且不決定候選池或結果，也不得把 cooldown 設定保存為跨頁面或跨重新啟動偏好。
 - [ ] T039 [US1] 執行 `dotnet test CardPicker2.sln --filter "DrawRotationCooldownService|CardLibraryRotationDraw|DrawIdempotencyRotation|RotationCooldownDrawPage"`，確認 `CardPicker2.sln` 的 US1 測試通過。
 
 **檢查點**: US1 可作為 MVP 獨立展示，包含預設啟用 N=3、metadata 後輪替排除、公平 post-rotation pool 與 replay snapshot。
@@ -143,7 +146,7 @@
 - [ ] T061 [US3] 更新 replay/result restore 流程於 `CardPicker2/Pages/Index.cshtml.cs`，依 persisted history snapshot 重顯摘要，missing snapshot 顯示舊紀錄提示且不得依目前資料重算。
 - [ ] T062 [US3] 更新統計服務相容性於 `CardPicker2/Services/DrawStatisticsService.cs`，確認 `RotationSnapshot` 不參與統計公式且 missing snapshot history 仍計入總數與單卡抽中次數。
 - [ ] T063 [US3] 更新本地化投影於 `CardPicker2/Models/LocalizedMealCardView.cs` 與 `CardPicker2/Services/MealCardLocalizationService.cs`，支援 deleted result card、old-history-missing-snapshot 與 snapshot summary 的雙語呈現。
-- [ ] T064 [US3] 更新首頁結果摘要 Razor UI 於 `CardPicker2/Pages/Index.cshtml`，用 definition list 或 stable summary chips 顯示 snapshot counts、排除數與輪替後候選池大小，並標示舊紀錄缺少輪替摘要。
+- [ ] T064 [US3] 更新首頁結果摘要 Razor UI 於 `CardPicker2/Pages/Index.cshtml`，用 definition list 或 stable summary chips 顯示 snapshot counts、排除數與輪替後候選池大小，維持僅顯示數量的呈現且不列出被排除卡牌名稱，並標示舊紀錄缺少輪替摘要。
 - [ ] T065 [P] [US3] 新增或更新繁中歷史一致性文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`，包含 replay snapshot、missing snapshot、deleted result card 與不暗示加權的摘要文字。
 - [ ] T066 [P] [US3] 新增或更新英文歷史一致性文案於 `CardPicker2/Resources/SharedResource.en-US.resx`，確保 replay 與 missing snapshot 呈現在 `en-US` 無未翻譯 key。
 - [ ] T067 [P] [US3] 更新輪替摘要與 reduced-motion 樣式於 `CardPicker2/wwwroot/css/site.css`，確保 summary chips、deleted badge、validation state 與 result card 在 light/dark theme 可讀且不重疊。
@@ -171,7 +174,7 @@
 - [ ] T080 執行 `dotnet build CardPicker2.sln`，確認 `CardPicker2.sln` 無新增 build warning、formatting 或 naming 違規。
 - [ ] T081 執行 `dotnet test CardPicker2.sln`，確認 `CardPicker2.sln` 全部單元、整合、browser/security/performance/route-surface tests 通過。
 - [ ] T082 執行 `dotnet test CardPicker2.sln --collect:"XPlat Code Coverage"`，檢查 coverage report 中本功能涉及的 critical business logic（`CardPicker2/Models/` 與 `CardPicker2/Services/` 的 rotation/filter/draw/history/persistence 路徑）覆蓋率達 80% 以上；若未達標，必須在 `specs/006-card-rotation-cooldown/plan.md` 記錄例外、風險與補救計畫後才可交付。
-- [ ] T083 依 `specs/006-card-rotation-cooldown/quickstart.md` 完成手動或 browser automation 驗證，覆蓋預設防重複、關閉防重複與 N=0、隨機模式與 metadata filters、防重複後空候選池、原始候選池為空、重複提交與 snapshot replay、舊 history 缺 snapshot、deleted card、card edit、語系/主題狀態保留、reduced motion、RWD、安全與觀察性。
+- [ ] T083 依 `specs/006-card-rotation-cooldown/quickstart.md` 完成手動或 browser automation 驗證，覆蓋預設防重複、關閉防重複與 N=0、防重複設定不跨頁面或跨重新啟動持久保存、隨機模式與 metadata filters、防重複後空候選池、原始候選池為空、重複提交與 snapshot replay、舊 history 缺 snapshot、deleted card、card edit、僅顯示數量的輪替摘要、語系/主題狀態保留、reduced motion、RWD、安全與觀察性。
 
 ---
 

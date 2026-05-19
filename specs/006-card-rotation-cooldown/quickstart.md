@@ -35,6 +35,7 @@ dotnet test CardPicker2.sln --filter DrawStatistics
 預期在尚未實作時，新增測試會失敗，至少覆蓋：
 
 - 首頁預設啟用「避免最近重複」且 N=3。
+- 新首頁 GET 或應用程式重新啟動後，防重複設定回到預設啟用與 N=3；先前本次抽卡設定不作為持久偏好保存。
 - N 有效範圍固定為 0..10。
 - 無效 N 值拒絕抽卡，不新增成功 history，不改變 statistics。
 - N=0 或關閉防重複時，候選池與 005 metadata filtered draw 規則一致。
@@ -69,7 +70,7 @@ dotnet run --project CardPicker2/CardPicker2.csproj
 4. 保持「避免最近重複」啟用與 N=3。
 5. 完成 coin/confirmation 後啟動抽卡。
 6. 預期成功結果只來自未出現在最近 3 筆成功 history 的午餐候選卡牌。
-7. 預期結果摘要顯示輪替前候選池 5 張、排除 2 張、輪替後候選池 3 張或依 fixture 對應數字。
+7. 預期結果摘要顯示輪替前候選池 5 張、排除 2 張、輪替後候選池 3 張或依 fixture 對應數字，且只顯示排除數量，不顯示被排除卡牌名稱。
 8. 預期總成功抽取次數增加 1，抽中 card 的統計增加 1。
 
 ## 關閉防重複與 N=0 驗證
@@ -80,6 +81,15 @@ dotnet run --project CardPicker2/CardPicker2.csproj
 4. 將「避免最近重複」重新啟用但 N 設為 0。
 5. 預期候選池仍與 005 規則一致。
 6. 成功結果可保存 snapshot，且 snapshot 顯示未套用或 N=0 的摘要。
+
+## 防重複設定不持久化驗證
+
+1. 在首頁關閉「避免最近重複」並將 N 改為 7。
+2. 完成一次成功或失敗抽卡後，重新以不帶表單狀態的新 GET 開啟首頁。
+3. 預期防重複控制回到預設啟用，N 回到 3。
+4. 重新啟動應用程式後再次開啟首頁。
+5. 預期防重複控制仍回到預設啟用，N 仍為 3。
+6. 預期 `cards.json` 只保存成功抽卡歷史中的 `rotationSnapshot`，不得保存跨頁面或跨重新啟動的防重複偏好。
 
 ## 隨機模式與 metadata filters 驗證
 
@@ -149,6 +159,7 @@ dotnet run --project CardPicker2/CardPicker2.csproj
 5. 預期 result card ID、history、statistics 與 rotation snapshot 不變，只改變 labels/options/summary display text。
 6. 切換主題。
 7. 預期防重複設定、operation ID、候選池語意、結果與 statistics 不變。
+8. 預期語系/主題切換使用的 transient state 不會成為跨重新啟動偏好；新首頁 GET 仍回到預設啟用與 N=3。
 
 ## Reduced Motion 與 RWD 驗證
 
