@@ -24,8 +24,8 @@ If bulk deletion is required, halt the operation and request that the user perfo
 ## Current Spec Kit Source Of Truth
 
 <!-- SPECKIT START -->
-For the current feature context, technologies, project structure, shell commands,
-and other important information, read `specs/005-card-metadata-filtered-draw/plan.md`.
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
 <!-- SPECKIT END -->
 
 Before making architecture, behavior, UI, persistence, security, or testing changes, read these files:
