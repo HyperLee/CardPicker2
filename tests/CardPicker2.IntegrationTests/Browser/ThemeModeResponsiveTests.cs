@@ -5,6 +5,7 @@ using Microsoft.Playwright;
 
 namespace CardPicker2.IntegrationTests.Browser;
 
+[Collection(NonParallelBrowserCollection.Name)]
 public sealed class ThemeModeResponsiveTests : IClassFixture<ThemeBrowserFixture>
 {
     private readonly ThemeBrowserFixture _fixture;

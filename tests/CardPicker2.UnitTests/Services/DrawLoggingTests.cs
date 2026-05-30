@@ -237,6 +237,70 @@ public sealed class DrawLoggingTests
     }
 
     [Fact]
+    public async Task Preferences_LogsMigrationMutationEmptyPoolSearchAndWriteFailureWithoutRawPayloads()
+    {
+        using var migratedLibrary = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV4Document());
+        var migratedLogger = new CapturingLogger<CardLibraryService>();
+        await CreateService(migratedLibrary.FilePath, migratedLogger).LoadAsync();
+
+        using var preferenceLibrary = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV5Document());
+        var preferenceLogger = new CapturingLogger<CardLibraryService>();
+        var preferenceService = CreateService(preferenceLibrary.FilePath, preferenceLogger);
+        await preferenceService.SetPreferenceAsync(new CardPreferenceUpdateInputModel
+        {
+            CardId = DrawFeatureTestData.LowPriceLunchCardId,
+            TargetIsFavorite = true
+        });
+        await preferenceService.SetPreferenceAsync(new CardPreferenceUpdateInputModel
+        {
+            CardId = DrawFeatureTestData.LowPriceLunchCardId
+        });
+        await preferenceService.SearchAsync(new SearchCriteria
+        {
+            Preferences = new CardPreferenceCriteria
+            {
+                FavoriteFilter = FavoriteFilter.FavoritesOnly,
+                DrawEligibilityFilter = DrawEligibilityFilter.DrawableOnly
+            }
+        });
+        await preferenceService.DrawAsync(new DrawOperation
+        {
+            OperationId = Guid.NewGuid(),
+            Mode = DrawMode.Normal,
+            MealType = MealType.Lunch,
+            CoinInserted = true,
+            RequestedLanguage = SupportedLanguage.ZhTw,
+            Filters = new CardFilterCriteria
+            {
+                Tags = new[] { "麵食" },
+                CurrentLanguage = SupportedLanguage.ZhTw
+            }
+        });
+        await preferenceService.DrawAsync(CreateOperation(DrawMode.Random, null));
+
+        using var writeFailureLibrary = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV5Document());
+        Directory.CreateDirectory(writeFailureLibrary.FilePath + ".tmp");
+        var writeFailureLogger = new CapturingLogger<CardLibraryService>();
+        await CreateService(writeFailureLibrary.FilePath, writeFailureLogger)
+            .SetPreferenceAsync(new CardPreferenceUpdateInputModel
+            {
+                CardId = DrawFeatureTestData.LowPriceLunchCardId,
+                TargetIsExcludedFromDraw = true
+            });
+
+        Assert.Contains(migratedLogger.Entries, entry => entry.Level == LogLevel.Information && entry.Message.Contains("using schema 5", StringComparison.Ordinal));
+        Assert.Contains(preferenceLogger.Entries, entry => entry.Level == LogLevel.Information && entry.Message.Contains("Preference update succeeded", StringComparison.Ordinal));
+        Assert.Contains(preferenceLogger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("target state is invalid", StringComparison.Ordinal));
+        Assert.Contains(preferenceLogger.Entries, entry => entry.Level == LogLevel.Information && entry.Message.Contains("favorite filter FavoritesOnly", StringComparison.Ordinal));
+        Assert.Contains(preferenceLogger.Entries, entry => entry.Level == LogLevel.Warning && entry.Message.Contains("preference excluded count", StringComparison.Ordinal));
+        Assert.Contains(preferenceLogger.Entries, entry => entry.Level == LogLevel.Information && entry.Message.Contains("pool size", StringComparison.Ordinal));
+        Assert.Contains(writeFailureLogger.Entries, entry => entry.Level == LogLevel.Error && entry.Message.Contains("Preference update write failed", StringComparison.Ordinal));
+        AssertNoSensitivePayloads(migratedLogger);
+        AssertNoSensitivePayloads(preferenceLogger);
+        AssertNoSensitivePayloads(writeFailureLogger);
+    }
+
+    [Fact]
     public async Task DeleteAsync_WithHistory_LogsRetainedDeletedCardWithoutRawPayloads()
     {
         using var library = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV3Document(

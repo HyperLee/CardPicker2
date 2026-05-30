@@ -3,6 +3,7 @@ using Microsoft.Playwright;
 
 namespace CardPicker2.IntegrationTests.Browser;
 
+[Collection(NonParallelBrowserCollection.Name)]
 public sealed class RotationCooldownResponsiveAccessibilityTests : IClassFixture<ThemeBrowserFixture>
 {
     private readonly ThemeBrowserFixture _fixture;

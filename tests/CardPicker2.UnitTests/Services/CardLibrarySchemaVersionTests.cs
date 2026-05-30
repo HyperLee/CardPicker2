@@ -11,7 +11,7 @@ namespace CardPicker2.UnitTests.Services;
 public sealed class CardLibrarySchemaVersionTests
 {
     [Fact]
-    public async Task LoadAsync_WhenLegacySchemaV1IsValid_MigratesInMemoryToSchemaV4()
+    public async Task LoadAsync_WhenLegacySchemaV1IsValid_MigratesInMemoryToCurrentSchema()
     {
         using var library = TempCardLibrary.Create();
         await WriteJsonAsync(library.FilePath, new
@@ -34,7 +34,7 @@ public sealed class CardLibrarySchemaVersionTests
 
         Assert.Equal(CardLibraryLoadStatus.Ready, result.Status);
         Assert.NotNull(result.Document);
-        Assert.Equal(4, result.Document.SchemaVersion);
+        Assert.Equal(CardLibraryDocument.CurrentSchemaVersion, result.Document.SchemaVersion);
         Assert.Empty(result.Document.DrawHistory);
         var card = Assert.Single(result.Document.Cards);
         Assert.Equal(CardStatus.Active, card.Status);
@@ -44,7 +44,7 @@ public sealed class CardLibrarySchemaVersionTests
     }
 
     [Fact]
-    public async Task LoadAsync_WhenBilingualSchemaV2IsValid_MigratesInMemoryToSchemaV4()
+    public async Task LoadAsync_WhenBilingualSchemaV2IsValid_MigratesInMemoryToCurrentSchema()
     {
         using var library = TempCardLibrary.Create();
         await WriteJsonAsync(library.FilePath, DrawFeatureTestData.SchemaV2Document());
@@ -54,14 +54,14 @@ public sealed class CardLibrarySchemaVersionTests
 
         Assert.Equal(CardLibraryLoadStatus.Ready, result.Status);
         Assert.NotNull(result.Document);
-        Assert.Equal(4, result.Document.SchemaVersion);
+        Assert.Equal(CardLibraryDocument.CurrentSchemaVersion, result.Document.SchemaVersion);
         Assert.Empty(result.Document.DrawHistory);
         Assert.All(result.Document.Cards, card => Assert.Equal(CardStatus.Active, card.Status));
         Assert.All(result.Document.Cards, card => Assert.Null(card.DecisionMetadata));
     }
 
     [Fact]
-    public async Task LoadAsync_WhenSchemaV3IsValid_MigratesInMemoryToSchemaV4AndPreservesHistory()
+    public async Task LoadAsync_WhenSchemaV3IsValid_MigratesInMemoryToCurrentSchemaAndPreservesHistory()
     {
         using var library = TempCardLibrary.Create();
         await WriteJsonAsync(library.FilePath, DrawFeatureTestData.SchemaV3Document(
@@ -72,7 +72,7 @@ public sealed class CardLibrarySchemaVersionTests
 
         Assert.Equal(CardLibraryLoadStatus.Ready, result.Status);
         Assert.NotNull(result.Document);
-        Assert.Equal(4, result.Document.SchemaVersion);
+        Assert.Equal(CardLibraryDocument.CurrentSchemaVersion, result.Document.SchemaVersion);
         Assert.Single(result.Document.DrawHistory);
         Assert.All(result.Document.Cards, card => Assert.Null(card.DecisionMetadata));
     }
@@ -200,7 +200,7 @@ public sealed class CardLibrarySchemaVersionTests
     }
 
     [Fact]
-    public async Task LoadAsync_WhenJsonIsMissing_CreatesSchemaV4SeedWithEmptyHistoryAndMetadata()
+    public async Task LoadAsync_WhenJsonIsMissing_CreatesCurrentSchemaSeedWithEmptyHistoryMetadataAndPreferences()
     {
         using var library = TempCardLibrary.Create();
         var service = CreateService(library.FilePath);
@@ -209,13 +209,18 @@ public sealed class CardLibrarySchemaVersionTests
 
         Assert.Equal(CardLibraryLoadStatus.CreatedFromSeed, result.Status);
         Assert.NotNull(result.Document);
-        Assert.Equal(4, result.Document.SchemaVersion);
+        Assert.Equal(CardLibraryDocument.CurrentSchemaVersion, result.Document.SchemaVersion);
         Assert.Empty(result.Document.DrawHistory);
         Assert.All(Enum.GetValues<MealType>(), mealType =>
         {
             Assert.True(result.Document.Cards.Count(card => card.MealType == mealType && card.Status == CardStatus.Active) >= 3);
         });
         Assert.Contains(result.Document.Cards, card => card.DecisionMetadata is not null);
+        Assert.All(result.Document.Cards, card =>
+        {
+            Assert.False(card.Preferences.IsFavorite);
+            Assert.False(card.Preferences.IsExcludedFromDraw);
+        });
     }
 
     [Fact]

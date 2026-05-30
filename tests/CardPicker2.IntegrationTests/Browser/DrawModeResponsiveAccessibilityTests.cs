@@ -2,6 +2,7 @@ using Microsoft.Playwright;
 
 namespace CardPicker2.IntegrationTests.Browser;
 
+[Collection(NonParallelBrowserCollection.Name)]
 public sealed class DrawModeResponsiveAccessibilityTests : IClassFixture<ThemeBrowserFixture>
 {
     private readonly ThemeBrowserFixture _fixture;

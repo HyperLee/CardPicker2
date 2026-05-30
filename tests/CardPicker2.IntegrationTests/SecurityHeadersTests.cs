@@ -67,6 +67,7 @@ public sealed class SecurityHeadersTests
     [InlineData("/?avoidRecentRepeats=true&recentDrawCount=3")]
     [InlineData("/?drawMode=Random&avoidRecentRepeats=false&recentDrawCount=0")]
     [InlineData("/Cards?tags=便當&priceRange=Low")]
+    [InlineData("/Cards?favoriteFilter=FavoritesOnly&drawEligibilityFilter=DrawableOnly")]
     [InlineData("/Cards/Create")]
     public async Task ProductionMetadataSurfaces_IncludeSecurityHeaders(string path)
     {
@@ -96,6 +97,43 @@ public sealed class SecurityHeadersTests
         Assert.True(
             Regex.Matches(html, "name=\"__RequestVerificationToken\"", RegexOptions.IgnoreCase).Count >= 2,
             "Home must render anti-forgery tokens for the rotation draw form and language switch form.");
+    }
+
+    [Fact]
+    public async Task PreferenceForms_RenderAntiForgeryTokensOnHomeLibraryAndDetails()
+    {
+        await using var factory = DrawFeatureWebApplicationFactory.CreateWithDeterministicRandomizer(0);
+        await factory.WriteLibraryDocumentAsync(MetadataFilterTestData.PreferenceAwareSchemaV5Document());
+        var client = factory.CreateClient();
+        var drawResponse = await client.PostAsync("/", await factory.CreateFilteredDrawContentAsync(
+            client,
+            drawMode: nameof(DrawMode.Normal),
+            mealType: nameof(MealType.Lunch)));
+        var homeHtml = await drawResponse.Content.ReadAsStringAsync();
+        var libraryHtml = await client.GetStringAsync("/Cards");
+        var detailsHtml = await client.GetStringAsync($"/Cards/{MetadataFilterTestData.VegetarianLunchCardId}");
+
+        AssertPreferenceFormsAreProtected(homeHtml, minimumTokenCount: 4);
+        AssertPreferenceFormsAreProtected(libraryHtml, minimumTokenCount: 3);
+        AssertPreferenceFormsAreProtected(detailsHtml, minimumTokenCount: 4);
+    }
+
+    [Theory]
+    [InlineData("/?handler=Preference")]
+    [InlineData("/Cards?handler=Preference")]
+    [InlineData("/Cards/22222222-2222-2222-2222-222222222223?handler=Preference")]
+    public async Task PostPreference_WithoutAntiForgeryToken_ReturnsBadRequest(string path)
+    {
+        await using var factory = new DrawFeatureWebApplicationFactory();
+        var client = factory.CreateClient();
+
+        var response = await client.PostAsync(path, new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["CardId"] = MetadataFilterTestData.VegetarianLunchCardId.ToString(),
+            ["TargetIsFavorite"] = "true"
+        }));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -205,5 +243,14 @@ public sealed class SecurityHeadersTests
                 || contentSecurityPolicy.Contains("'nonce-", StringComparison.Ordinal)
                 || contentSecurityPolicy.Contains("'sha256-", StringComparison.Ordinal)),
             "Production CSP must explicitly allow the audited theme bootstrap script while retaining script-src restrictions.");
+    }
+
+    private static void AssertPreferenceFormsAreProtected(string html, int minimumTokenCount)
+    {
+        Assert.Contains("data-card-preference-controls", html, StringComparison.Ordinal);
+        Assert.Contains("data-preference-action-form", html, StringComparison.Ordinal);
+        Assert.True(
+            Regex.Matches(html, "name=\"__RequestVerificationToken\"", RegexOptions.IgnoreCase).Count >= minimumTokenCount,
+            "Preference forms must render anti-forgery tokens alongside existing state-changing forms.");
     }
 }

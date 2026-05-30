@@ -93,6 +93,44 @@ public sealed class LocalizationResourceTests
         }
     }
 
+    [Fact]
+    public void SharedResources_ContainPreferenceLabelsFiltersActionsAndMessages()
+    {
+        var zhResources = ReadResources("CardPicker2/Resources/SharedResource.zh-TW.resx");
+        var enResources = ReadResources("CardPicker2/Resources/SharedResource.en-US.resx");
+        var requiredKeys = new[]
+        {
+            "Preference.Badges.Aria",
+            "Preference.Badge.Favorite",
+            "Preference.Badge.Drawable",
+            "Preference.Badge.Excluded",
+            "Preference.Action.ExcludeFromDraw",
+            "Preference.Action.IncludeInDraw",
+            "Preference.Action.AddFavorite",
+            "Preference.Action.RemoveFavorite",
+            "Preference.Filter.Favorite.Label",
+            "Preference.Filter.Favorite.All",
+            "Preference.Filter.Favorite.FavoritesOnly",
+            "Preference.Filter.Favorite.NotFavoritesOnly",
+            "Preference.Filter.DrawEligibility.Label",
+            "Preference.Filter.DrawEligibility.All",
+            "Preference.Filter.DrawEligibility.DrawableOnly",
+            "Preference.Filter.DrawEligibility.ExcludedOnly",
+            "Preference.EmptyPool",
+            "Preference.Update.Succeeded",
+            "Preference.Update.NotFound",
+            "Preference.Update.Deleted",
+            "Preference.Validation.InvalidTarget",
+            "Preference.Update.WriteFailed"
+        };
+
+        foreach (var key in requiredKeys)
+        {
+            AssertTranslated(zhResources, key);
+            AssertTranslated(enResources, key);
+        }
+    }
+
     private static SortedSet<string> ReadKeys(string path)
     {
         var document = XDocument.Load(Path.Combine(GetRepositoryRoot(), path));
@@ -100,6 +138,24 @@ public sealed class LocalizationResourceTests
             .Elements("data")
             .Select(element => element.Attribute("name")?.Value ?? string.Empty),
             StringComparer.Ordinal);
+    }
+
+    private static IReadOnlyDictionary<string, string> ReadResources(string path)
+    {
+        var document = XDocument.Load(Path.Combine(GetRepositoryRoot(), path));
+        return document.Root!
+            .Elements("data")
+            .ToDictionary(
+                element => element.Attribute("name")?.Value ?? string.Empty,
+                element => element.Element("value")?.Value ?? string.Empty,
+                StringComparer.Ordinal);
+    }
+
+    private static void AssertTranslated(IReadOnlyDictionary<string, string> resources, string key)
+    {
+        Assert.True(resources.TryGetValue(key, out var value), $"Missing resource key {key}.");
+        Assert.False(string.IsNullOrWhiteSpace(value), $"Resource key {key} must have non-empty text.");
+        Assert.NotEqual(key, value);
     }
 
     private static string GetRepositoryRoot()

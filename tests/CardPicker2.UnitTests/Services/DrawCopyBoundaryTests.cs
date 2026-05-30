@@ -35,6 +35,32 @@ public sealed class DrawCopyBoundaryTests
         }
     }
 
+    [Theory]
+    [InlineData("CardPicker2/Resources/SharedResource.zh-TW.resx")]
+    [InlineData("CardPicker2/Resources/SharedResource.en-US.resx")]
+    public async Task PreferenceCopy_DoesNotSuggestFavoritesAffectDrawOdds(string relativePath)
+    {
+        var source = await File.ReadAllTextAsync(Path.Combine(GetRepositoryRoot(), relativePath));
+        var forbiddenPreferenceClaims = new[]
+        {
+            "收藏提高",
+            "收藏加權",
+            "收藏後更容易",
+            "偏好提高機率",
+            "排除後補償",
+            "favorite boost",
+            "favorites increase",
+            "favorite weighting",
+            "more likely when favorited",
+            "excluded compensation"
+        };
+
+        foreach (var term in forbiddenPreferenceClaims)
+        {
+            Assert.DoesNotContain(term, source, StringComparison.OrdinalIgnoreCase);
+        }
+    }
+
     private static string GetRepositoryRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);

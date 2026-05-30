@@ -170,19 +170,19 @@
 
 **目的**: 補齊安全、可觀察性、效能、公開介面邊界、雙語完整性、RWD/accessibility、XML 文件註解、coverage 與 quickstart 驗證。
 
-- [ ] T082 [P] 擴充 Anti-Forgery 與 production HSTS/CSP 測試，覆蓋首頁 result preference、卡牌庫 preference 與詳情頁 preference forms 於 `tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs`
-- [ ] T083 [P] 擴充偏好結構化日誌測試，覆蓋 schema v5 migration、preference update、invalid target、preference empty pool、draw success count 與 write failure 於 `tests/CardPicker2.UnitTests/Services/DrawLoggingTests.cs`
-- [ ] T084 [P] 擴充公開介面邊界測試，確認未新增外部 JSON/API endpoint 且偏好互動維持 Razor Pages/form/query/page handler 於 `tests/CardPicker2.IntegrationTests/RouteSurfaceTests.cs`
-- [ ] T085 [P] 新增偏好效能與 web-vitals smoke 測試，覆蓋首頁 GET、preference-aware draw POST、preference update POST、statistics projection 與 `/Cards` preference filter p95 於 `tests/CardPicker2.IntegrationTests/Performance/CardPreferencePerformanceTests.cs`
-- [ ] T086 [P] 擴充 resource key 完整性測試，確認 `zh-TW` 與 `en-US` 無偏好相關未翻譯 key 於 `tests/CardPicker2.IntegrationTests/Pages/LocalizationResourceTests.cs`
-- [ ] T087 [P] 擴充賭博式或加權暗示文案邊界測試，確認偏好文案不含保底、加權、下一次機率提高或付費暗示於 `tests/CardPicker2.UnitTests/Services/DrawCopyBoundaryTests.cs`
-- [ ] T088 [P] 新增卡牌庫與詳情頁偏好控制/篩選 RWD 與 accessibility browser smoke 測試，覆蓋 390x844、768x1024、1366x768、鍵盤焦點、觸控可操作、非僅靠顏色與無水平溢出於 `tests/CardPicker2.IntegrationTests/Browser/CardPreferenceLibraryResponsiveAccessibilityTests.cs`
-- [ ] T089 更新 production 安全標頭、DI wiring、Serilog 安全欄位與 service lifetime 最終檢查於 `CardPicker2/Program.cs`
-- [ ] T090 更新新增或變更 public C# model/service API 的 XML 文件註解於 `CardPicker2/Models/CardPreferenceState.cs`、`CardPicker2/Models/MealCard.cs`、`CardPicker2/Models/DrawResult.cs`、`CardPicker2/Services/ICardLibraryService.cs`、`CardPicker2/Services/CardLibraryService.cs`、`CardPicker2/Services/DrawCandidatePoolBuilder.cs`、`CardPicker2/Services/MealCardLocalizationService.cs`，並以 `tests/CardPicker2.UnitTests/Documentation/PublicApiDocumentationTests.cs` 驗證
-- [ ] T091 執行 `dotnet test CardPicker2.sln --filter "CardPreference|Preference|SecurityHeaders|AntiForgery|Logging|RouteSurface|CardPreferencePerformance|LocalizationResource|DrawCopyBoundary|CardPreferenceLibraryResponsiveAccessibility"`，確認 `CardPicker2.sln` 的 cross-cutting 測試通過
-- [ ] T092 執行 `dotnet build CardPicker2.sln`，確認 `CardPicker2.sln` 無新增 build warning、formatting 或 naming 違規
-- [ ] T093 執行 `dotnet test CardPicker2.sln`，確認 `CardPicker2.sln` 全部單元、整合、browser、security、performance 與 route-surface 測試通過
-- [ ] T094 依 `specs/007-card-preference-controls/quickstart.md` 完成手動或 browser automation 驗證，覆蓋 schema v5、卡牌庫收藏/排除、詳情頁、排除候選池、空候選池、結果區操作、公平性、語系/主題、reduced motion、RWD、效能、安全與觀察性
+- [X] T082 [P] 擴充 Anti-Forgery 與 production HSTS/CSP 測試，覆蓋首頁 result preference、卡牌庫 preference 與詳情頁 preference forms 於 `tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs`
+- [X] T083 [P] 擴充偏好結構化日誌測試，覆蓋 schema v5 migration、preference update、invalid target、preference empty pool、draw success count 與 write failure 於 `tests/CardPicker2.UnitTests/Services/DrawLoggingTests.cs`
+- [X] T084 [P] 擴充公開介面邊界測試，確認未新增外部 JSON/API endpoint 且偏好互動維持 Razor Pages/form/query/page handler 於 `tests/CardPicker2.IntegrationTests/RouteSurfaceTests.cs`
+- [X] T085 [P] 新增偏好效能與 web-vitals smoke 測試，覆蓋首頁 GET、preference-aware draw POST、preference update POST、statistics projection 與 `/Cards` preference filter p95 於 `tests/CardPicker2.IntegrationTests/Performance/CardPreferencePerformanceTests.cs`
+- [X] T086 [P] 擴充 resource key 完整性測試，確認 `zh-TW` 與 `en-US` 無偏好相關未翻譯 key 於 `tests/CardPicker2.IntegrationTests/Pages/LocalizationResourceTests.cs`
+- [X] T087 [P] 擴充賭博式或加權暗示文案邊界測試，確認偏好文案不含保底、加權、下一次機率提高或付費暗示於 `tests/CardPicker2.UnitTests/Services/DrawCopyBoundaryTests.cs`
+- [X] T088 [P] 新增卡牌庫與詳情頁偏好控制/篩選 RWD 與 accessibility browser smoke 測試，覆蓋 390x844、768x1024、1366x768、鍵盤焦點、觸控可操作、非僅靠顏色與無水平溢出於 `tests/CardPicker2.IntegrationTests/Browser/CardPreferenceLibraryResponsiveAccessibilityTests.cs`
+- [X] T089 更新 production 安全標頭、DI wiring、Serilog 安全欄位與 service lifetime 最終檢查於 `CardPicker2/Program.cs`
+- [X] T090 更新新增或變更 public C# model/service API 的 XML 文件註解於 `CardPicker2/Models/CardPreferenceState.cs`、`CardPicker2/Models/MealCard.cs`、`CardPicker2/Models/DrawResult.cs`、`CardPicker2/Services/ICardLibraryService.cs`、`CardPicker2/Services/CardLibraryService.cs`、`CardPicker2/Services/DrawCandidatePoolBuilder.cs`、`CardPicker2/Services/MealCardLocalizationService.cs`，並以 `tests/CardPicker2.UnitTests/Documentation/PublicApiDocumentationTests.cs` 驗證
+- [X] T091 執行 `dotnet test CardPicker2.sln --filter "CardPreference|Preference|SecurityHeaders|AntiForgery|Logging|RouteSurface|CardPreferencePerformance|LocalizationResource|DrawCopyBoundary|CardPreferenceLibraryResponsiveAccessibility"`，確認 `CardPicker2.sln` 的 cross-cutting 測試通過
+- [X] T092 執行 `dotnet build CardPicker2.sln`，確認 `CardPicker2.sln` 無新增 build warning、formatting 或 naming 違規
+- [X] T093 執行 `dotnet test CardPicker2.sln`，確認 `CardPicker2.sln` 全部單元、整合、browser、security、performance 與 route-surface 測試通過
+- [X] T094 依 `specs/007-card-preference-controls/quickstart.md` 完成手動或 browser automation 驗證，覆蓋 schema v5、卡牌庫收藏/排除、詳情頁、排除候選池、空候選池、結果區操作、公平性、語系/主題、reduced motion、RWD、效能、安全與觀察性
 
 ---
 
