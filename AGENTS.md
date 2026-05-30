@@ -25,7 +25,7 @@ If bulk deletion is required, halt the operation and request that the user perfo
 
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read `specs/006-card-rotation-cooldown/plan.md`
+shell commands, and other important information, read the current plan
 <!-- SPECKIT END -->
 
 Before making architecture, behavior, UI, persistence, security, or testing changes, read these files:
