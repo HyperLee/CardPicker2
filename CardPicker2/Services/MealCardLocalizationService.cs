@@ -35,7 +35,12 @@ public sealed class MealCardLocalizationService
             normalized.GetMissingTranslationCultures(),
             normalized.Status,
             normalized.DeletedAtUtc,
-            CreateMetadataBadges(normalized.DecisionMetadata, language));
+            CreateMetadataBadges(normalized.DecisionMetadata, language),
+            normalized.Preferences.IsFavorite,
+            normalized.Preferences.IsExcludedFromDraw,
+            normalized.IsDrawable,
+            normalized.IsPreferenceEditable,
+            CreatePreferenceBadges(normalized, language));
     }
 
     /// <summary>
@@ -115,6 +120,21 @@ public sealed class MealCardLocalizationService
         {
             badges.Add(Display(spiceLevel, language));
         }
+
+        return badges;
+    }
+
+    private static IReadOnlyList<string> CreatePreferenceBadges(MealCard card, SupportedLanguage language)
+    {
+        var badges = new List<string>();
+        if (card.Preferences.IsFavorite)
+        {
+            badges.Add(language == SupportedLanguage.EnUs ? "Favorite" : "已收藏");
+        }
+
+        badges.Add(card.IsDrawable
+            ? language == SupportedLanguage.EnUs ? "Drawable" : "可抽"
+            : language == SupportedLanguage.EnUs ? "Excluded from draw" : "已排除抽卡");
 
         return badges;
     }

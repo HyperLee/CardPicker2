@@ -14,6 +14,11 @@ namespace CardPicker2.Models;
 /// <param name="Status">The card lifecycle status.</param>
 /// <param name="DeletedAtUtc">The UTC deletion time when retained as deleted.</param>
 /// <param name="MetadataBadges">Localized metadata labels suitable for compact display.</param>
+/// <param name="IsFavorite">Whether the card is currently marked as favorite.</param>
+/// <param name="IsExcludedFromDraw">Whether the card is manually excluded from future draws.</param>
+/// <param name="IsDrawable">Whether the active card may enter future draw candidate pools.</param>
+/// <param name="IsPreferenceEditable">Whether preference controls may mutate this card.</param>
+/// <param name="PreferenceBadges">Localized preference labels suitable for compact display.</param>
 public sealed record LocalizedMealCardView(
     Guid CardId,
     MealType MealType,
@@ -25,4 +30,9 @@ public sealed record LocalizedMealCardView(
     IReadOnlyList<string> MissingTranslationCultures,
     CardStatus Status = CardStatus.Active,
     DateTimeOffset? DeletedAtUtc = null,
-    IReadOnlyList<string>? MetadataBadges = null);
+    IReadOnlyList<string>? MetadataBadges = null,
+    bool IsFavorite = false,
+    bool IsExcludedFromDraw = false,
+    bool IsDrawable = true,
+    bool IsPreferenceEditable = true,
+    IReadOnlyList<string>? PreferenceBadges = null);

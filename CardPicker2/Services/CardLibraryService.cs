@@ -199,6 +199,12 @@ public sealed class CardLibraryService : ICardLibraryService
     }
 
     /// <inheritdoc />
+    public Task<PreferenceMutationResult> SetPreferenceAsync(CardPreferenceUpdateInputModel input, CancellationToken cancellationToken = default)
+    {
+        return SetPreferenceCoreAsync(input, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public Task<CardLibraryMutationResult> CreateAsync(MealCardInputModel input, CancellationToken cancellationToken = default)
     {
         return CreateCoreAsync(input, cancellationToken);
@@ -618,7 +624,8 @@ public sealed class CardLibraryService : ICardLibraryService
                 normalized.ToLocalizations(),
                 CardStatus.Active,
                 deletedAtUtc: null,
-                normalized.ToDecisionMetadata());
+                normalized.ToDecisionMetadata(),
+                CardPreferenceState.Default);
             var updatedDocument = new CardLibraryDocument
             {
                 SchemaVersion = CardLibraryDocument.CurrentSchemaVersion,
@@ -666,7 +673,8 @@ public sealed class CardLibraryService : ICardLibraryService
                 normalized.ToLocalizations(),
                 existing.Status,
                 existing.DeletedAtUtc,
-                normalized.ToDecisionMetadata());
+                normalized.ToDecisionMetadata(),
+                existing.Preferences);
             var cards = loadResult.Document.Cards
                 .Select(card => card.Id == id ? updatedCard : card)
                 .ToList();
@@ -708,7 +716,8 @@ public sealed class CardLibraryService : ICardLibraryService
                             card.Localizations,
                             CardStatus.Deleted,
                             DateTimeOffset.UtcNow,
-                            card.DecisionMetadata)
+                            card.DecisionMetadata,
+                            card.Preferences)
                         : card)
                     .ToList()
                 : loadResult.Document.Cards.Where(card => card.Id != id).ToList();
@@ -741,6 +750,124 @@ public sealed class CardLibraryService : ICardLibraryService
         }, cancellationToken);
     }
 
+    private async Task<PreferenceMutationResult> SetPreferenceCoreAsync(
+        CardPreferenceUpdateInputModel input,
+        CancellationToken cancellationToken)
+    {
+        if (!IsValidPreferenceInput(input))
+        {
+            _logger.LogWarning(
+                "Preference update rejected because target state is invalid for card {CardId}",
+                input.CardId);
+            return PreferenceMutationResult.Failure(
+                PreferenceMutationStatus.ValidationFailed,
+                "偏好操作資料不完整，請重新整理後再試。",
+                "Preference.Validation.InvalidTarget",
+                input.CardId == Guid.Empty ? null : input.CardId);
+        }
+
+        return await _fileCoordinator.RunExclusiveAsync(async innerCancellationToken =>
+        {
+            var loadResult = await LoadAsync(innerCancellationToken);
+            if (loadResult.IsBlocked || loadResult.Document is null)
+            {
+                return PreferenceMutationResult.Failure(
+                    PreferenceMutationStatus.Blocked,
+                    loadResult.UserMessage,
+                    loadResult.MessageKey,
+                    input.CardId);
+            }
+
+            var existing = loadResult.Document.Cards.FirstOrDefault(card => card.Id == input.CardId);
+            if (existing is null)
+            {
+                return PreferenceMutationResult.Failure(
+                    PreferenceMutationStatus.NotFound,
+                    "找不到餐點卡牌。",
+                    "Preference.Update.NotFound",
+                    input.CardId);
+            }
+
+            if (!existing.IsPreferenceEditable)
+            {
+                return PreferenceMutationResult.Failure(
+                    PreferenceMutationStatus.Deleted,
+                    "已刪除的餐點卡牌無法更新偏好。",
+                    "Preference.Update.Deleted",
+                    input.CardId);
+            }
+
+            var updatedPreferences = new CardPreferenceState
+            {
+                IsFavorite = input.TargetIsFavorite ?? existing.Preferences.IsFavorite,
+                IsExcludedFromDraw = input.TargetIsExcludedFromDraw ?? existing.Preferences.IsExcludedFromDraw
+            };
+            var updatedCard = new MealCard(
+                existing.Id,
+                existing.MealType,
+                existing.Localizations,
+                existing.Status,
+                existing.DeletedAtUtc,
+                existing.DecisionMetadata,
+                updatedPreferences);
+            var cards = loadResult.Document.Cards
+                .Select(card => card.Id == input.CardId ? updatedCard : card)
+                .ToList();
+            var updatedDocument = new CardLibraryDocument
+            {
+                SchemaVersion = CardLibraryDocument.CurrentSchemaVersion,
+                Cards = cards,
+                DrawHistory = loadResult.Document.DrawHistory
+            };
+
+            var writeResult = await TryWritePreferenceDocumentAsync(updatedDocument, innerCancellationToken);
+            if (writeResult is not null)
+            {
+                return writeResult;
+            }
+
+            _logger.LogInformation(
+                "Preference update succeeded for card {CardId}. Target favorite: {TargetIsFavorite}, target excluded from draw: {TargetIsExcludedFromDraw}",
+                input.CardId,
+                input.TargetIsFavorite,
+                input.TargetIsExcludedFromDraw);
+            return PreferenceMutationResult.Success(
+                input.CardId,
+                updatedPreferences,
+                "已更新餐點偏好。",
+                "Preference.Update.Succeeded");
+        }, cancellationToken);
+    }
+
+    private async Task<PreferenceMutationResult?> TryWritePreferenceDocumentAsync(
+        CardLibraryDocument document,
+        CancellationToken cancellationToken)
+    {
+        var validationError = ValidateDocument(document, requireCompleteEnglish: false);
+        if (validationError is not null)
+        {
+            _logger.LogError("Preference update write rejected because the new document is invalid: {ValidationError}", validationError);
+            return PreferenceMutationResult.Failure(
+                PreferenceMutationStatus.ValidationFailed,
+                "偏好暫時無法儲存，請稍後再試。",
+                "Preference.Update.ValidationFailed");
+        }
+
+        try
+        {
+            await WriteDocumentAsync(GetLibraryFilePath(), document, cancellationToken);
+            return null;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            _logger.LogError(ex, "Preference update write failed");
+            return PreferenceMutationResult.Failure(
+                PreferenceMutationStatus.WriteFailed,
+                "偏好暫時無法儲存，請稍後再試。",
+                "Preference.Update.WriteFailed");
+        }
+    }
+
     private async Task<CardLibraryMutationResult?> TryWriteDocumentAsync(
         CardLibraryDocument document,
         CancellationToken cancellationToken,
@@ -766,6 +893,16 @@ public sealed class CardLibraryService : ICardLibraryService
     }
 
     private static bool IsValidInput(MealCardInputModel input)
+    {
+        var validationResults = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
+        return System.ComponentModel.DataAnnotations.Validator.TryValidateObject(
+            input,
+            new System.ComponentModel.DataAnnotations.ValidationContext(input),
+            validationResults,
+            validateAllProperties: true);
+    }
+
+    private static bool IsValidPreferenceInput(CardPreferenceUpdateInputModel input)
     {
         var validationResults = new List<System.ComponentModel.DataAnnotations.ValidationResult>();
         return System.ComponentModel.DataAnnotations.Validator.TryValidateObject(
@@ -831,6 +968,7 @@ public sealed class CardLibraryService : ICardLibraryService
         }
 
         if ((schemaVersion == CardLibraryDocument.CurrentSchemaVersion ||
+                schemaVersion == CardLibraryDocument.MetadataSchemaVersion ||
                 schemaVersion == CardLibraryDocument.DrawHistorySchemaVersion) &&
             (!root.TryGetProperty("drawHistory", out var drawHistoryElement) ||
                 drawHistoryElement.ValueKind != JsonValueKind.Array))
@@ -843,6 +981,7 @@ public sealed class CardLibraryService : ICardLibraryService
             CardLibraryDocument.LegacySchemaVersion => ConvertLegacyDocument(JsonSerializer.Deserialize<LegacyCardLibraryDocument>(json, JsonOptions)),
             CardLibraryDocument.BilingualSchemaVersion => ConvertBilingualDocument(JsonSerializer.Deserialize<CardLibraryDocument>(json, JsonOptions)),
             CardLibraryDocument.DrawHistorySchemaVersion => NormalizeCurrentDocument(JsonSerializer.Deserialize<CardLibraryDocument>(json, JsonOptions)),
+            CardLibraryDocument.MetadataSchemaVersion => NormalizeCurrentDocument(JsonSerializer.Deserialize<CardLibraryDocument>(json, JsonOptions)),
             CardLibraryDocument.CurrentSchemaVersion => NormalizeCurrentDocument(JsonSerializer.Deserialize<CardLibraryDocument>(json, JsonOptions)),
             _ => new CardLibraryDocument { SchemaVersion = schemaVersion, Cards = Array.Empty<MealCard>() }
         };
@@ -941,6 +1080,11 @@ public sealed class CardLibraryService : ICardLibraryService
             if (!seenIds.Add(card.Id))
             {
                 return "Duplicate card ID.";
+            }
+
+            if (card.Preferences is null)
+            {
+                return "Card preferences are missing.";
             }
 
             if (!Enum.IsDefined(typeof(MealType), card.MealType))

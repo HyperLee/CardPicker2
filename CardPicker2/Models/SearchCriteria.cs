@@ -26,6 +26,11 @@ public sealed class SearchCriteria
     public CardFilterCriteria? Filters { get; set; }
 
     /// <summary>
+    /// Gets or sets optional preference filters.
+    /// </summary>
+    public CardPreferenceCriteria Preferences { get; set; } = new();
+
+    /// <summary>
     /// Gets the trimmed keyword, or <see langword="null"/> when empty.
     /// </summary>
     public string? NormalizedKeyword

@@ -18,6 +18,11 @@ public enum CandidatePoolEmptyReason
     BaseCandidatePoolEmpty,
 
     /// <summary>
+    /// Manual draw exclusion removed every otherwise matching candidate.
+    /// </summary>
+    PreferenceExcludedCandidatePoolEmpty,
+
+    /// <summary>
     /// Rotation cooldown excluded every base candidate.
     /// </summary>
     RotationCandidatePoolEmpty,

@@ -11,7 +11,7 @@ public static class MetadataFilterTestData
     {
         return new
         {
-            schemaVersion = CardLibraryDocument.CurrentSchemaVersion,
+            schemaVersion = CardLibraryDocument.MetadataSchemaVersion,
             cards = new[]
             {
                 Card(

@@ -28,35 +28,35 @@
 
 ### 基礎測試
 
-- [ ] T006 [P] 新增偏好狀態預設值、正規化與不可影響抽卡的失敗測試於 `tests/CardPicker2.UnitTests/Models/CardPreferenceStateTests.cs`
-- [ ] T007 [P] 新增 favorite/draw eligibility criteria 預設值與 unsupported value 行為失敗測試於 `tests/CardPicker2.UnitTests/Models/CardPreferenceCriteriaTests.cs`
-- [ ] T008 [P] 新增 schema v4->v5 migration、schema v5 round-trip、invalid preference JSON 封鎖與 write v5 失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferencePersistenceTests.cs`
-- [ ] T009 [P] 擴充 public model/service XML 文件註解失敗測試以涵蓋偏好 API 於 `tests/CardPicker2.UnitTests/Documentation/PublicApiDocumentationTests.cs`
-- [ ] T010 [P] 新增卡牌新增預設未收藏/未排除與編輯保留既有偏好狀態的失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/CardPreferenceCreateEditTests.cs`
-- [ ] T011 [P] 新增 duplicate detection 忽略收藏/排除狀態且仍只依 active card 雙語名稱、描述與餐別判斷的失敗測試於 `tests/CardPicker2.UnitTests/Services/DuplicateCardDetectorPreferenceTests.cs`
-- [ ] T012 執行 `dotnet test CardPicker2.sln --filter "CardPreferenceState|CardPreferenceCriteria|CardLibraryPreferencePersistence|CardPreferenceCreateEdit|DuplicateCardDetectorPreference|PublicApiDocumentation"`，確認 `CardPicker2.sln` 的基礎新測試在實作前失敗
+- [X] T006 [P] 新增偏好狀態預設值、正規化與不可影響抽卡的失敗測試於 `tests/CardPicker2.UnitTests/Models/CardPreferenceStateTests.cs`
+- [X] T007 [P] 新增 favorite/draw eligibility criteria 預設值與 unsupported value 行為失敗測試於 `tests/CardPicker2.UnitTests/Models/CardPreferenceCriteriaTests.cs`
+- [X] T008 [P] 新增 schema v4->v5 migration、schema v5 round-trip、invalid preference JSON 封鎖與 write v5 失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferencePersistenceTests.cs`
+- [X] T009 [P] 擴充 public model/service XML 文件註解失敗測試以涵蓋偏好 API 於 `tests/CardPicker2.UnitTests/Documentation/PublicApiDocumentationTests.cs`
+- [X] T010 [P] 新增卡牌新增預設未收藏/未排除與編輯保留既有偏好狀態的失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/CardPreferenceCreateEditTests.cs`
+- [X] T011 [P] 新增 duplicate detection 忽略收藏/排除狀態且仍只依 active card 雙語名稱、描述與餐別判斷的失敗測試於 `tests/CardPicker2.UnitTests/Services/DuplicateCardDetectorPreferenceTests.cs`
+- [X] T012 執行 `dotnet test CardPicker2.sln --filter "CardPreferenceState|CardPreferenceCriteria|CardLibraryPreferencePersistence|CardPreferenceCreateEdit|DuplicateCardDetectorPreference|PublicApiDocumentation"`，確認 `CardPicker2.sln` 的基礎新測試在實作前失敗
 
 ### 基礎實作
 
-- [ ] T013 [P] 建立卡牌偏好狀態模型與 XML 文件註解於 `CardPicker2/Models/CardPreferenceState.cs`
-- [ ] T014 [P] 建立收藏篩選列舉與 XML 文件註解於 `CardPicker2/Models/FavoriteFilter.cs`
-- [ ] T015 [P] 建立可抽狀態篩選列舉與 XML 文件註解於 `CardPicker2/Models/DrawEligibilityFilter.cs`
-- [ ] T016 [P] 建立偏好篩選條件模型與 XML 文件註解於 `CardPicker2/Models/CardPreferenceCriteria.cs`
-- [ ] T017 [P] 建立 target-state 偏好更新輸入模型與 server validation 註解於 `CardPicker2/Models/CardPreferenceUpdateInputModel.cs`
-- [ ] T018 [P] 建立偏好 mutation 結果模型與 status enum 於 `CardPicker2/Models/PreferenceMutationResult.cs`
-- [ ] T019 更新 JSON 文件 schema 常數、v5 版本語意與 XML 文件註解於 `CardPicker2/Models/CardLibraryDocument.cs`
-- [ ] T020 更新卡牌模型以保存 `Preferences`、`IsDrawable`、`IsPreferenceEditable` 與 normalize 保留偏好於 `CardPicker2/Models/MealCard.cs`
-- [ ] T021 更新搜尋條件以納入 `CardPreferenceCriteria` 預設值於 `CardPicker2/Models/SearchCriteria.cs`
-- [ ] T022 更新 localized card projection 以包含收藏、排除與可抽狀態欄位於 `CardPicker2/Models/LocalizedMealCardView.cs`
-- [ ] T023 更新抽卡結果模型以攜帶選中卡牌目前偏好狀態與 preference message key 於 `CardPicker2/Models/DrawResult.cs`
-- [ ] T024 更新候選池空集合原因以區分偏好排除造成的空候選池於 `CardPicker2/Models/CandidatePoolEmptyReason.cs`
-- [ ] T025 更新種子資料建立流程，確保新 seed card 預設未收藏且未排除於 `CardPicker2/Services/SeedMealCards.cs`
-- [ ] T026 更新服務契約，加入 target-state 偏好 mutation 與偏好投影需求於 `CardPicker2/Services/ICardLibraryService.cs`
-- [ ] T027 更新卡牌本地化投影，輸出偏好 badges、可抽狀態與安全 display projection 於 `CardPicker2/Services/MealCardLocalizationService.cs`
-- [ ] T028 更新 card library persistence，支援 schema v1-v4 載入為 v5、schema v5 validation、invalid preference blocking 與 atomic v5 write 於 `CardPicker2/Services/CardLibraryService.cs`
-- [ ] T029 更新卡牌新增與編輯流程，使新卡預設未收藏/未排除且編輯雙語內容、餐別或 metadata 時保留既有偏好狀態於 `CardPicker2/Services/CardLibraryService.cs`、`CardPicker2/Pages/Cards/Create.cshtml.cs`、`CardPicker2/Pages/Cards/Edit.cshtml.cs`
-- [ ] T030 更新 duplicate detection 呼叫路徑，確認偏好狀態不參與重複判斷且 deleted card 不阻擋新增於 `CardPicker2/Services/DuplicateCardDetector.cs`、`CardPicker2/Services/CardLibraryService.cs`
-- [ ] T031 執行 `dotnet test CardPicker2.sln --filter "CardPreferenceState|CardPreferenceCriteria|CardLibraryPreferencePersistence|CardPreferenceCreateEdit|DuplicateCardDetectorPreference|PublicApiDocumentation"`，確認 `CardPicker2.sln` 的基礎測試通過
+- [X] T013 [P] 建立卡牌偏好狀態模型與 XML 文件註解於 `CardPicker2/Models/CardPreferenceState.cs`
+- [X] T014 [P] 建立收藏篩選列舉與 XML 文件註解於 `CardPicker2/Models/FavoriteFilter.cs`
+- [X] T015 [P] 建立可抽狀態篩選列舉與 XML 文件註解於 `CardPicker2/Models/DrawEligibilityFilter.cs`
+- [X] T016 [P] 建立偏好篩選條件模型與 XML 文件註解於 `CardPicker2/Models/CardPreferenceCriteria.cs`
+- [X] T017 [P] 建立 target-state 偏好更新輸入模型與 server validation 註解於 `CardPicker2/Models/CardPreferenceUpdateInputModel.cs`
+- [X] T018 [P] 建立偏好 mutation 結果模型與 status enum 於 `CardPicker2/Models/PreferenceMutationResult.cs`
+- [X] T019 更新 JSON 文件 schema 常數、v5 版本語意與 XML 文件註解於 `CardPicker2/Models/CardLibraryDocument.cs`
+- [X] T020 更新卡牌模型以保存 `Preferences`、`IsDrawable`、`IsPreferenceEditable` 與 normalize 保留偏好於 `CardPicker2/Models/MealCard.cs`
+- [X] T021 更新搜尋條件以納入 `CardPreferenceCriteria` 預設值於 `CardPicker2/Models/SearchCriteria.cs`
+- [X] T022 更新 localized card projection 以包含收藏、排除與可抽狀態欄位於 `CardPicker2/Models/LocalizedMealCardView.cs`
+- [X] T023 更新抽卡結果模型以攜帶選中卡牌目前偏好狀態與 preference message key 於 `CardPicker2/Models/DrawResult.cs`
+- [X] T024 更新候選池空集合原因以區分偏好排除造成的空候選池於 `CardPicker2/Models/CandidatePoolEmptyReason.cs`
+- [X] T025 更新種子資料建立流程，確保新 seed card 預設未收藏且未排除於 `CardPicker2/Services/SeedMealCards.cs`
+- [X] T026 更新服務契約，加入 target-state 偏好 mutation 與偏好投影需求於 `CardPicker2/Services/ICardLibraryService.cs`
+- [X] T027 更新卡牌本地化投影，輸出偏好 badges、可抽狀態與安全 display projection 於 `CardPicker2/Services/MealCardLocalizationService.cs`
+- [X] T028 更新 card library persistence，支援 schema v1-v4 載入為 v5、schema v5 validation、invalid preference blocking 與 atomic v5 write 於 `CardPicker2/Services/CardLibraryService.cs`
+- [X] T029 更新卡牌新增與編輯流程，使新卡預設未收藏/未排除且編輯雙語內容、餐別或 metadata 時保留既有偏好狀態於 `CardPicker2/Services/CardLibraryService.cs`、`CardPicker2/Pages/Cards/Create.cshtml.cs`、`CardPicker2/Pages/Cards/Edit.cshtml.cs`
+- [X] T030 更新 duplicate detection 呼叫路徑，確認偏好狀態不參與重複判斷且 deleted card 不阻擋新增於 `CardPicker2/Services/DuplicateCardDetector.cs`、`CardPicker2/Services/CardLibraryService.cs`
+- [X] T031 執行 `dotnet test CardPicker2.sln --filter "CardPreferenceState|CardPreferenceCriteria|CardLibraryPreferencePersistence|CardPreferenceCreateEdit|DuplicateCardDetectorPreference|PublicApiDocumentation"`，確認 `CardPicker2.sln` 的基礎測試通過
 
 **檢查點**: schema v5 偏好狀態可安全載入、驗證、投影與保存；所有 user story 可開始實作。
 

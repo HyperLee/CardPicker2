@@ -93,6 +93,14 @@ public interface ICardLibraryService
     Task<DrawStatisticsSummary> GetDrawStatisticsAsync(SupportedLanguage language, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Updates one or more target preference states for an active card.
+    /// </summary>
+    /// <param name="input">The submitted target-state preference update.</param>
+    /// <param name="cancellationToken">A token that cancels the operation.</param>
+    /// <returns>The preference mutation result.</returns>
+    Task<PreferenceMutationResult> SetPreferenceAsync(CardPreferenceUpdateInputModel input, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Creates a new card.
     /// </summary>
     /// <param name="input">The submitted card input.</param>

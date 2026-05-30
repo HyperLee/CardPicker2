@@ -23,6 +23,7 @@ namespace CardPicker2.Models;
 /// <param name="RotationSnapshot">The persisted or projected rotation summary.</param>
 /// <param name="CandidatePoolEmptyReason">The empty-pool reason when a draw fails before selection.</param>
 /// <param name="RotationSummaryKey">The stable localized summary key for rotation display.</param>
+/// <param name="PreferenceMessageKey">The stable localized message key for result preference display.</param>
 /// <example>
 /// <code>
 /// var result = DrawResult.Failure(operation, "Coin required.", "Draw.CoinRequired");
@@ -48,7 +49,8 @@ public sealed record DrawResult(
     RotationCooldownSettings? RotationSettings = null,
     RotationSnapshot? RotationSnapshot = null,
     CandidatePoolEmptyReason? CandidatePoolEmptyReason = null,
-    string? RotationSummaryKey = null)
+    string? RotationSummaryKey = null,
+    string? PreferenceMessageKey = null)
 {
     /// <summary>
     /// Gets the display name of the selected card meal type.

@@ -60,13 +60,15 @@ public sealed class MealCard
     /// <param name="status">The lifecycle status.</param>
     /// <param name="deletedAtUtc">The UTC deletion time when the card is retained as deleted.</param>
     /// <param name="decisionMetadata">Optional decision metadata used for filtering.</param>
+    /// <param name="preferences">Optional preference state used for browsing and draw eligibility.</param>
     public MealCard(
         Guid id,
         MealType mealType,
         IDictionary<string, MealCardLocalizedContent> localizations,
         CardStatus status,
         DateTimeOffset? deletedAtUtc,
-        MealCardDecisionMetadata? decisionMetadata = null)
+        MealCardDecisionMetadata? decisionMetadata = null,
+        CardPreferenceState? preferences = null)
     {
         Id = id;
         MealType = mealType;
@@ -74,6 +76,7 @@ public sealed class MealCard
         Status = status;
         DeletedAtUtc = deletedAtUtc;
         DecisionMetadata = decisionMetadata;
+        Preferences = preferences?.Normalize() ?? CardPreferenceState.Default;
     }
 
     /// <summary>
@@ -107,6 +110,11 @@ public sealed class MealCard
     public MealCardDecisionMetadata? DecisionMetadata { get; init; }
 
     /// <summary>
+    /// Gets or initializes the card preference state.
+    /// </summary>
+    public CardPreferenceState Preferences { get; init; } = CardPreferenceState.Default;
+
+    /// <summary>
     /// Gets a value indicating whether the card can be browsed, edited, deleted, and drawn.
     /// </summary>
     [JsonIgnore]
@@ -117,6 +125,18 @@ public sealed class MealCard
     /// </summary>
     [JsonIgnore]
     public bool IsDeleted => Status == CardStatus.Deleted;
+
+    /// <summary>
+    /// Gets a value indicating whether the card may enter future draw candidate pools.
+    /// </summary>
+    [JsonIgnore]
+    public bool IsDrawable => IsActive && Preferences is not null && !Preferences.IsExcludedFromDraw;
+
+    /// <summary>
+    /// Gets a value indicating whether preference controls may update this card.
+    /// </summary>
+    [JsonIgnore]
+    public bool IsPreferenceEditable => IsActive;
 
     /// <summary>
     /// Gets the Traditional Chinese meal name for legacy callers.
@@ -196,7 +216,8 @@ public sealed class MealCard
                 StringComparer.OrdinalIgnoreCase),
             Status,
             DeletedAtUtc,
-            DecisionMetadata?.Normalize());
+            DecisionMetadata?.Normalize(),
+            Preferences?.Normalize() ?? CardPreferenceState.Default);
     }
 }
 
