@@ -25,7 +25,9 @@ If bulk deletion is required, halt the operation and request that the user perfo
 
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+shell commands, and other important information, read the current plan:
+
+- `specs/007-card-preference-controls/plan.md`
 <!-- SPECKIT END -->
 
 Before making architecture, behavior, UI, persistence, security, or testing changes, read these files:
