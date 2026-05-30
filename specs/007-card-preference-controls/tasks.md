@@ -145,22 +145,22 @@
 
 > 先撰寫這些測試，確認在實作前失敗。
 
-- [ ] T069 [P] [US3] 新增首頁結果區收藏/排除 action 整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionTests.cs`
-- [ ] T070 [P] [US3] 新增結果區偏好 action 不新增 history/statistics/snapshot 失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionStatisticsTests.cs`
-- [ ] T071 [P] [US3] 新增結果區 target-state 重複提交與語系切換不變性失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionLocalizationTests.cs`
-- [ ] T072 [P] [US3] 新增 preference result action responsive/accessibility 失敗測試於 `tests/CardPicker2.IntegrationTests/Browser/CardPreferenceResponsiveAccessibilityTests.cs`
-- [ ] T073 [P] [US3] 新增 result preference action HTML assertion helper 覆蓋測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceHtmlAssertions.cs`
-- [ ] T074 [US3] 執行 `dotnet test CardPicker2.sln --filter "PreferenceResultAction|PreferenceResultActionStatistics|PreferenceResultActionLocalization|CardPreferenceResponsiveAccessibility"`，確認 `CardPicker2.sln` 的 US3 新測試在實作前失敗
+- [X] T069 [P] [US3] 新增首頁結果區收藏/排除 action 整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionTests.cs`
+- [X] T070 [P] [US3] 新增結果區偏好 action 不新增 history/statistics/snapshot 失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionStatisticsTests.cs`
+- [X] T071 [P] [US3] 新增結果區 target-state 重複提交與語系切換不變性失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionLocalizationTests.cs`
+- [X] T072 [P] [US3] 新增 preference result action responsive/accessibility 失敗測試於 `tests/CardPicker2.IntegrationTests/Browser/CardPreferenceResponsiveAccessibilityTests.cs`
+- [X] T073 [P] [US3] 新增 result preference action HTML assertion helper 覆蓋測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceHtmlAssertions.cs`
+- [X] T074 [US3] 執行 `dotnet test CardPicker2.sln --filter "PreferenceResultAction|PreferenceResultActionStatistics|PreferenceResultActionLocalization|CardPreferenceResponsiveAccessibility"`，確認 `CardPicker2.sln` 的 US3 新測試在實作前失敗
 
 ### 使用者故事 3 的實作
 
-- [ ] T075 [US3] 更新首頁 PageModel，加入 result preference binding、`OnPostPreferenceAsync`、result restore 與 operation/result card validation 於 `CardPicker2/Pages/Index.cshtml.cs`
-- [ ] T076 [US3] 更新首頁結果區 Razor UI，加入收藏/排除 target-state forms、目前偏好 badge 與 disabled blocked state 於 `CardPicker2/Pages/Index.cshtml`
-- [ ] T077 [US3] 更新抽卡 replay/result projection，重顯成功結果時投影目前 preference state 但不重新 randomize 於 `CardPicker2/Services/CardLibraryService.cs`
-- [ ] T078 [US3] 更新 localized result projection，確保 result card 的偏好 badge、deleted state、metadata 與 rotation summary 可並存於 `CardPicker2/Services/MealCardLocalizationService.cs`
-- [ ] T079 [P] [US3] 新增繁中結果區偏好 action success/error、replay 與 blocked 文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`
-- [ ] T080 [P] [US3] 新增英文結果區偏好 action success/error、replay 與 blocked 文案於 `CardPicker2/Resources/SharedResource.en-US.resx`
-- [ ] T081 [US3] 執行 `dotnet test CardPicker2.sln --filter "PreferenceResultAction|PreferenceResultActionStatistics|PreferenceResultActionLocalization|CardPreferenceResponsiveAccessibility"`，確認 `CardPicker2.sln` 的 US3 測試通過
+- [X] T075 [US3] 更新首頁 PageModel，加入 result preference binding、`OnPostPreferenceAsync`、result restore 與 operation/result card validation 於 `CardPicker2/Pages/Index.cshtml.cs`
+- [X] T076 [US3] 更新首頁結果區 Razor UI，加入收藏/排除 target-state forms、目前偏好 badge 與 disabled blocked state 於 `CardPicker2/Pages/Index.cshtml`
+- [X] T077 [US3] 更新抽卡 replay/result projection，重顯成功結果時投影目前 preference state 但不重新 randomize 於 `CardPicker2/Services/CardLibraryService.cs`
+- [X] T078 [US3] 更新 localized result projection，確保 result card 的偏好 badge、deleted state、metadata 與 rotation summary 可並存於 `CardPicker2/Services/MealCardLocalizationService.cs`
+- [X] T079 [P] [US3] 新增繁中結果區偏好 action success/error、replay 與 blocked 文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`
+- [X] T080 [P] [US3] 新增英文結果區偏好 action success/error、replay 與 blocked 文案於 `CardPicker2/Resources/SharedResource.en-US.resx`
+- [X] T081 [US3] 執行 `dotnet test CardPicker2.sln --filter "PreferenceResultAction|PreferenceResultActionStatistics|PreferenceResultActionLocalization|CardPreferenceResponsiveAccessibility"`，確認 `CardPicker2.sln` 的 US3 測試通過
 
 **檢查點**: 所有使用者故事均可獨立驗證；結果區偏好整理不污染已成立的抽卡事實。
 

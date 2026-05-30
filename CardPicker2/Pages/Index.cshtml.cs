@@ -207,6 +207,38 @@ public class IndexModel : PageModel
         return OnPostDrawAsync(cancellationToken);
     }
 
+    public async Task OnPostPreferenceAsync(
+        CardPreferenceUpdateInputModel input,
+        CancellationToken cancellationToken)
+    {
+        LibraryState = await _cardLibraryService.LoadAsync(cancellationToken);
+        if (LibraryState.IsBlocked)
+        {
+            Statistics = new DrawStatisticsSummary(0, Array.Empty<CardDrawStatistic>(), LibraryState.MessageKey);
+            OperationState = DrawOperationState.Blocked;
+            StatusMessage = LibraryState.UserMessage;
+            return;
+        }
+
+        DrawOperationId = input.DrawOperationId is Guid operationId && operationId != Guid.Empty
+            ? operationId
+            : DrawOperationId == Guid.Empty ? Guid.NewGuid() : DrawOperationId;
+        var targetResultCardId = input.ResultCardId is Guid resultCardId && resultCardId != Guid.Empty
+            ? resultCardId
+            : input.CardId;
+        var result = await _cardLibraryService.SetPreferenceAsync(input, cancellationToken);
+
+        Statistics = await _cardLibraryService.GetDrawStatisticsAsync(CurrentLanguage, cancellationToken);
+        CurrentFilterSummary = CreateLocalizedFilterSummary(BuildCriteria());
+        await RestoreResultAsync(targetResultCardId, cancellationToken);
+        StatusMessage = LocalizePreferenceResult(result);
+        if (!result.Succeeded)
+        {
+            OperationState = Result?.Succeeded == true ? DrawOperationState.Revealed : DrawOperationState.Blocked;
+            ModelState.AddModelError(string.Empty, StatusMessage);
+        }
+    }
+
     private async Task RestoreResultAsync(Guid cardId, CancellationToken cancellationToken)
     {
         var localizedCard = await _cardLibraryService.FindLocalizedByIdAsync(cardId, CurrentLanguage, cancellationToken);
@@ -308,6 +340,19 @@ public class IndexModel : PageModel
             "Rotation.Empty.AfterCooldown" => _localizer["Rotation.Empty.AfterCooldown"],
             "Rotation.Validation.InvalidRecentDrawCount" => _localizer["Rotation.Validation.InvalidRecentDrawCount"],
             _ => fallback
+        };
+    }
+
+    private string LocalizePreferenceResult(PreferenceMutationResult result)
+    {
+        return result.MessageKey switch
+        {
+            "Preference.Update.Succeeded" => _localizer["Preference.Update.Succeeded"],
+            "Preference.Update.NotFound" => _localizer["Preference.Update.NotFound"],
+            "Preference.Update.Deleted" => _localizer["Preference.Update.Deleted"],
+            "Preference.Validation.InvalidTarget" => _localizer["Preference.Validation.InvalidTarget"],
+            "Preference.Update.WriteFailed" => _localizer["Preference.Update.WriteFailed"],
+            _ => result.UserMessage
         };
     }
 

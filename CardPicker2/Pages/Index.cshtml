@@ -243,6 +243,49 @@
                     }
                 </div>
             }
+            @if (Model.Result.LocalizedCard is LocalizedMealCardView resultCard)
+            {
+                <div class="card-preference-controls result-preference-controls" data-card-preference-controls>
+                    <div class="preference-badge-list" aria-label="@Localizer["Preference.Badges.Aria"]">
+                        @if (resultCard.PreferenceBadges?.Count > 0)
+                        {
+                            @foreach (var badge in resultCard.PreferenceBadges)
+                            {
+                                <span class="preference-badge @(resultCard.IsExcludedFromDraw && badge == Localizer["Preference.Badge.Excluded"].Value ? "is-excluded" : null)"
+                                      data-preference-badge>@badge</span>
+                            }
+                        }
+                    </div>
+
+                    @if (resultCard.IsPreferenceEditable)
+                    {
+                        <form method="post" asp-page-handler="Preference" class="preference-action-form" data-preference-action-form>
+                            <input type="hidden" name="CardId" value="@resultCard.CardId" />
+                            <input type="hidden" name="ResultCardId" value="@resultCard.CardId" />
+                            <input type="hidden" name="DrawOperationId" value="@Model.Result.OperationId" />
+                            <input type="hidden" name="TargetIsFavorite" value="@(!resultCard.IsFavorite)" />
+                            <button class="btn btn-outline-secondary btn-sm"
+                                    type="submit"
+                                    data-preference-submit
+                                    aria-pressed="@resultCard.IsFavorite.ToString().ToLowerInvariant()">
+                                @(resultCard.IsFavorite ? Localizer["Preference.Action.RemoveFavorite"] : Localizer["Preference.Action.AddFavorite"])
+                            </button>
+                        </form>
+                        <form method="post" asp-page-handler="Preference" class="preference-action-form" data-preference-action-form>
+                            <input type="hidden" name="CardId" value="@resultCard.CardId" />
+                            <input type="hidden" name="ResultCardId" value="@resultCard.CardId" />
+                            <input type="hidden" name="DrawOperationId" value="@Model.Result.OperationId" />
+                            <input type="hidden" name="TargetIsExcludedFromDraw" value="@(!resultCard.IsExcludedFromDraw)" />
+                            <button class="btn btn-outline-secondary btn-sm"
+                                    type="submit"
+                                    data-preference-submit
+                                    aria-pressed="@resultCard.IsExcludedFromDraw.ToString().ToLowerInvariant()">
+                                @(resultCard.IsExcludedFromDraw ? Localizer["Preference.Action.IncludeInDraw"] : Localizer["Preference.Action.ExcludeFromDraw"])
+                            </button>
+                        </form>
+                    }
+                </div>
+            }
             @if (Model.Result.RotationSnapshot is RotationSnapshot snapshot)
             {
                 <dl class="rotation-summary" data-rotation-summary>
