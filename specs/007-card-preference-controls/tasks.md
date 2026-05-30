@@ -110,26 +110,26 @@
 
 > 先撰寫這些測試，確認在實作前失敗。
 
-- [ ] T052 [P] [US2] 新增收藏 target-state mutation 與重啟保存失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceMutationTests.cs`
-- [ ] T053 [P] [US2] 新增偏好篩選服務交集規則失敗測試於 `tests/CardPicker2.UnitTests/Services/CardPreferenceFilterServiceTests.cs`
-- [ ] T054 [P] [US2] 新增收藏不得影響候選池與公平性失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCandidatePoolPreferenceTests.cs`
-- [ ] T055 [P] [US2] 新增收藏/可抽狀態與 keyword/meal/metadata 組合搜尋失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceSearchTests.cs`
-- [ ] T056 [P] [US2] 新增卡牌庫偏好篩選整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredCardLibraryPageTests.cs`
-- [ ] T057 [P] [US2] 新增收藏與統計/rotation 相容性失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawStatisticsPreferenceCompatibilityTests.cs`
-- [ ] T058 [US2] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|CardPreferenceFilterService|DrawCandidatePoolPreference|CardLibraryPreferenceSearch|PreferenceFilteredCardLibrary|DrawStatisticsPreferenceCompatibility"`，確認 `CardPicker2.sln` 的 US2 新測試在實作前失敗
+- [X] T052 [P] [US2] 新增收藏 target-state mutation 與重啟保存失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceMutationTests.cs`
+- [X] T053 [P] [US2] 新增偏好篩選服務交集規則失敗測試於 `tests/CardPicker2.UnitTests/Services/CardPreferenceFilterServiceTests.cs`
+- [X] T054 [P] [US2] 新增收藏不得影響候選池與公平性失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCandidatePoolPreferenceTests.cs`
+- [X] T055 [P] [US2] 新增收藏/可抽狀態與 keyword/meal/metadata 組合搜尋失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceSearchTests.cs`
+- [X] T056 [P] [US2] 新增卡牌庫偏好篩選整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredCardLibraryPageTests.cs`
+- [X] T057 [P] [US2] 新增收藏與統計/rotation 相容性失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawStatisticsPreferenceCompatibilityTests.cs`
+- [X] T058 [US2] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|CardPreferenceFilterService|DrawCandidatePoolPreference|CardLibraryPreferenceSearch|PreferenceFilteredCardLibrary|DrawStatisticsPreferenceCompatibility"`，確認 `CardPicker2.sln` 的 US2 新測試在實作前失敗
 
 ### 使用者故事 2 的實作
 
-- [ ] T059 [US2] 建立偏好篩選服務，實作 `FavoriteFilter` 與 `DrawEligibilityFilter` 交集規則於 `CardPicker2/Services/CardPreferenceFilterService.cs`
-- [ ] T060 [US2] 更新服務 wiring，註冊或注入偏好篩選服務且不改變既有 lifetime 於 `CardPicker2/Program.cs`
-- [ ] T061 [US2] 更新卡牌搜尋流程，套用 keyword、meal type、metadata filters 與 preference filters 交集並記錄安全 count 於 `CardPicker2/Services/CardLibraryService.cs`
-- [ ] T062 [US2] 更新卡牌庫 PageModel，加入 `favoriteFilter`、`drawEligibilityFilter` query binding、條件摘要與清除條件狀態於 `CardPicker2/Pages/Cards/Index.cshtml.cs`
-- [ ] T063 [US2] 更新偏好控制 partial，加入收藏/取消收藏 target-state form 與雙狀態 badge 於 `CardPicker2/Pages/Cards/_CardPreferenceControls.cshtml`
-- [ ] T064 [US2] 更新卡牌庫 Razor UI，加入收藏篩選、可抽/已排除篩選、結果數、badge 與 filter state preservation 於 `CardPicker2/Pages/Cards/Index.cshtml`
-- [ ] T065 [US2] 更新詳情頁 Razor UI，顯示收藏狀態並提供收藏/取消收藏操作於 `CardPicker2/Pages/Cards/Details.cshtml`
-- [ ] T066 [P] [US2] 新增繁中收藏 labels、filters、badges、success/error 與 no-result 文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`
-- [ ] T067 [P] [US2] 新增英文收藏 labels、filters、badges、success/error 與 no-result 文案於 `CardPicker2/Resources/SharedResource.en-US.resx`
-- [ ] T068 [US2] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|CardPreferenceFilterService|DrawCandidatePoolPreference|CardLibraryPreferenceSearch|PreferenceFilteredCardLibrary|DrawStatisticsPreferenceCompatibility"`，確認 `CardPicker2.sln` 的 US2 測試通過
+- [X] T059 [US2] 建立偏好篩選服務，實作 `FavoriteFilter` 與 `DrawEligibilityFilter` 交集規則於 `CardPicker2/Services/CardPreferenceFilterService.cs`
+- [X] T060 [US2] 更新服務 wiring，註冊或注入偏好篩選服務且不改變既有 lifetime 於 `CardPicker2/Program.cs`
+- [X] T061 [US2] 更新卡牌搜尋流程，套用 keyword、meal type、metadata filters 與 preference filters 交集並記錄安全 count 於 `CardPicker2/Services/CardLibraryService.cs`
+- [X] T062 [US2] 更新卡牌庫 PageModel，加入 `favoriteFilter`、`drawEligibilityFilter` query binding、條件摘要與清除條件狀態於 `CardPicker2/Pages/Cards/Index.cshtml.cs`
+- [X] T063 [US2] 更新偏好控制 partial，加入收藏/取消收藏 target-state form 與雙狀態 badge 於 `CardPicker2/Pages/Cards/_CardPreferenceControls.cshtml`
+- [X] T064 [US2] 更新卡牌庫 Razor UI，加入收藏篩選、可抽/已排除篩選、結果數、badge 與 filter state preservation 於 `CardPicker2/Pages/Cards/Index.cshtml`
+- [X] T065 [US2] 更新詳情頁 Razor UI，顯示收藏狀態並提供收藏/取消收藏操作於 `CardPicker2/Pages/Cards/Details.cshtml`
+- [X] T066 [P] [US2] 新增繁中收藏 labels、filters、badges、success/error 與 no-result 文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`
+- [X] T067 [P] [US2] 新增英文收藏 labels、filters、badges、success/error 與 no-result 文案於 `CardPicker2/Resources/SharedResource.en-US.resx`
+- [X] T068 [US2] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|CardPreferenceFilterService|DrawCandidatePoolPreference|CardLibraryPreferenceSearch|PreferenceFilteredCardLibrary|DrawStatisticsPreferenceCompatibility"`，確認 `CardPicker2.sln` 的 US2 測試通過
 
 **檢查點**: US1 與 US2 可同時運作；收藏只影響辨識與卡牌庫篩選，不影響任何抽卡或統計規則。
 

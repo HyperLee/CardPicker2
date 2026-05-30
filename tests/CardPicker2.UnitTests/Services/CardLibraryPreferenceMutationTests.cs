@@ -28,6 +28,23 @@ public sealed class CardLibraryPreferenceMutationTests
     }
 
     [Fact]
+    public async Task SetPreferenceAsync_UpdatesFavoriteTargetStateAndPersistsAcrossServiceReload()
+    {
+        using var library = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV5Document());
+        var service = CreateService(library.FilePath);
+
+        var result = await service.SetPreferenceAsync(new CardPreferenceUpdateInputModel
+        {
+            CardId = DrawFeatureTestData.LowPriceLunchCardId,
+            TargetIsFavorite = true
+        });
+        var reloaded = CreateService(library.FilePath);
+
+        Assert.True(result.Succeeded);
+        Assert.True((await reloaded.FindByIdAsync(DrawFeatureTestData.LowPriceLunchCardId))!.Preferences.IsFavorite);
+    }
+
+    [Fact]
     public async Task SetPreferenceAsync_RejectsMissingDeletedBlockedAndWriteFailure()
     {
         using var library = await TempCardLibrary.CreateWithDocumentAsync(DrawFeatureTestData.SchemaV5Document());

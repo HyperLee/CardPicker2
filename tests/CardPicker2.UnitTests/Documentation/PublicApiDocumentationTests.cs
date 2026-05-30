@@ -57,6 +57,7 @@ public sealed class PublicApiDocumentationTests
     [InlineData("CardPicker2/Services/DrawStatisticsService.cs")]
     [InlineData("CardPicker2/Services/MealCardMetadataValidator.cs")]
     [InlineData("CardPicker2/Services/MealCardFilterService.cs")]
+    [InlineData("CardPicker2/Services/CardPreferenceFilterService.cs")]
     [InlineData("CardPicker2/Services/MealCardLocalizationService.cs")]
     public async Task DrawFeaturePublicApiDocumentation_IncludesSummaryExampleAndCode(string relativePath)
     {

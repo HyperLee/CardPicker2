@@ -33,6 +33,7 @@ public sealed class CardLibraryService : ICardLibraryService
     private readonly DrawStatisticsService _statisticsService;
     private readonly MealCardMetadataValidator _metadataValidator;
     private readonly MealCardFilterService _filterService;
+    private readonly CardPreferenceFilterService _preferenceFilterService;
     private readonly DrawRotationCooldownService _rotationCooldownService;
 
     /// <summary>
@@ -48,6 +49,7 @@ public sealed class CardLibraryService : ICardLibraryService
     /// <param name="statisticsService">The draw statistics projection service.</param>
     /// <param name="metadataValidator">The decision metadata validator.</param>
     /// <param name="filterService">The shared card metadata filter service.</param>
+    /// <param name="preferenceFilterService">The shared card preference filter service.</param>
     /// <param name="rotationCooldownService">The recent-repeat rotation cooldown service.</param>
     public CardLibraryService(
         IOptions<CardLibraryOptions> options,
@@ -60,6 +62,7 @@ public sealed class CardLibraryService : ICardLibraryService
         DrawStatisticsService? statisticsService = null,
         MealCardMetadataValidator? metadataValidator = null,
         MealCardFilterService? filterService = null,
+        CardPreferenceFilterService? preferenceFilterService = null,
         DrawRotationCooldownService? rotationCooldownService = null)
     {
         _options = options.Value;
@@ -72,6 +75,7 @@ public sealed class CardLibraryService : ICardLibraryService
         _statisticsService = statisticsService ?? new DrawStatisticsService(_localizationService);
         _metadataValidator = metadataValidator ?? new MealCardMetadataValidator();
         _filterService = filterService ?? new MealCardFilterService();
+        _preferenceFilterService = preferenceFilterService ?? new CardPreferenceFilterService();
         _rotationCooldownService = rotationCooldownService ?? new DrawRotationCooldownService();
     }
 
@@ -582,11 +586,15 @@ public sealed class CardLibraryService : ICardLibraryService
 
         var filterCriteria = (criteria.Filters ?? new CardFilterCriteria())
             .Normalize();
-        var filtered = _filterService.Apply(query, filterCriteria);
+        var metadataFiltered = _filterService.Apply(query, filterCriteria);
+        var preferenceCriteria = (criteria.Preferences ?? new CardPreferenceCriteria()).Normalize();
+        var filtered = _preferenceFilterService.Apply(metadataFiltered, preferenceCriteria);
         _logger.LogInformation(
-            "Card search returned {SearchResultCount} active cards with metadata filter active: {MetadataFilterActive}",
+            "Card search returned {SearchResultCount} active cards with metadata filter active: {MetadataFilterActive}, favorite filter {FavoriteFilter}, draw eligibility filter {DrawEligibilityFilter}",
             filtered.Count,
-            filterCriteria.HasActiveMetadataFilters);
+            filterCriteria.HasActiveMetadataFilters,
+            preferenceCriteria.FavoriteFilter,
+            preferenceCriteria.DrawEligibilityFilter);
 
         return filtered
             .OrderBy(card => card.MealType)

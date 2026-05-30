@@ -447,6 +447,36 @@
   <data name="Preference.Action.IncludeInDraw" xml:space="preserve">
     <value>Include in draw</value>
   </data>
+  <data name="Preference.Action.AddFavorite" xml:space="preserve">
+    <value>Favorite</value>
+  </data>
+  <data name="Preference.Action.RemoveFavorite" xml:space="preserve">
+    <value>Remove favorite</value>
+  </data>
+  <data name="Preference.Filter.Favorite.Label" xml:space="preserve">
+    <value>Favorite status</value>
+  </data>
+  <data name="Preference.Filter.Favorite.All" xml:space="preserve">
+    <value>All favorite states</value>
+  </data>
+  <data name="Preference.Filter.Favorite.FavoritesOnly" xml:space="preserve">
+    <value>Favorites only</value>
+  </data>
+  <data name="Preference.Filter.Favorite.NotFavoritesOnly" xml:space="preserve">
+    <value>Not favorites only</value>
+  </data>
+  <data name="Preference.Filter.DrawEligibility.Label" xml:space="preserve">
+    <value>Draw eligibility</value>
+  </data>
+  <data name="Preference.Filter.DrawEligibility.All" xml:space="preserve">
+    <value>All draw states</value>
+  </data>
+  <data name="Preference.Filter.DrawEligibility.DrawableOnly" xml:space="preserve">
+    <value>Drawable only</value>
+  </data>
+  <data name="Preference.Filter.DrawEligibility.ExcludedOnly" xml:space="preserve">
+    <value>Excluded only</value>
+  </data>
   <data name="Preference.EmptyPool" xml:space="preserve">
     <value>Every meal matching the current conditions is excluded from draw. Include some cards again, adjust filters, or add a card.</value>
   </data>

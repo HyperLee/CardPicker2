@@ -18,6 +18,16 @@
     {
         <form method="post" asp-page-handler="Preference" class="preference-action-form" data-preference-action-form>
             <input type="hidden" name="CardId" value="@Model.CardId" />
+            <input type="hidden" name="TargetIsFavorite" value="@(!Model.IsFavorite)" />
+            <button class="btn btn-outline-secondary btn-sm"
+                    type="submit"
+                    data-preference-submit
+                    aria-pressed="@Model.IsFavorite.ToString().ToLowerInvariant()">
+                @(Model.IsFavorite ? Localizer["Preference.Action.RemoveFavorite"] : Localizer["Preference.Action.AddFavorite"])
+            </button>
+        </form>
+        <form method="post" asp-page-handler="Preference" class="preference-action-form" data-preference-action-form>
+            <input type="hidden" name="CardId" value="@Model.CardId" />
             <input type="hidden" name="TargetIsExcludedFromDraw" value="@(!Model.IsExcludedFromDraw)" />
             <button class="btn btn-outline-secondary btn-sm"
                     type="submit"

@@ -39,6 +39,12 @@ public sealed class IndexModel : PageModel
     [BindProperty(SupportsGet = true)]
     public List<string> Tags { get; set; } = new();
 
+    [BindProperty(SupportsGet = true)]
+    public FavoriteFilter FavoriteFilter { get; set; } = FavoriteFilter.All;
+
+    [BindProperty(SupportsGet = true)]
+    public DrawEligibilityFilter DrawEligibilityFilter { get; set; } = DrawEligibilityFilter.All;
+
     public IReadOnlyList<MealType> MealTypes { get; } = Enum.GetValues<MealType>();
 
     public IReadOnlyList<PriceRange> PriceRangeOptions { get; } = Enum.GetValues<PriceRange>();
@@ -48,6 +54,10 @@ public sealed class IndexModel : PageModel
     public IReadOnlyList<DietaryPreference> DietaryPreferenceOptions { get; } = Enum.GetValues<DietaryPreference>();
 
     public IReadOnlyList<SpiceLevel> SpiceLevelOptions { get; } = Enum.GetValues<SpiceLevel>();
+
+    public IReadOnlyList<FavoriteFilter> FavoriteFilterOptions { get; } = Enum.GetValues<FavoriteFilter>();
+
+    public IReadOnlyList<DrawEligibilityFilter> DrawEligibilityFilterOptions { get; } = Enum.GetValues<DrawEligibilityFilter>();
 
     public SupportedLanguage CurrentLanguage => SupportedLanguage.FromCultureNameOrDefault(Thread.CurrentThread.CurrentUICulture.Name);
 
@@ -82,7 +92,8 @@ public sealed class IndexModel : PageModel
             Keyword = Keyword,
             MealType = MealType,
             CurrentLanguage = CurrentLanguage,
-            Filters = filters
+            Filters = filters,
+            Preferences = BuildPreferenceCriteria()
         }, cancellationToken);
     }
 
@@ -122,6 +133,16 @@ public sealed class IndexModel : PageModel
         return _localizer[$"Metadata.SpiceLevel.{value}"];
     }
 
+    public string DisplayFavoriteFilter(FavoriteFilter value)
+    {
+        return _localizer[$"Preference.Filter.Favorite.{value}"];
+    }
+
+    public string DisplayDrawEligibilityFilter(DrawEligibilityFilter value)
+    {
+        return _localizer[$"Preference.Filter.DrawEligibility.{value}"];
+    }
+
     private CardFilterCriteria BuildCriteria()
     {
         return new CardFilterCriteria
@@ -133,6 +154,15 @@ public sealed class IndexModel : PageModel
             MaxSpiceLevel = MaxSpiceLevel,
             Tags = SplitTags(Tags),
             CurrentLanguage = CurrentLanguage
+        }.Normalize();
+    }
+
+    private CardPreferenceCriteria BuildPreferenceCriteria()
+    {
+        return new CardPreferenceCriteria
+        {
+            FavoriteFilter = FavoriteFilter,
+            DrawEligibilityFilter = DrawEligibilityFilter
         }.Normalize();
     }
 
@@ -163,6 +193,17 @@ public sealed class IndexModel : PageModel
         }
 
         items.AddRange(normalized.Tags);
+        var preferenceCriteria = BuildPreferenceCriteria();
+        if (preferenceCriteria.FavoriteFilter != FavoriteFilter.All)
+        {
+            items.Add(DisplayFavoriteFilter(preferenceCriteria.FavoriteFilter));
+        }
+
+        if (preferenceCriteria.DrawEligibilityFilter != DrawEligibilityFilter.All)
+        {
+            items.Add(DisplayDrawEligibilityFilter(preferenceCriteria.DrawEligibilityFilter));
+        }
+
         return items.Count == 0 ? FilterSummary.Empty : new FilterSummary(items);
     }
 

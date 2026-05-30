@@ -447,6 +447,36 @@
   <data name="Preference.Action.IncludeInDraw" xml:space="preserve">
     <value>取消排除</value>
   </data>
+  <data name="Preference.Action.AddFavorite" xml:space="preserve">
+    <value>收藏</value>
+  </data>
+  <data name="Preference.Action.RemoveFavorite" xml:space="preserve">
+    <value>取消收藏</value>
+  </data>
+  <data name="Preference.Filter.Favorite.Label" xml:space="preserve">
+    <value>收藏狀態</value>
+  </data>
+  <data name="Preference.Filter.Favorite.All" xml:space="preserve">
+    <value>全部收藏狀態</value>
+  </data>
+  <data name="Preference.Filter.Favorite.FavoritesOnly" xml:space="preserve">
+    <value>只看收藏</value>
+  </data>
+  <data name="Preference.Filter.Favorite.NotFavoritesOnly" xml:space="preserve">
+    <value>只看未收藏</value>
+  </data>
+  <data name="Preference.Filter.DrawEligibility.Label" xml:space="preserve">
+    <value>可抽狀態</value>
+  </data>
+  <data name="Preference.Filter.DrawEligibility.All" xml:space="preserve">
+    <value>全部可抽狀態</value>
+  </data>
+  <data name="Preference.Filter.DrawEligibility.DrawableOnly" xml:space="preserve">
+    <value>只看可抽</value>
+  </data>
+  <data name="Preference.Filter.DrawEligibility.ExcludedOnly" xml:space="preserve">
+    <value>只看已排除</value>
+  </data>
   <data name="Preference.EmptyPool" xml:space="preserve">
     <value>目前符合條件的餐點都已排除抽卡。請取消排除部分卡牌、調整條件或新增卡牌。</value>
   </data>

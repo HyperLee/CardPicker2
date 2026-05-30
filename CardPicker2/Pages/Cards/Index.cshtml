@@ -41,6 +41,24 @@
             </select>
         </div>
         <div class="filter-field">
+            <label asp-for="FavoriteFilter" class="form-label">@Localizer["Preference.Filter.Favorite.Label"]</label>
+            <select asp-for="FavoriteFilter" class="form-select" name="favoriteFilter">
+                @foreach (var filter in Model.FavoriteFilterOptions)
+                {
+                    <option value="@filter">@Model.DisplayFavoriteFilter(filter)</option>
+                }
+            </select>
+        </div>
+        <div class="filter-field">
+            <label asp-for="DrawEligibilityFilter" class="form-label">@Localizer["Preference.Filter.DrawEligibility.Label"]</label>
+            <select asp-for="DrawEligibilityFilter" class="form-select" name="drawEligibilityFilter">
+                @foreach (var filter in Model.DrawEligibilityFilterOptions)
+                {
+                    <option value="@filter">@Model.DisplayDrawEligibilityFilter(filter)</option>
+                }
+            </select>
+        </div>
+        <div class="filter-field">
             <label asp-for="PriceRange" class="form-label">@Localizer["Metadata.Label.PriceRange"]</label>
             <select asp-for="PriceRange" class="form-select">
                 <option value="">@Localizer["Metadata.Option.NotSet"]</option>

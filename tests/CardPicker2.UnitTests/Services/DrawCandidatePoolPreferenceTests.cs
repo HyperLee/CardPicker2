@@ -48,6 +48,33 @@ public sealed class DrawCandidatePoolPreferenceTests
         Assert.Equal(1, pool.PrePreferenceCandidateCount);
     }
 
+    [Fact]
+    public void Build_DoesNotRemoveFavoriteCards()
+    {
+        var builder = new DrawCandidatePoolBuilder();
+        var operation = new DrawOperation
+        {
+            OperationId = Guid.NewGuid(),
+            Mode = DrawMode.Random,
+            CoinInserted = true
+        };
+        var cards = DrawFeatureTestData.ActiveLocalizedCards()
+            .Select((card, index) => new MealCard(
+                card.Id,
+                card.MealType,
+                card.Localizations,
+                card.Status,
+                card.DeletedAtUtc,
+                card.DecisionMetadata,
+                new CardPreferenceState { IsFavorite = index == 0 }))
+            .ToList();
+
+        var pool = builder.Build(operation, cards);
+
+        Assert.Equal(cards.Count, pool.Cards.Count);
+        Assert.Contains(pool.Cards, card => card.Preferences.IsFavorite);
+    }
+
     private static IReadOnlyList<MealCard> CreatePreferenceCards()
     {
         return DrawFeatureTestData.SchemaV5Cards()
