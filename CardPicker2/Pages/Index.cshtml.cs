@@ -304,6 +304,7 @@ public class IndexModel : PageModel
             "Metadata.Filter.EmptyPool" => _localizer["Metadata.Filter.EmptyPool"],
             "Metadata.InvalidEnum" => _localizer["Metadata.Validation.InvalidEnum"],
             "Metadata.InvalidTag" => _localizer["Metadata.Validation.InvalidTag"],
+            "Preference.EmptyPool" => _localizer["Preference.EmptyPool"],
             "Rotation.Empty.AfterCooldown" => _localizer["Rotation.Empty.AfterCooldown"],
             "Rotation.Validation.InvalidRecentDrawCount" => _localizer["Rotation.Validation.InvalidRecentDrawCount"],
             _ => fallback

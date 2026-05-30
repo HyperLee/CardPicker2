@@ -339,12 +339,20 @@ public sealed class CardLibraryService : ICardLibraryService
             var pool = _candidatePoolBuilder.Build(operation, loadResult.Document.Cards);
             if (pool.Cards.Count == 0)
             {
+                var preferenceExcludedEmpty = pool.PrePreferenceCandidateCount > 0 && pool.PreferenceExcludedCount > 0;
                 _logger.LogWarning(
-                    "Draw rejected because candidate pool is empty for mode {DrawMode}, meal type {MealType}, filter count {FilterCount}",
+                    "Draw rejected because candidate pool is empty for mode {DrawMode}, meal type {MealType}, filter count {FilterCount}, preference excluded count {PreferenceExcludedCount}",
                     operation.Mode,
                     operation.MealType,
-                    CountActiveFilters(pool.AppliedFilters));
+                    CountActiveFilters(pool.AppliedFilters),
+                    pool.PreferenceExcludedCount);
                 var hasFilters = pool.AppliedFilters.HasActiveMetadataFilters;
+                var message = preferenceExcludedEmpty
+                    ? "目前符合條件的餐點都已排除抽卡。請取消排除部分卡牌、調整條件或新增卡牌。"
+                    : hasFilters ? "目前沒有符合條件的餐點。" : "目前沒有可抽取的餐點卡牌。";
+                var statusKey = preferenceExcludedEmpty
+                    ? "Preference.EmptyPool"
+                    : hasFilters ? "Metadata.Filter.EmptyPool" : "Draw.EmptyPool";
                 return new DrawResult(
                     false,
                     operation.MealType ?? default,
@@ -352,9 +360,9 @@ public sealed class CardLibraryService : ICardLibraryService
                     null,
                     null,
                     null,
-                    hasFilters ? "目前沒有符合條件的餐點。" : "目前沒有可抽取的餐點卡牌。",
+                    message,
                     null,
-                    hasFilters ? "Metadata.Filter.EmptyPool" : "Draw.EmptyPool",
+                    statusKey,
                     operation.OperationId,
                     operation.Mode,
                     operation.Mode == DrawMode.Normal ? operation.MealType : null,
@@ -362,7 +370,9 @@ public sealed class CardLibraryService : ICardLibraryService
                     FilterSummary: CreateFilterSummary(pool.AppliedFilters),
                     FilteredPoolSize: 0,
                     RotationSettings: operation.RotationCooldown,
-                    CandidatePoolEmptyReason: CandidatePoolEmptyReason.BaseCandidatePoolEmpty);
+                    CandidatePoolEmptyReason: preferenceExcludedEmpty
+                        ? CandidatePoolEmptyReason.PreferenceExcludedCandidatePoolEmpty
+                        : CandidatePoolEmptyReason.BaseCandidatePoolEmpty);
             }
 
             var rotationPool = _rotationCooldownService.Apply(pool.Cards, loadResult.Document.DrawHistory, operation.RotationCooldown);

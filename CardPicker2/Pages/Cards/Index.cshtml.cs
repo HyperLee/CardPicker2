@@ -86,6 +86,22 @@ public sealed class IndexModel : PageModel
         }, cancellationToken);
     }
 
+    public async Task<IActionResult> OnPostPreferenceAsync(
+        CardPreferenceUpdateInputModel input,
+        CancellationToken cancellationToken)
+    {
+        LibraryState = await _cardLibraryService.LoadAsync(cancellationToken);
+        if (LibraryState.IsBlocked)
+        {
+            TempData["StatusMessage"] = LibraryState.UserMessage;
+            return RedirectToPage("/Cards/Index");
+        }
+
+        var result = await _cardLibraryService.SetPreferenceAsync(input, cancellationToken);
+        TempData["StatusMessage"] = LocalizePreferenceResult(result);
+        return RedirectToPage("/Cards/Index");
+    }
+
     public string DisplayPriceRange(PriceRange value)
     {
         return _localizer[$"Metadata.PriceRange.{value}"];
@@ -148,6 +164,19 @@ public sealed class IndexModel : PageModel
 
         items.AddRange(normalized.Tags);
         return items.Count == 0 ? FilterSummary.Empty : new FilterSummary(items);
+    }
+
+    private string LocalizePreferenceResult(PreferenceMutationResult result)
+    {
+        return result.MessageKey switch
+        {
+            "Preference.Update.Succeeded" => _localizer["Preference.Update.Succeeded"],
+            "Preference.Update.NotFound" => _localizer["Preference.Update.NotFound"],
+            "Preference.Update.Deleted" => _localizer["Preference.Update.Deleted"],
+            "Preference.Validation.InvalidTarget" => _localizer["Preference.Validation.InvalidTarget"],
+            "Preference.Update.WriteFailed" => _localizer["Preference.Update.WriteFailed"],
+            _ => result.UserMessage
+        };
     }
 
     private static IReadOnlyList<string> SplitTags(IEnumerable<string?>? values)

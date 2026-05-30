@@ -75,6 +75,54 @@ public sealed class DetailsModel : PageModel
         return Page();
     }
 
+    public async Task<IActionResult> OnPostPreferenceAsync(
+        Guid id,
+        CardPreferenceUpdateInputModel input,
+        CancellationToken cancellationToken)
+    {
+        if (input.CardId == Guid.Empty)
+        {
+            input.CardId = id;
+        }
+
+        LibraryState = await _cardLibraryService.LoadAsync(cancellationToken);
+        if (LibraryState.IsBlocked)
+        {
+            Message = LibraryState.UserMessage;
+            return Page();
+        }
+
+        var result = await _cardLibraryService.SetPreferenceAsync(input, cancellationToken);
+        if (result.Succeeded)
+        {
+            TempData["StatusMessage"] = LocalizePreferenceResult(result);
+            return RedirectToPage("/Cards/Details", new { id = input.CardId });
+        }
+
+        if (result.Status is PreferenceMutationStatus.NotFound or PreferenceMutationStatus.Deleted)
+        {
+            Response.StatusCode = StatusCodes.Status404NotFound;
+        }
+
+        await LoadCardAsync(id, cancellationToken);
+        Message = LocalizePreferenceResult(result);
+        ModelState.AddModelError(string.Empty, Message);
+        return Page();
+    }
+
+    private string LocalizePreferenceResult(PreferenceMutationResult result)
+    {
+        return result.MessageKey switch
+        {
+            "Preference.Update.Succeeded" => _localizer["Preference.Update.Succeeded"],
+            "Preference.Update.NotFound" => _localizer["Preference.Update.NotFound"],
+            "Preference.Update.Deleted" => _localizer["Preference.Update.Deleted"],
+            "Preference.Validation.InvalidTarget" => _localizer["Preference.Validation.InvalidTarget"],
+            "Preference.Update.WriteFailed" => _localizer["Preference.Update.WriteFailed"],
+            _ => result.UserMessage
+        };
+    }
+
     private async Task LoadCardAsync(Guid id, CancellationToken cancellationToken)
     {
         LibraryState = await _cardLibraryService.LoadAsync(cancellationToken);

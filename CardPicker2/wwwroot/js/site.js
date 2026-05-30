@@ -319,3 +319,15 @@
     }
   });
 })();
+
+(() => {
+  const forms = Array.from(document.querySelectorAll('[data-preference-action-form]'));
+  forms.forEach((form) => {
+    form.addEventListener('submit', () => {
+      const button = form.querySelector('[data-preference-submit]');
+      if (button instanceof HTMLButtonElement) {
+        button.disabled = true;
+      }
+    });
+  });
+})();

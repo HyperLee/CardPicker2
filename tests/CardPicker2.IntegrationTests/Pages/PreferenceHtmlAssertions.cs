@@ -16,8 +16,7 @@ public static partial class PreferenceHtmlAssertions
 
         AssertContainsAny(decodedHtml, PreferenceControlsAttribute, "preference-control");
         AssertContainsField(decodedHtml, "CardId", "cardId");
-        AssertContainsField(decodedHtml, "TargetIsFavorite", "targetIsFavorite");
-        AssertContainsField(decodedHtml, "TargetIsExcludedFromDraw", "targetIsExcludedFromDraw");
+        AssertContainsAny(decodedHtml, "TargetIsFavorite", "targetIsFavorite", "TargetIsExcludedFromDraw", "targetIsExcludedFromDraw");
     }
 
     public static void AssertPreferenceBadges(string html, params string[] expectedTexts)

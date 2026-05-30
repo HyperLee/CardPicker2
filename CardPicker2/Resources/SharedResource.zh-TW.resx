@@ -429,4 +429,40 @@
   <data name="Rotation.Log.ReplayMissingSnapshot" xml:space="preserve">
     <value>rotation-replay-missing-snapshot</value>
   </data>
+  <data name="Preference.Badges.Aria" xml:space="preserve">
+    <value>卡牌偏好狀態</value>
+  </data>
+  <data name="Preference.Badge.Favorite" xml:space="preserve">
+    <value>已收藏</value>
+  </data>
+  <data name="Preference.Badge.Drawable" xml:space="preserve">
+    <value>可抽</value>
+  </data>
+  <data name="Preference.Badge.Excluded" xml:space="preserve">
+    <value>已排除抽卡</value>
+  </data>
+  <data name="Preference.Action.ExcludeFromDraw" xml:space="preserve">
+    <value>排除抽卡</value>
+  </data>
+  <data name="Preference.Action.IncludeInDraw" xml:space="preserve">
+    <value>取消排除</value>
+  </data>
+  <data name="Preference.EmptyPool" xml:space="preserve">
+    <value>目前符合條件的餐點都已排除抽卡。請取消排除部分卡牌、調整條件或新增卡牌。</value>
+  </data>
+  <data name="Preference.Update.Succeeded" xml:space="preserve">
+    <value>已更新餐點偏好。</value>
+  </data>
+  <data name="Preference.Update.NotFound" xml:space="preserve">
+    <value>找不到餐點卡牌。</value>
+  </data>
+  <data name="Preference.Update.Deleted" xml:space="preserve">
+    <value>已刪除的餐點卡牌無法更新偏好。</value>
+  </data>
+  <data name="Preference.Validation.InvalidTarget" xml:space="preserve">
+    <value>偏好操作資料不完整，請重新整理後再試。</value>
+  </data>
+  <data name="Preference.Update.WriteFailed" xml:space="preserve">
+    <value>偏好暫時無法儲存，請稍後再試。</value>
+  </data>
 </root>

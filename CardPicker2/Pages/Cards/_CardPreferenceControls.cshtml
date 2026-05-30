@@ -1,0 +1,30 @@
+@model CardPicker2.Models.LocalizedMealCardView
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+
+<div class="card-preference-controls" data-card-preference-controls>
+    <div class="preference-badge-list" aria-label="@Localizer["Preference.Badges.Aria"]">
+        @if (Model.PreferenceBadges?.Count > 0)
+        {
+            @foreach (var badge in Model.PreferenceBadges)
+            {
+                <span class="preference-badge @(Model.IsExcludedFromDraw && badge == Localizer["Preference.Badge.Excluded"].Value ? "is-excluded" : null)"
+                      data-preference-badge>@badge</span>
+            }
+        }
+    </div>
+
+    @if (Model.IsPreferenceEditable)
+    {
+        <form method="post" asp-page-handler="Preference" class="preference-action-form" data-preference-action-form>
+            <input type="hidden" name="CardId" value="@Model.CardId" />
+            <input type="hidden" name="TargetIsExcludedFromDraw" value="@(!Model.IsExcludedFromDraw)" />
+            <button class="btn btn-outline-secondary btn-sm"
+                    type="submit"
+                    data-preference-submit
+                    aria-pressed="@Model.IsExcludedFromDraw.ToString().ToLowerInvariant()">
+                @(Model.IsExcludedFromDraw ? Localizer["Preference.Action.IncludeInDraw"] : Localizer["Preference.Action.ExcludeFromDraw"])
+            </button>
+        </form>
+    }
+</div>

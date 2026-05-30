@@ -37,6 +37,17 @@ public static class MetadataFilterTestData
                         new[] { "Vegetarian", "TakeoutFriendly", "Light" },
                         "None")),
                 Card(
+                    Guid.Parse("22222222-2222-2222-2222-222222222224"),
+                    "Lunch",
+                    "雞腿便當",
+                    "Chicken Leg Bento",
+                    Metadata(
+                        new[] { "便當", "外帶" },
+                        "Medium",
+                        "Quick",
+                        new[] { "TakeoutFriendly", "HeavyFlavor" },
+                        "None")),
+                Card(
                     Guid.Parse("33333333-3333-3333-3333-333333333332"),
                     "Dinner",
                     "麻辣乾拌麵",
@@ -93,6 +104,19 @@ public static class MetadataFilterTestData
                         "None"),
                     favoriteCardId == VegetarianLunchCardId,
                     excludedCardId == VegetarianLunchCardId),
+                Card(
+                    Guid.Parse("22222222-2222-2222-2222-222222222224"),
+                    "Lunch",
+                    "雞腿便當",
+                    "Chicken Leg Bento",
+                    Metadata(
+                        new[] { "便當", "外帶" },
+                        "Medium",
+                        "Quick",
+                        new[] { "TakeoutFriendly", "HeavyFlavor" },
+                        "None"),
+                    favoriteCardId == Guid.Parse("22222222-2222-2222-2222-222222222224"),
+                    excludedCardId == Guid.Parse("22222222-2222-2222-2222-222222222224")),
                 Card(
                     Guid.Parse("33333333-3333-3333-3333-333333333332"),
                     "Dinner",

@@ -25,17 +25,17 @@ public sealed class DrawCandidatePoolBuilder
     }
 
     /// <summary>
-    /// Builds a candidate pool using active cards only.
+    /// Builds a candidate pool using active cards that are not manually excluded.
     /// </summary>
     /// <param name="operation">The draw operation.</param>
     /// <param name="cards">The cards loaded from the library.</param>
     /// <returns>The candidate pool and its nominal probability.</returns>
     public DrawCandidatePool Build(DrawOperation operation, IEnumerable<MealCard> cards)
     {
-        var activeCards = cards.Where(card => card.IsActive);
+        var activeCards = cards.Where(card => card.IsActive).ToList();
         var selectedMealType = operation.Mode == DrawMode.Normal ? operation.MealType : null;
 
-        var baseCandidates = operation.Mode switch
+        var activeBaseCandidates = operation.Mode switch
         {
             DrawMode.Normal when selectedMealType is MealType mealType && Enum.IsDefined(typeof(MealType), mealType) =>
                 activeCards.Where(card => card.MealType == mealType),
@@ -44,13 +44,16 @@ public sealed class DrawCandidatePoolBuilder
         };
         var appliedFilters = (operation.Filters ?? new CardFilterCriteria { CurrentLanguage = operation.RequestedLanguage })
             .ForDrawMode(operation.Mode);
-        var candidates = _filterService.Apply(baseCandidates, appliedFilters);
+        var prePreferenceCandidates = _filterService.Apply(activeBaseCandidates, appliedFilters);
+        var candidates = prePreferenceCandidates.Where(card => card.IsDrawable).ToList();
 
         return new DrawCandidatePool(
             operation.Mode,
             selectedMealType,
-            candidates.ToList(),
-            appliedFilters);
+            candidates,
+            appliedFilters,
+            prePreferenceCandidates.Count,
+            prePreferenceCandidates.Count - candidates.Count);
     }
 }
 
@@ -69,11 +72,15 @@ public sealed class DrawCandidatePoolBuilder
 /// <param name="SelectedMealType">The selected meal type for normal mode.</param>
 /// <param name="Cards">The active cards eligible for selection.</param>
 /// <param name="AppliedFilters">The normalized filters applied after the base pool was built.</param>
+/// <param name="PrePreferenceCandidateCount">The candidate count before manual draw exclusion is applied.</param>
+/// <param name="PreferenceExcludedCount">The number of otherwise matching active cards manually excluded from draw.</param>
 public sealed record DrawCandidatePool(
     DrawMode Mode,
     MealType? SelectedMealType,
     IReadOnlyList<MealCard> Cards,
-    CardFilterCriteria AppliedFilters)
+    CardFilterCriteria AppliedFilters,
+    int PrePreferenceCandidateCount = 0,
+    int PreferenceExcludedCount = 0)
 {
     /// <summary>
     /// Gets each candidate card's nominal probability when the pool is non-empty.

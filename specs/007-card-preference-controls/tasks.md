@@ -72,29 +72,29 @@
 
 > 先撰寫這些測試，確認在實作前失敗。
 
-- [ ] T032 [P] [US1] 新增排除 target-state mutation、重複提交、missing/deleted/blocked/write failure 失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceMutationTests.cs`
-- [ ] T033 [P] [US1] 新增偏好排除候選池失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCandidatePoolPreferenceTests.cs`
-- [ ] T034 [P] [US1] 新增偏好排除與 metadata/rotation 順序失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceDrawTests.cs`
-- [ ] T035 [P] [US1] 新增首頁偏好排除抽卡整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredDrawPageTests.cs`
-- [ ] T036 [P] [US1] 新增卡牌庫與詳情頁排除操作整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/CardPreferencePageTests.cs`
-- [ ] T037 [P] [US1] 新增偏好排除後統計不變整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredDrawStatisticsTests.cs`
-- [ ] T038 [US1] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|DrawCandidatePoolPreference|CardLibraryPreferenceDraw|PreferenceFilteredDraw|CardPreferencePage|PreferenceFilteredDrawStatistics"`，確認 `CardPicker2.sln` 的 US1 新測試在實作前失敗
+- [X] T032 [P] [US1] 新增排除 target-state mutation、重複提交、missing/deleted/blocked/write failure 失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceMutationTests.cs`
+- [X] T033 [P] [US1] 新增偏好排除候選池失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCandidatePoolPreferenceTests.cs`
+- [X] T034 [P] [US1] 新增偏好排除與 metadata/rotation 順序失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceDrawTests.cs`
+- [X] T035 [P] [US1] 新增首頁偏好排除抽卡整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredDrawPageTests.cs`
+- [X] T036 [P] [US1] 新增卡牌庫與詳情頁排除操作整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/CardPreferencePageTests.cs`
+- [X] T037 [P] [US1] 新增偏好排除後統計不變整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredDrawStatisticsTests.cs`
+- [X] T038 [US1] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|DrawCandidatePoolPreference|CardLibraryPreferenceDraw|PreferenceFilteredDraw|CardPreferencePage|PreferenceFilteredDrawStatistics"`，確認 `CardPicker2.sln` 的 US1 新測試在實作前失敗
 
 ### 使用者故事 1 的實作
 
-- [ ] T039 [US1] 實作 `SetPreferenceAsync` target-state mutation、idempotency、missing/deleted/blocked/write failure 與安全 message key 於 `CardPicker2/Services/CardLibraryService.cs`
-- [ ] T040 [US1] 更新候選池建構，先移除 `Preferences.IsExcludedFromDraw == true` 再套用 mode、meal 與 metadata filters 於 `CardPicker2/Services/DrawCandidatePoolBuilder.cs`
-- [ ] T041 [US1] 更新抽卡流程，處理 preference exclusion count、preference-empty reason、不呼叫 randomizer、不新增 history/statistics 與結構化日誌於 `CardPicker2/Services/CardLibraryService.cs`
-- [ ] T042 [US1] 更新卡牌庫 PageModel，加入排除/取消排除 POST handler、Anti-Forgery 表單回跳與 localized status message 於 `CardPicker2/Pages/Cards/Index.cshtml.cs`
-- [ ] T043 [US1] 更新詳情頁 PageModel，加入排除/取消排除 POST handler、not-found/deleted/blocked/write failure 處理於 `CardPicker2/Pages/Cards/Details.cshtml.cs`
-- [ ] T044 [US1] 建立可重用排除控制 partial，提交 target final state 而非 toggle action 於 `CardPicker2/Pages/Cards/_CardPreferenceControls.cshtml`
-- [ ] T045 [US1] 更新卡牌庫列表，預設顯示已排除 active cards、狀態 badge 與排除 target-state form 於 `CardPicker2/Pages/Cards/Index.cshtml`
-- [ ] T046 [US1] 更新卡牌詳情頁，顯示排除狀態、可抽狀態與排除 target-state form 於 `CardPicker2/Pages/Cards/Details.cshtml`
-- [ ] T047 [P] [US1] 新增繁中排除抽卡、可抽狀態、偏好空候選池與 mutation 訊息資源於 `CardPicker2/Resources/SharedResource.zh-TW.resx`
-- [ ] T048 [P] [US1] 新增英文排除抽卡、可抽狀態、偏好空候選池與 mutation 訊息資源於 `CardPicker2/Resources/SharedResource.en-US.resx`
-- [ ] T049 [P] [US1] 更新 preference badge、列表控制、詳情控制與 empty prompt responsive 樣式於 `CardPicker2/wwwroot/css/site.css`
-- [ ] T050 [P] [US1] 更新 target-state button progressive enhancement 與快速連點 UI guard 於 `CardPicker2/wwwroot/js/site.js`
-- [ ] T051 [US1] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|DrawCandidatePoolPreference|CardLibraryPreferenceDraw|PreferenceFilteredDraw|CardPreferencePage|PreferenceFilteredDrawStatistics"`，確認 `CardPicker2.sln` 的 US1 測試通過
+- [X] T039 [US1] 實作 `SetPreferenceAsync` target-state mutation、idempotency、missing/deleted/blocked/write failure 與安全 message key 於 `CardPicker2/Services/CardLibraryService.cs`
+- [X] T040 [US1] 更新候選池建構，先移除 `Preferences.IsExcludedFromDraw == true` 再套用 mode、meal 與 metadata filters 於 `CardPicker2/Services/DrawCandidatePoolBuilder.cs`
+- [X] T041 [US1] 更新抽卡流程，處理 preference exclusion count、preference-empty reason、不呼叫 randomizer、不新增 history/statistics 與結構化日誌於 `CardPicker2/Services/CardLibraryService.cs`
+- [X] T042 [US1] 更新卡牌庫 PageModel，加入排除/取消排除 POST handler、Anti-Forgery 表單回跳與 localized status message 於 `CardPicker2/Pages/Cards/Index.cshtml.cs`
+- [X] T043 [US1] 更新詳情頁 PageModel，加入排除/取消排除 POST handler、not-found/deleted/blocked/write failure 處理於 `CardPicker2/Pages/Cards/Details.cshtml.cs`
+- [X] T044 [US1] 建立可重用排除控制 partial，提交 target final state 而非 toggle action 於 `CardPicker2/Pages/Cards/_CardPreferenceControls.cshtml`
+- [X] T045 [US1] 更新卡牌庫列表，預設顯示已排除 active cards、狀態 badge 與排除 target-state form 於 `CardPicker2/Pages/Cards/Index.cshtml`
+- [X] T046 [US1] 更新卡牌詳情頁，顯示排除狀態、可抽狀態與排除 target-state form 於 `CardPicker2/Pages/Cards/Details.cshtml`
+- [X] T047 [P] [US1] 新增繁中排除抽卡、可抽狀態、偏好空候選池與 mutation 訊息資源於 `CardPicker2/Resources/SharedResource.zh-TW.resx`
+- [X] T048 [P] [US1] 新增英文排除抽卡、可抽狀態、偏好空候選池與 mutation 訊息資源於 `CardPicker2/Resources/SharedResource.en-US.resx`
+- [X] T049 [P] [US1] 更新 preference badge、列表控制、詳情控制與 empty prompt responsive 樣式於 `CardPicker2/wwwroot/css/site.css`
+- [X] T050 [P] [US1] 更新 target-state button progressive enhancement 與快速連點 UI guard 於 `CardPicker2/wwwroot/js/site.js`
+- [X] T051 [US1] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|DrawCandidatePoolPreference|CardLibraryPreferenceDraw|PreferenceFilteredDraw|CardPreferencePage|PreferenceFilteredDrawStatistics"`，確認 `CardPicker2.sln` 的 US1 測試通過
 
 **檢查點**: US1 是 MVP；使用者可手動排除餐點，排除卡仍可管理且不再進入未來抽卡候選池。
 
