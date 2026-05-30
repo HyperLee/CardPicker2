@@ -77,6 +77,18 @@ public static class DrawFeatureTestData
         };
     }
 
+    public static object SchemaV5Document(
+        IReadOnlyList<object>? cards = null,
+        IReadOnlyList<object>? drawHistory = null)
+    {
+        return new
+        {
+            schemaVersion = 5,
+            cards = cards ?? SchemaV5Cards(),
+            drawHistory = drawHistory ?? Array.Empty<object>()
+        };
+    }
+
     public static IReadOnlyList<object> SchemaV3Cards()
     {
         return new[]
@@ -190,6 +202,18 @@ public static class DrawFeatureTestData
         };
     }
 
+    public static IReadOnlyList<object> SchemaV5Cards()
+    {
+        return SchemaV4Cards()
+            .Select((card, index) => index switch
+            {
+                1 => WithPreferences(card, isFavorite: true, isExcludedFromDraw: false),
+                2 => WithPreferences(card, isFavorite: false, isExcludedFromDraw: true),
+                _ => WithDefaultPreferences(card)
+            })
+            .ToList();
+    }
+
     public static object SchemaV3Card(
         Guid id,
         string mealType,
@@ -249,6 +273,66 @@ public static class DrawFeatureTestData
                 }
             },
             decisionMetadata
+        };
+    }
+
+    public static object SchemaV5Card(
+        Guid id,
+        string mealType,
+        string status,
+        string zhTwName,
+        string enUsName,
+        object? decisionMetadata,
+        bool isFavorite = false,
+        bool isExcludedFromDraw = false,
+        DateTimeOffset? deletedAtUtc = null)
+    {
+        return WithPreferences(
+            SchemaV4Card(id, mealType, status, zhTwName, enUsName, decisionMetadata, deletedAtUtc),
+            isFavorite,
+            isExcludedFromDraw);
+    }
+
+    public static object WithDefaultPreferences(object card)
+    {
+        return WithPreferences(card, isFavorite: false, isExcludedFromDraw: false);
+    }
+
+    public static object WithPreferences(
+        object card,
+        bool isFavorite,
+        bool isExcludedFromDraw)
+    {
+        var json = JsonSerializer.Serialize(card, JsonOptions);
+        using var document = JsonDocument.Parse(json);
+        var properties = document.RootElement
+            .EnumerateObject()
+            .ToDictionary(
+                property => property.Name,
+                property => JsonSerializer.Deserialize<object>(property.Value.GetRawText(), JsonOptions),
+                StringComparer.OrdinalIgnoreCase);
+
+        properties["preferences"] = PreferenceState(isFavorite, isExcludedFromDraw);
+        return properties;
+    }
+
+    public static object PreferenceState(
+        bool isFavorite = false,
+        bool isExcludedFromDraw = false)
+    {
+        return new
+        {
+            isFavorite,
+            isExcludedFromDraw
+        };
+    }
+
+    public static object InvalidPreferenceState()
+    {
+        return new
+        {
+            isFavorite = "yes",
+            isExcludedFromDraw = false
         };
     }
 

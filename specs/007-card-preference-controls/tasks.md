@@ -12,11 +12,11 @@
 
 **目的**: 準備 schema v5、偏好狀態與頁面測試會共用的 fixture/helper，避免每個故事重複建立測試資料。
 
-- [ ] T001 [P] 擴充 schema v5、收藏與排除抽卡測試資料 helper 於 `tests/CardPicker2.UnitTests/Services/DrawFeatureTestData.cs`
-- [ ] T002 [P] 擴充 preference-aware integration fixture 建立工具於 `tests/CardPicker2.IntegrationTests/Infrastructure/MetadataFilterTestData.cs`
-- [ ] T003 [P] 擴充隔離 JSON 資料檔 helper 以支援 schema v5 與重啟驗證於 `tests/CardPicker2.IntegrationTests/Infrastructure/TempCardLibrary.cs`
-- [ ] T004 [P] 擴充測試網站 factory 的偏好測試 wiring 與 deterministic randomizer 支援於 `tests/CardPicker2.IntegrationTests/Infrastructure/DrawFeatureWebApplicationFactory.cs`
-- [ ] T005 [P] 新增偏好 UI HTML assertion helper 於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceHtmlAssertions.cs`
+- [X] T001 [P] 擴充 schema v5、收藏與排除抽卡測試資料 helper 於 `tests/CardPicker2.UnitTests/Services/DrawFeatureTestData.cs`
+- [X] T002 [P] 擴充 preference-aware integration fixture 建立工具於 `tests/CardPicker2.IntegrationTests/Infrastructure/MetadataFilterTestData.cs`
+- [X] T003 [P] 擴充隔離 JSON 資料檔 helper 以支援 schema v5 與重啟驗證於 `tests/CardPicker2.IntegrationTests/Infrastructure/TempCardLibrary.cs`
+- [X] T004 [P] 擴充測試網站 factory 的偏好測試 wiring 與 deterministic randomizer 支援於 `tests/CardPicker2.IntegrationTests/Infrastructure/DrawFeatureWebApplicationFactory.cs`
+- [X] T005 [P] 新增偏好 UI HTML assertion helper 於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceHtmlAssertions.cs`
 
 ---
 

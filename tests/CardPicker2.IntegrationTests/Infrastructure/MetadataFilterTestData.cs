@@ -58,7 +58,75 @@ public static class MetadataFilterTestData
         };
     }
 
-    private static object Card(Guid id, string mealType, string zhTwName, string enUsName, object? metadata)
+    public static object PreferenceAwareSchemaV5Document(
+        Guid? favoriteCardId = null,
+        Guid? excludedCardId = null)
+    {
+        return new
+        {
+            schemaVersion = 5,
+            cards = new[]
+            {
+                Card(
+                    Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                    "Breakfast",
+                    "鮪魚蛋餅",
+                    "Tuna Egg Crepe",
+                    Metadata(
+                        new[] { "早餐", "蛋餅" },
+                        "Low",
+                        "Quick",
+                        new[] { "TakeoutFriendly" },
+                        "None"),
+                    favoriteCardId == Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                    excludedCardId == Guid.Parse("11111111-1111-1111-1111-111111111111")),
+                Card(
+                    VegetarianLunchCardId,
+                    "Lunch",
+                    "菇菇蔬食便當",
+                    "Mushroom Vegetable Bento",
+                    Metadata(
+                        new[] { "蔬食", "便當", "Bento" },
+                        "Medium",
+                        "Quick",
+                        new[] { "Vegetarian", "TakeoutFriendly", "Light" },
+                        "None"),
+                    favoriteCardId == VegetarianLunchCardId,
+                    excludedCardId == VegetarianLunchCardId),
+                Card(
+                    Guid.Parse("33333333-3333-3333-3333-333333333332"),
+                    "Dinner",
+                    "麻辣乾拌麵",
+                    "Spicy Tossed Noodles",
+                    Metadata(
+                        new[] { "麵食", "辣" },
+                        "Low",
+                        "Quick",
+                        new[] { "HeavyFlavor" },
+                        "Hot"),
+                    favoriteCardId == Guid.Parse("33333333-3333-3333-3333-333333333332"),
+                    excludedCardId == Guid.Parse("33333333-3333-3333-3333-333333333332")),
+                Card(
+                    MissingMetadataDinnerCardId,
+                    "Dinner",
+                    "家常炒飯",
+                    "Home-Style Fried Rice",
+                    metadata: null,
+                    isFavorite: favoriteCardId == MissingMetadataDinnerCardId,
+                    isExcludedFromDraw: excludedCardId == MissingMetadataDinnerCardId)
+            },
+            drawHistory = Array.Empty<object>()
+        };
+    }
+
+    private static object Card(
+        Guid id,
+        string mealType,
+        string zhTwName,
+        string enUsName,
+        object? metadata,
+        bool isFavorite = false,
+        bool isExcludedFromDraw = false)
     {
         return new
         {
@@ -79,7 +147,12 @@ public static class MetadataFilterTestData
                     description = $"{enUsName} description"
                 }
             },
-            decisionMetadata = metadata
+            decisionMetadata = metadata,
+            preferences = new
+            {
+                isFavorite,
+                isExcludedFromDraw
+            }
         };
     }
 

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace CardPicker2.IntegrationTests.Infrastructure;
 
@@ -15,11 +16,15 @@ public sealed partial class DrawFeatureWebApplicationFactory : WebApplicationFac
 {
     private readonly TempCardLibrary _library;
     private readonly string? _environmentName;
+    private readonly IMealCardRandomizer? _randomizer;
 
-    public DrawFeatureWebApplicationFactory(string? environmentName = null)
+    public DrawFeatureWebApplicationFactory(
+        string? environmentName = null,
+        IMealCardRandomizer? randomizer = null)
     {
         _library = TempCardLibrary.Create("cardpicker-draw-feature-tests-");
         _environmentName = environmentName;
+        _randomizer = randomizer;
     }
 
     public string LibraryDirectoryPath => _library.DirectoryPath;
@@ -29,6 +34,11 @@ public sealed partial class DrawFeatureWebApplicationFactory : WebApplicationFac
     public static DrawFeatureWebApplicationFactory CreateProduction()
     {
         return new DrawFeatureWebApplicationFactory("Production");
+    }
+
+    public static DrawFeatureWebApplicationFactory CreateWithDeterministicRandomizer(params int[] indices)
+    {
+        return new DrawFeatureWebApplicationFactory(randomizer: new SequenceMealCardRandomizer(indices));
     }
 
     public HttpClient CreateClientForCulture(string cultureName)
@@ -111,6 +121,47 @@ public sealed partial class DrawFeatureWebApplicationFactory : WebApplicationFac
             tokenPath: tokenPath);
     }
 
+    public async Task<FormUrlEncodedContent> CreatePreferenceContentAsync(
+        HttpClient client,
+        Guid cardId,
+        bool? targetIsFavorite = null,
+        bool? targetIsExcludedFromDraw = null,
+        Guid? drawOperationId = null,
+        Guid? resultCardId = null,
+        string tokenPath = "/Cards")
+    {
+        var token = await GetAntiForgeryTokenAsync(client, tokenPath);
+        return new FormUrlEncodedContent(CreatePreferencePayload(
+            token,
+            cardId,
+            targetIsFavorite,
+            targetIsExcludedFromDraw,
+            drawOperationId,
+            resultCardId));
+    }
+
+    public static IReadOnlyList<KeyValuePair<string, string>> CreatePreferencePayload(
+        string antiForgeryToken,
+        Guid cardId,
+        bool? targetIsFavorite = null,
+        bool? targetIsExcludedFromDraw = null,
+        Guid? drawOperationId = null,
+        Guid? resultCardId = null)
+    {
+        var payload = new List<KeyValuePair<string, string>>
+        {
+            new("__RequestVerificationToken", antiForgeryToken),
+            new("CardId", cardId.ToString())
+        };
+
+        AddOptional(payload, "TargetIsFavorite", targetIsFavorite?.ToString().ToLowerInvariant());
+        AddOptional(payload, "TargetIsExcludedFromDraw", targetIsExcludedFromDraw?.ToString().ToLowerInvariant());
+        AddOptional(payload, "DrawOperationId", drawOperationId?.ToString());
+        AddOptional(payload, "ResultCardId", resultCardId?.ToString());
+
+        return payload;
+    }
+
     public static IReadOnlyList<KeyValuePair<string, string>> CreateFilteredDrawPayload(
         string antiForgeryToken,
         string drawMode = "Normal",
@@ -152,7 +203,9 @@ public sealed partial class DrawFeatureWebApplicationFactory : WebApplicationFac
         string? preparationTimeRange = null,
         IEnumerable<string>? dietaryPreferences = null,
         string? maxSpiceLevel = null,
-        IEnumerable<string>? tags = null)
+        IEnumerable<string>? tags = null,
+        string? favoriteFilter = null,
+        string? drawEligibilityFilter = null)
     {
         var query = new List<KeyValuePair<string, string>>();
 
@@ -161,6 +214,8 @@ public sealed partial class DrawFeatureWebApplicationFactory : WebApplicationFac
         AddOptional(query, "priceRange", priceRange);
         AddOptional(query, "preparationTimeRange", preparationTimeRange);
         AddOptional(query, "maxSpiceLevel", maxSpiceLevel);
+        AddOptional(query, "favoriteFilter", favoriteFilter);
+        AddOptional(query, "drawEligibilityFilter", drawEligibilityFilter);
         AddRepeated(query, "dietaryPreferences", dietaryPreferences);
         AddRepeated(query, "tags", tags);
 
@@ -175,7 +230,9 @@ public sealed partial class DrawFeatureWebApplicationFactory : WebApplicationFac
         string? preparationTimeRange = null,
         IEnumerable<string>? dietaryPreferences = null,
         string? maxSpiceLevel = null,
-        IEnumerable<string>? tags = null)
+        IEnumerable<string>? tags = null,
+        string? favoriteFilter = null,
+        string? drawEligibilityFilter = null)
     {
         var query = CreateFilterQuery(
             keyword,
@@ -184,7 +241,9 @@ public sealed partial class DrawFeatureWebApplicationFactory : WebApplicationFac
             preparationTimeRange,
             dietaryPreferences,
             maxSpiceLevel,
-            tags);
+            tags,
+            favoriteFilter,
+            drawEligibilityFilter);
 
         return string.IsNullOrEmpty(query) ? "/Cards" : $"/Cards?{query}";
     }
@@ -222,6 +281,12 @@ public sealed partial class DrawFeatureWebApplicationFactory : WebApplicationFac
             {
                 options.LibraryFilePath = LibraryFilePath;
             });
+
+            if (_randomizer is not null)
+            {
+                services.RemoveAll<IMealCardRandomizer>();
+                services.AddSingleton(_randomizer);
+            }
         });
     }
 
@@ -262,6 +327,23 @@ public sealed partial class DrawFeatureWebApplicationFactory : WebApplicationFac
         foreach (var value in repeatedValues.Where(value => !string.IsNullOrWhiteSpace(value)))
         {
             values.Add(new KeyValuePair<string, string>(key, value));
+        }
+    }
+
+    private sealed class SequenceMealCardRandomizer : IMealCardRandomizer
+    {
+        private readonly Queue<int> _indices;
+
+        public SequenceMealCardRandomizer(IEnumerable<int> indices)
+        {
+            _indices = new Queue<int>(indices);
+        }
+
+        public int NextIndex(int count)
+        {
+            var index = _indices.Count == 0 ? 0 : _indices.Dequeue();
+            Assert.InRange(index, 0, count - 1);
+            return index;
         }
     }
 }
