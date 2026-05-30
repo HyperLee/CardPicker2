@@ -32,27 +32,31 @@
 - [ ] T007 [P] 新增 favorite/draw eligibility criteria 預設值與 unsupported value 行為失敗測試於 `tests/CardPicker2.UnitTests/Models/CardPreferenceCriteriaTests.cs`
 - [ ] T008 [P] 新增 schema v4->v5 migration、schema v5 round-trip、invalid preference JSON 封鎖與 write v5 失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferencePersistenceTests.cs`
 - [ ] T009 [P] 擴充 public model/service XML 文件註解失敗測試以涵蓋偏好 API 於 `tests/CardPicker2.UnitTests/Documentation/PublicApiDocumentationTests.cs`
-- [ ] T010 執行 `dotnet test CardPicker2.sln --filter "CardPreferenceState|CardPreferenceCriteria|CardLibraryPreferencePersistence|PublicApiDocumentation"`，確認 `CardPicker2.sln` 的基礎新測試在實作前失敗
+- [ ] T010 [P] 新增卡牌新增預設未收藏/未排除與編輯保留既有偏好狀態的失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/CardPreferenceCreateEditTests.cs`
+- [ ] T011 [P] 新增 duplicate detection 忽略收藏/排除狀態且仍只依 active card 雙語名稱、描述與餐別判斷的失敗測試於 `tests/CardPicker2.UnitTests/Services/DuplicateCardDetectorPreferenceTests.cs`
+- [ ] T012 執行 `dotnet test CardPicker2.sln --filter "CardPreferenceState|CardPreferenceCriteria|CardLibraryPreferencePersistence|CardPreferenceCreateEdit|DuplicateCardDetectorPreference|PublicApiDocumentation"`，確認 `CardPicker2.sln` 的基礎新測試在實作前失敗
 
 ### 基礎實作
 
-- [ ] T011 [P] 建立卡牌偏好狀態模型與 XML 文件註解於 `CardPicker2/Models/CardPreferenceState.cs`
-- [ ] T012 [P] 建立收藏篩選列舉與 XML 文件註解於 `CardPicker2/Models/FavoriteFilter.cs`
-- [ ] T013 [P] 建立可抽狀態篩選列舉與 XML 文件註解於 `CardPicker2/Models/DrawEligibilityFilter.cs`
-- [ ] T014 [P] 建立偏好篩選條件模型與 XML 文件註解於 `CardPicker2/Models/CardPreferenceCriteria.cs`
-- [ ] T015 [P] 建立 target-state 偏好更新輸入模型與 server validation 註解於 `CardPicker2/Models/CardPreferenceUpdateInputModel.cs`
-- [ ] T016 [P] 建立偏好 mutation 結果模型與 status enum 於 `CardPicker2/Models/PreferenceMutationResult.cs`
-- [ ] T017 更新 JSON 文件 schema 常數、v5 版本語意與 XML 文件註解於 `CardPicker2/Models/CardLibraryDocument.cs`
-- [ ] T018 更新卡牌模型以保存 `Preferences`、`IsDrawable`、`IsPreferenceEditable` 與 normalize 保留偏好於 `CardPicker2/Models/MealCard.cs`
-- [ ] T019 更新搜尋條件以納入 `CardPreferenceCriteria` 預設值於 `CardPicker2/Models/SearchCriteria.cs`
-- [ ] T020 更新 localized card projection 以包含收藏、排除與可抽狀態欄位於 `CardPicker2/Models/LocalizedMealCardView.cs`
-- [ ] T021 更新抽卡結果模型以攜帶選中卡牌目前偏好狀態與 preference message key 於 `CardPicker2/Models/DrawResult.cs`
-- [ ] T022 更新候選池空集合原因以區分偏好排除造成的空候選池於 `CardPicker2/Models/CandidatePoolEmptyReason.cs`
-- [ ] T023 更新種子資料建立流程，確保新 seed card 預設未收藏且未排除於 `CardPicker2/Services/SeedMealCards.cs`
-- [ ] T024 更新服務契約，加入 target-state 偏好 mutation 與偏好投影需求於 `CardPicker2/Services/ICardLibraryService.cs`
-- [ ] T025 更新卡牌本地化投影，輸出偏好 badges、可抽狀態與安全 display projection 於 `CardPicker2/Services/MealCardLocalizationService.cs`
-- [ ] T026 更新 card library persistence，支援 schema v1-v4 載入為 v5、schema v5 validation、invalid preference blocking 與 atomic v5 write 於 `CardPicker2/Services/CardLibraryService.cs`
-- [ ] T027 執行 `dotnet test CardPicker2.sln --filter "CardPreferenceState|CardPreferenceCriteria|CardLibraryPreferencePersistence|PublicApiDocumentation"`，確認 `CardPicker2.sln` 的基礎測試通過
+- [ ] T013 [P] 建立卡牌偏好狀態模型與 XML 文件註解於 `CardPicker2/Models/CardPreferenceState.cs`
+- [ ] T014 [P] 建立收藏篩選列舉與 XML 文件註解於 `CardPicker2/Models/FavoriteFilter.cs`
+- [ ] T015 [P] 建立可抽狀態篩選列舉與 XML 文件註解於 `CardPicker2/Models/DrawEligibilityFilter.cs`
+- [ ] T016 [P] 建立偏好篩選條件模型與 XML 文件註解於 `CardPicker2/Models/CardPreferenceCriteria.cs`
+- [ ] T017 [P] 建立 target-state 偏好更新輸入模型與 server validation 註解於 `CardPicker2/Models/CardPreferenceUpdateInputModel.cs`
+- [ ] T018 [P] 建立偏好 mutation 結果模型與 status enum 於 `CardPicker2/Models/PreferenceMutationResult.cs`
+- [ ] T019 更新 JSON 文件 schema 常數、v5 版本語意與 XML 文件註解於 `CardPicker2/Models/CardLibraryDocument.cs`
+- [ ] T020 更新卡牌模型以保存 `Preferences`、`IsDrawable`、`IsPreferenceEditable` 與 normalize 保留偏好於 `CardPicker2/Models/MealCard.cs`
+- [ ] T021 更新搜尋條件以納入 `CardPreferenceCriteria` 預設值於 `CardPicker2/Models/SearchCriteria.cs`
+- [ ] T022 更新 localized card projection 以包含收藏、排除與可抽狀態欄位於 `CardPicker2/Models/LocalizedMealCardView.cs`
+- [ ] T023 更新抽卡結果模型以攜帶選中卡牌目前偏好狀態與 preference message key 於 `CardPicker2/Models/DrawResult.cs`
+- [ ] T024 更新候選池空集合原因以區分偏好排除造成的空候選池於 `CardPicker2/Models/CandidatePoolEmptyReason.cs`
+- [ ] T025 更新種子資料建立流程，確保新 seed card 預設未收藏且未排除於 `CardPicker2/Services/SeedMealCards.cs`
+- [ ] T026 更新服務契約，加入 target-state 偏好 mutation 與偏好投影需求於 `CardPicker2/Services/ICardLibraryService.cs`
+- [ ] T027 更新卡牌本地化投影，輸出偏好 badges、可抽狀態與安全 display projection 於 `CardPicker2/Services/MealCardLocalizationService.cs`
+- [ ] T028 更新 card library persistence，支援 schema v1-v4 載入為 v5、schema v5 validation、invalid preference blocking 與 atomic v5 write 於 `CardPicker2/Services/CardLibraryService.cs`
+- [ ] T029 更新卡牌新增與編輯流程，使新卡預設未收藏/未排除且編輯雙語內容、餐別或 metadata 時保留既有偏好狀態於 `CardPicker2/Services/CardLibraryService.cs`、`CardPicker2/Pages/Cards/Create.cshtml.cs`、`CardPicker2/Pages/Cards/Edit.cshtml.cs`
+- [ ] T030 更新 duplicate detection 呼叫路徑，確認偏好狀態不參與重複判斷且 deleted card 不阻擋新增於 `CardPicker2/Services/DuplicateCardDetector.cs`、`CardPicker2/Services/CardLibraryService.cs`
+- [ ] T031 執行 `dotnet test CardPicker2.sln --filter "CardPreferenceState|CardPreferenceCriteria|CardLibraryPreferencePersistence|CardPreferenceCreateEdit|DuplicateCardDetectorPreference|PublicApiDocumentation"`，確認 `CardPicker2.sln` 的基礎測試通過
 
 **檢查點**: schema v5 偏好狀態可安全載入、驗證、投影與保存；所有 user story 可開始實作。
 
@@ -68,29 +72,29 @@
 
 > 先撰寫這些測試，確認在實作前失敗。
 
-- [ ] T028 [P] [US1] 新增排除 target-state mutation、重複提交、missing/deleted/blocked/write failure 失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceMutationTests.cs`
-- [ ] T029 [P] [US1] 新增偏好排除候選池失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCandidatePoolPreferenceTests.cs`
-- [ ] T030 [P] [US1] 新增偏好排除與 metadata/rotation 順序失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceDrawTests.cs`
-- [ ] T031 [P] [US1] 新增首頁偏好排除抽卡整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredDrawPageTests.cs`
-- [ ] T032 [P] [US1] 新增卡牌庫與詳情頁排除操作整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/CardPreferencePageTests.cs`
-- [ ] T033 [P] [US1] 新增偏好排除後統計不變整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredDrawStatisticsTests.cs`
-- [ ] T034 [US1] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|DrawCandidatePoolPreference|CardLibraryPreferenceDraw|PreferenceFilteredDraw|CardPreferencePage|PreferenceFilteredDrawStatistics"`，確認 `CardPicker2.sln` 的 US1 新測試在實作前失敗
+- [ ] T032 [P] [US1] 新增排除 target-state mutation、重複提交、missing/deleted/blocked/write failure 失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceMutationTests.cs`
+- [ ] T033 [P] [US1] 新增偏好排除候選池失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCandidatePoolPreferenceTests.cs`
+- [ ] T034 [P] [US1] 新增偏好排除與 metadata/rotation 順序失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceDrawTests.cs`
+- [ ] T035 [P] [US1] 新增首頁偏好排除抽卡整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredDrawPageTests.cs`
+- [ ] T036 [P] [US1] 新增卡牌庫與詳情頁排除操作整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/CardPreferencePageTests.cs`
+- [ ] T037 [P] [US1] 新增偏好排除後統計不變整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredDrawStatisticsTests.cs`
+- [ ] T038 [US1] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|DrawCandidatePoolPreference|CardLibraryPreferenceDraw|PreferenceFilteredDraw|CardPreferencePage|PreferenceFilteredDrawStatistics"`，確認 `CardPicker2.sln` 的 US1 新測試在實作前失敗
 
 ### 使用者故事 1 的實作
 
-- [ ] T035 [US1] 實作 `SetPreferenceAsync` target-state mutation、idempotency、missing/deleted/blocked/write failure 與安全 message key 於 `CardPicker2/Services/CardLibraryService.cs`
-- [ ] T036 [US1] 更新候選池建構，先移除 `Preferences.IsExcludedFromDraw == true` 再套用 mode、meal 與 metadata filters 於 `CardPicker2/Services/DrawCandidatePoolBuilder.cs`
-- [ ] T037 [US1] 更新抽卡流程，處理 preference exclusion count、preference-empty reason、不呼叫 randomizer、不新增 history/statistics 與結構化日誌於 `CardPicker2/Services/CardLibraryService.cs`
-- [ ] T038 [US1] 更新卡牌庫 PageModel，加入排除/取消排除 POST handler、Anti-Forgery 表單回跳與 localized status message 於 `CardPicker2/Pages/Cards/Index.cshtml.cs`
-- [ ] T039 [US1] 更新詳情頁 PageModel，加入排除/取消排除 POST handler、not-found/deleted/blocked/write failure 處理於 `CardPicker2/Pages/Cards/Details.cshtml.cs`
-- [ ] T040 [US1] 建立可重用排除控制 partial，提交 target final state 而非 toggle action 於 `CardPicker2/Pages/Cards/_CardPreferenceControls.cshtml`
-- [ ] T041 [US1] 更新卡牌庫列表，預設顯示已排除 active cards、狀態 badge 與排除 target-state form 於 `CardPicker2/Pages/Cards/Index.cshtml`
-- [ ] T042 [US1] 更新卡牌詳情頁，顯示排除狀態、可抽狀態與排除 target-state form 於 `CardPicker2/Pages/Cards/Details.cshtml`
-- [ ] T043 [P] [US1] 新增繁中排除抽卡、可抽狀態、偏好空候選池與 mutation 訊息資源於 `CardPicker2/Resources/SharedResource.zh-TW.resx`
-- [ ] T044 [P] [US1] 新增英文排除抽卡、可抽狀態、偏好空候選池與 mutation 訊息資源於 `CardPicker2/Resources/SharedResource.en-US.resx`
-- [ ] T045 [P] [US1] 更新 preference badge、列表控制、詳情控制與 empty prompt responsive 樣式於 `CardPicker2/wwwroot/css/site.css`
-- [ ] T046 [P] [US1] 更新 target-state button progressive enhancement 與快速連點 UI guard 於 `CardPicker2/wwwroot/js/site.js`
-- [ ] T047 [US1] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|DrawCandidatePoolPreference|CardLibraryPreferenceDraw|PreferenceFilteredDraw|CardPreferencePage|PreferenceFilteredDrawStatistics"`，確認 `CardPicker2.sln` 的 US1 測試通過
+- [ ] T039 [US1] 實作 `SetPreferenceAsync` target-state mutation、idempotency、missing/deleted/blocked/write failure 與安全 message key 於 `CardPicker2/Services/CardLibraryService.cs`
+- [ ] T040 [US1] 更新候選池建構，先移除 `Preferences.IsExcludedFromDraw == true` 再套用 mode、meal 與 metadata filters 於 `CardPicker2/Services/DrawCandidatePoolBuilder.cs`
+- [ ] T041 [US1] 更新抽卡流程，處理 preference exclusion count、preference-empty reason、不呼叫 randomizer、不新增 history/statistics 與結構化日誌於 `CardPicker2/Services/CardLibraryService.cs`
+- [ ] T042 [US1] 更新卡牌庫 PageModel，加入排除/取消排除 POST handler、Anti-Forgery 表單回跳與 localized status message 於 `CardPicker2/Pages/Cards/Index.cshtml.cs`
+- [ ] T043 [US1] 更新詳情頁 PageModel，加入排除/取消排除 POST handler、not-found/deleted/blocked/write failure 處理於 `CardPicker2/Pages/Cards/Details.cshtml.cs`
+- [ ] T044 [US1] 建立可重用排除控制 partial，提交 target final state 而非 toggle action 於 `CardPicker2/Pages/Cards/_CardPreferenceControls.cshtml`
+- [ ] T045 [US1] 更新卡牌庫列表，預設顯示已排除 active cards、狀態 badge 與排除 target-state form 於 `CardPicker2/Pages/Cards/Index.cshtml`
+- [ ] T046 [US1] 更新卡牌詳情頁，顯示排除狀態、可抽狀態與排除 target-state form 於 `CardPicker2/Pages/Cards/Details.cshtml`
+- [ ] T047 [P] [US1] 新增繁中排除抽卡、可抽狀態、偏好空候選池與 mutation 訊息資源於 `CardPicker2/Resources/SharedResource.zh-TW.resx`
+- [ ] T048 [P] [US1] 新增英文排除抽卡、可抽狀態、偏好空候選池與 mutation 訊息資源於 `CardPicker2/Resources/SharedResource.en-US.resx`
+- [ ] T049 [P] [US1] 更新 preference badge、列表控制、詳情控制與 empty prompt responsive 樣式於 `CardPicker2/wwwroot/css/site.css`
+- [ ] T050 [P] [US1] 更新 target-state button progressive enhancement 與快速連點 UI guard 於 `CardPicker2/wwwroot/js/site.js`
+- [ ] T051 [US1] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|DrawCandidatePoolPreference|CardLibraryPreferenceDraw|PreferenceFilteredDraw|CardPreferencePage|PreferenceFilteredDrawStatistics"`，確認 `CardPicker2.sln` 的 US1 測試通過
 
 **檢查點**: US1 是 MVP；使用者可手動排除餐點，排除卡仍可管理且不再進入未來抽卡候選池。
 
@@ -106,26 +110,26 @@
 
 > 先撰寫這些測試，確認在實作前失敗。
 
-- [ ] T048 [P] [US2] 新增收藏 target-state mutation 與重啟保存失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceMutationTests.cs`
-- [ ] T049 [P] [US2] 新增偏好篩選服務交集規則失敗測試於 `tests/CardPicker2.UnitTests/Services/CardPreferenceFilterServiceTests.cs`
-- [ ] T050 [P] [US2] 新增收藏不得影響候選池與公平性失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCandidatePoolPreferenceTests.cs`
-- [ ] T051 [P] [US2] 新增收藏/可抽狀態與 keyword/meal/metadata 組合搜尋失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceSearchTests.cs`
-- [ ] T052 [P] [US2] 新增卡牌庫偏好篩選整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredCardLibraryPageTests.cs`
-- [ ] T053 [P] [US2] 新增收藏與統計/rotation 相容性失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawStatisticsPreferenceCompatibilityTests.cs`
-- [ ] T054 [US2] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|CardPreferenceFilterService|DrawCandidatePoolPreference|CardLibraryPreferenceSearch|PreferenceFilteredCardLibrary|DrawStatisticsPreferenceCompatibility"`，確認 `CardPicker2.sln` 的 US2 新測試在實作前失敗
+- [ ] T052 [P] [US2] 新增收藏 target-state mutation 與重啟保存失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceMutationTests.cs`
+- [ ] T053 [P] [US2] 新增偏好篩選服務交集規則失敗測試於 `tests/CardPicker2.UnitTests/Services/CardPreferenceFilterServiceTests.cs`
+- [ ] T054 [P] [US2] 新增收藏不得影響候選池與公平性失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawCandidatePoolPreferenceTests.cs`
+- [ ] T055 [P] [US2] 新增收藏/可抽狀態與 keyword/meal/metadata 組合搜尋失敗測試於 `tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceSearchTests.cs`
+- [ ] T056 [P] [US2] 新增卡牌庫偏好篩選整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredCardLibraryPageTests.cs`
+- [ ] T057 [P] [US2] 新增收藏與統計/rotation 相容性失敗測試於 `tests/CardPicker2.UnitTests/Services/DrawStatisticsPreferenceCompatibilityTests.cs`
+- [ ] T058 [US2] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|CardPreferenceFilterService|DrawCandidatePoolPreference|CardLibraryPreferenceSearch|PreferenceFilteredCardLibrary|DrawStatisticsPreferenceCompatibility"`，確認 `CardPicker2.sln` 的 US2 新測試在實作前失敗
 
 ### 使用者故事 2 的實作
 
-- [ ] T055 [US2] 建立偏好篩選服務，實作 `FavoriteFilter` 與 `DrawEligibilityFilter` 交集規則於 `CardPicker2/Services/CardPreferenceFilterService.cs`
-- [ ] T056 [US2] 更新服務 wiring，註冊或注入偏好篩選服務且不改變既有 lifetime 於 `CardPicker2/Program.cs`
-- [ ] T057 [US2] 更新卡牌搜尋流程，套用 keyword、meal type、metadata filters 與 preference filters 交集並記錄安全 count 於 `CardPicker2/Services/CardLibraryService.cs`
-- [ ] T058 [US2] 更新卡牌庫 PageModel，加入 `favoriteFilter`、`drawEligibilityFilter` query binding、條件摘要與清除條件狀態於 `CardPicker2/Pages/Cards/Index.cshtml.cs`
-- [ ] T059 [US2] 更新偏好控制 partial，加入收藏/取消收藏 target-state form 與雙狀態 badge 於 `CardPicker2/Pages/Cards/_CardPreferenceControls.cshtml`
-- [ ] T060 [US2] 更新卡牌庫 Razor UI，加入收藏篩選、可抽/已排除篩選、結果數、badge 與 filter state preservation 於 `CardPicker2/Pages/Cards/Index.cshtml`
-- [ ] T061 [US2] 更新詳情頁 Razor UI，顯示收藏狀態並提供收藏/取消收藏操作於 `CardPicker2/Pages/Cards/Details.cshtml`
-- [ ] T062 [P] [US2] 新增繁中收藏 labels、filters、badges、success/error 與 no-result 文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`
-- [ ] T063 [P] [US2] 新增英文收藏 labels、filters、badges、success/error 與 no-result 文案於 `CardPicker2/Resources/SharedResource.en-US.resx`
-- [ ] T064 [US2] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|CardPreferenceFilterService|DrawCandidatePoolPreference|CardLibraryPreferenceSearch|PreferenceFilteredCardLibrary|DrawStatisticsPreferenceCompatibility"`，確認 `CardPicker2.sln` 的 US2 測試通過
+- [ ] T059 [US2] 建立偏好篩選服務，實作 `FavoriteFilter` 與 `DrawEligibilityFilter` 交集規則於 `CardPicker2/Services/CardPreferenceFilterService.cs`
+- [ ] T060 [US2] 更新服務 wiring，註冊或注入偏好篩選服務且不改變既有 lifetime 於 `CardPicker2/Program.cs`
+- [ ] T061 [US2] 更新卡牌搜尋流程，套用 keyword、meal type、metadata filters 與 preference filters 交集並記錄安全 count 於 `CardPicker2/Services/CardLibraryService.cs`
+- [ ] T062 [US2] 更新卡牌庫 PageModel，加入 `favoriteFilter`、`drawEligibilityFilter` query binding、條件摘要與清除條件狀態於 `CardPicker2/Pages/Cards/Index.cshtml.cs`
+- [ ] T063 [US2] 更新偏好控制 partial，加入收藏/取消收藏 target-state form 與雙狀態 badge 於 `CardPicker2/Pages/Cards/_CardPreferenceControls.cshtml`
+- [ ] T064 [US2] 更新卡牌庫 Razor UI，加入收藏篩選、可抽/已排除篩選、結果數、badge 與 filter state preservation 於 `CardPicker2/Pages/Cards/Index.cshtml`
+- [ ] T065 [US2] 更新詳情頁 Razor UI，顯示收藏狀態並提供收藏/取消收藏操作於 `CardPicker2/Pages/Cards/Details.cshtml`
+- [ ] T066 [P] [US2] 新增繁中收藏 labels、filters、badges、success/error 與 no-result 文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`
+- [ ] T067 [P] [US2] 新增英文收藏 labels、filters、badges、success/error 與 no-result 文案於 `CardPicker2/Resources/SharedResource.en-US.resx`
+- [ ] T068 [US2] 執行 `dotnet test CardPicker2.sln --filter "PreferenceMutation|CardPreferenceFilterService|DrawCandidatePoolPreference|CardLibraryPreferenceSearch|PreferenceFilteredCardLibrary|DrawStatisticsPreferenceCompatibility"`，確認 `CardPicker2.sln` 的 US2 測試通過
 
 **檢查點**: US1 與 US2 可同時運作；收藏只影響辨識與卡牌庫篩選，不影響任何抽卡或統計規則。
 
@@ -141,22 +145,22 @@
 
 > 先撰寫這些測試，確認在實作前失敗。
 
-- [ ] T065 [P] [US3] 新增首頁結果區收藏/排除 action 整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionTests.cs`
-- [ ] T066 [P] [US3] 新增結果區偏好 action 不新增 history/statistics/snapshot 失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionStatisticsTests.cs`
-- [ ] T067 [P] [US3] 新增結果區 target-state 重複提交與語系切換不變性失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionLocalizationTests.cs`
-- [ ] T068 [P] [US3] 新增 preference result action responsive/accessibility 失敗測試於 `tests/CardPicker2.IntegrationTests/Browser/CardPreferenceResponsiveAccessibilityTests.cs`
-- [ ] T069 [P] [US3] 新增 result preference action HTML assertion helper 覆蓋測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceHtmlAssertions.cs`
-- [ ] T070 [US3] 執行 `dotnet test CardPicker2.sln --filter "PreferenceResultAction|PreferenceResultActionStatistics|PreferenceResultActionLocalization|CardPreferenceResponsiveAccessibility"`，確認 `CardPicker2.sln` 的 US3 新測試在實作前失敗
+- [ ] T069 [P] [US3] 新增首頁結果區收藏/排除 action 整合失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionTests.cs`
+- [ ] T070 [P] [US3] 新增結果區偏好 action 不新增 history/statistics/snapshot 失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionStatisticsTests.cs`
+- [ ] T071 [P] [US3] 新增結果區 target-state 重複提交與語系切換不變性失敗測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionLocalizationTests.cs`
+- [ ] T072 [P] [US3] 新增 preference result action responsive/accessibility 失敗測試於 `tests/CardPicker2.IntegrationTests/Browser/CardPreferenceResponsiveAccessibilityTests.cs`
+- [ ] T073 [P] [US3] 新增 result preference action HTML assertion helper 覆蓋測試於 `tests/CardPicker2.IntegrationTests/Pages/PreferenceHtmlAssertions.cs`
+- [ ] T074 [US3] 執行 `dotnet test CardPicker2.sln --filter "PreferenceResultAction|PreferenceResultActionStatistics|PreferenceResultActionLocalization|CardPreferenceResponsiveAccessibility"`，確認 `CardPicker2.sln` 的 US3 新測試在實作前失敗
 
 ### 使用者故事 3 的實作
 
-- [ ] T071 [US3] 更新首頁 PageModel，加入 result preference binding、`OnPostPreferenceAsync`、result restore 與 operation/result card validation 於 `CardPicker2/Pages/Index.cshtml.cs`
-- [ ] T072 [US3] 更新首頁結果區 Razor UI，加入收藏/排除 target-state forms、目前偏好 badge 與 disabled blocked state 於 `CardPicker2/Pages/Index.cshtml`
-- [ ] T073 [US3] 更新抽卡 replay/result projection，重顯成功結果時投影目前 preference state 但不重新 randomize 於 `CardPicker2/Services/CardLibraryService.cs`
-- [ ] T074 [US3] 更新 localized result projection，確保 result card 的偏好 badge、deleted state、metadata 與 rotation summary 可並存於 `CardPicker2/Services/MealCardLocalizationService.cs`
-- [ ] T075 [P] [US3] 新增繁中結果區偏好 action success/error、replay 與 blocked 文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`
-- [ ] T076 [P] [US3] 新增英文結果區偏好 action success/error、replay 與 blocked 文案於 `CardPicker2/Resources/SharedResource.en-US.resx`
-- [ ] T077 [US3] 執行 `dotnet test CardPicker2.sln --filter "PreferenceResultAction|PreferenceResultActionStatistics|PreferenceResultActionLocalization|CardPreferenceResponsiveAccessibility"`，確認 `CardPicker2.sln` 的 US3 測試通過
+- [ ] T075 [US3] 更新首頁 PageModel，加入 result preference binding、`OnPostPreferenceAsync`、result restore 與 operation/result card validation 於 `CardPicker2/Pages/Index.cshtml.cs`
+- [ ] T076 [US3] 更新首頁結果區 Razor UI，加入收藏/排除 target-state forms、目前偏好 badge 與 disabled blocked state 於 `CardPicker2/Pages/Index.cshtml`
+- [ ] T077 [US3] 更新抽卡 replay/result projection，重顯成功結果時投影目前 preference state 但不重新 randomize 於 `CardPicker2/Services/CardLibraryService.cs`
+- [ ] T078 [US3] 更新 localized result projection，確保 result card 的偏好 badge、deleted state、metadata 與 rotation summary 可並存於 `CardPicker2/Services/MealCardLocalizationService.cs`
+- [ ] T079 [P] [US3] 新增繁中結果區偏好 action success/error、replay 與 blocked 文案於 `CardPicker2/Resources/SharedResource.zh-TW.resx`
+- [ ] T080 [P] [US3] 新增英文結果區偏好 action success/error、replay 與 blocked 文案於 `CardPicker2/Resources/SharedResource.en-US.resx`
+- [ ] T081 [US3] 執行 `dotnet test CardPicker2.sln --filter "PreferenceResultAction|PreferenceResultActionStatistics|PreferenceResultActionLocalization|CardPreferenceResponsiveAccessibility"`，確認 `CardPicker2.sln` 的 US3 測試通過
 
 **檢查點**: 所有使用者故事均可獨立驗證；結果區偏好整理不污染已成立的抽卡事實。
 
@@ -166,18 +170,19 @@
 
 **目的**: 補齊安全、可觀察性、效能、公開介面邊界、雙語完整性、RWD/accessibility、XML 文件註解、coverage 與 quickstart 驗證。
 
-- [ ] T078 [P] 擴充 Anti-Forgery 與 production HSTS/CSP 測試，覆蓋首頁 result preference、卡牌庫 preference 與詳情頁 preference forms 於 `tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs`
-- [ ] T079 [P] 擴充偏好結構化日誌測試，覆蓋 schema v5 migration、preference update、invalid target、preference empty pool、draw success count 與 write failure 於 `tests/CardPicker2.UnitTests/Services/DrawLoggingTests.cs`
-- [ ] T080 [P] 擴充公開介面邊界測試，確認未新增外部 JSON/API endpoint 且偏好互動維持 Razor Pages/form/query/page handler 於 `tests/CardPicker2.IntegrationTests/RouteSurfaceTests.cs`
-- [ ] T081 [P] 新增偏好效能與 web-vitals smoke 測試，覆蓋首頁 GET、preference-aware draw POST、preference update POST、statistics projection 與 `/Cards` preference filter p95 於 `tests/CardPicker2.IntegrationTests/Performance/CardPreferencePerformanceTests.cs`
-- [ ] T082 [P] 擴充 resource key 完整性測試，確認 `zh-TW` 與 `en-US` 無偏好相關未翻譯 key 於 `tests/CardPicker2.IntegrationTests/Pages/LocalizationResourceTests.cs`
-- [ ] T083 [P] 擴充賭博式或加權暗示文案邊界測試，確認偏好文案不含保底、加權、下一次機率提高或付費暗示於 `tests/CardPicker2.UnitTests/Services/DrawCopyBoundaryTests.cs`
-- [ ] T084 更新 production 安全標頭、DI wiring、Serilog 安全欄位與 service lifetime 最終檢查於 `CardPicker2/Program.cs`
-- [ ] T085 更新新增或變更 public C# model/service API 的 XML 文件註解於 `CardPicker2/Models/CardPreferenceState.cs`、`CardPicker2/Models/MealCard.cs`、`CardPicker2/Models/DrawResult.cs`、`CardPicker2/Services/ICardLibraryService.cs`、`CardPicker2/Services/CardLibraryService.cs`、`CardPicker2/Services/DrawCandidatePoolBuilder.cs`、`CardPicker2/Services/MealCardLocalizationService.cs`，並以 `tests/CardPicker2.UnitTests/Documentation/PublicApiDocumentationTests.cs` 驗證
-- [ ] T086 執行 `dotnet test CardPicker2.sln --filter "CardPreference|Preference|SecurityHeaders|AntiForgery|Logging|RouteSurface|CardPreferencePerformance|LocalizationResource|DrawCopyBoundary"`，確認 `CardPicker2.sln` 的 cross-cutting 測試通過
-- [ ] T087 執行 `dotnet build CardPicker2.sln`，確認 `CardPicker2.sln` 無新增 build warning、formatting 或 naming 違規
-- [ ] T088 執行 `dotnet test CardPicker2.sln`，確認 `CardPicker2.sln` 全部單元、整合、browser、security、performance 與 route-surface 測試通過
-- [ ] T089 依 `specs/007-card-preference-controls/quickstart.md` 完成手動或 browser automation 驗證，覆蓋 schema v5、卡牌庫收藏/排除、詳情頁、排除候選池、空候選池、結果區操作、公平性、語系/主題、reduced motion、RWD、效能、安全與觀察性
+- [ ] T082 [P] 擴充 Anti-Forgery 與 production HSTS/CSP 測試，覆蓋首頁 result preference、卡牌庫 preference 與詳情頁 preference forms 於 `tests/CardPicker2.IntegrationTests/SecurityHeadersTests.cs`
+- [ ] T083 [P] 擴充偏好結構化日誌測試，覆蓋 schema v5 migration、preference update、invalid target、preference empty pool、draw success count 與 write failure 於 `tests/CardPicker2.UnitTests/Services/DrawLoggingTests.cs`
+- [ ] T084 [P] 擴充公開介面邊界測試，確認未新增外部 JSON/API endpoint 且偏好互動維持 Razor Pages/form/query/page handler 於 `tests/CardPicker2.IntegrationTests/RouteSurfaceTests.cs`
+- [ ] T085 [P] 新增偏好效能與 web-vitals smoke 測試，覆蓋首頁 GET、preference-aware draw POST、preference update POST、statistics projection 與 `/Cards` preference filter p95 於 `tests/CardPicker2.IntegrationTests/Performance/CardPreferencePerformanceTests.cs`
+- [ ] T086 [P] 擴充 resource key 完整性測試，確認 `zh-TW` 與 `en-US` 無偏好相關未翻譯 key 於 `tests/CardPicker2.IntegrationTests/Pages/LocalizationResourceTests.cs`
+- [ ] T087 [P] 擴充賭博式或加權暗示文案邊界測試，確認偏好文案不含保底、加權、下一次機率提高或付費暗示於 `tests/CardPicker2.UnitTests/Services/DrawCopyBoundaryTests.cs`
+- [ ] T088 [P] 新增卡牌庫與詳情頁偏好控制/篩選 RWD 與 accessibility browser smoke 測試，覆蓋 390x844、768x1024、1366x768、鍵盤焦點、觸控可操作、非僅靠顏色與無水平溢出於 `tests/CardPicker2.IntegrationTests/Browser/CardPreferenceLibraryResponsiveAccessibilityTests.cs`
+- [ ] T089 更新 production 安全標頭、DI wiring、Serilog 安全欄位與 service lifetime 最終檢查於 `CardPicker2/Program.cs`
+- [ ] T090 更新新增或變更 public C# model/service API 的 XML 文件註解於 `CardPicker2/Models/CardPreferenceState.cs`、`CardPicker2/Models/MealCard.cs`、`CardPicker2/Models/DrawResult.cs`、`CardPicker2/Services/ICardLibraryService.cs`、`CardPicker2/Services/CardLibraryService.cs`、`CardPicker2/Services/DrawCandidatePoolBuilder.cs`、`CardPicker2/Services/MealCardLocalizationService.cs`，並以 `tests/CardPicker2.UnitTests/Documentation/PublicApiDocumentationTests.cs` 驗證
+- [ ] T091 執行 `dotnet test CardPicker2.sln --filter "CardPreference|Preference|SecurityHeaders|AntiForgery|Logging|RouteSurface|CardPreferencePerformance|LocalizationResource|DrawCopyBoundary|CardPreferenceLibraryResponsiveAccessibility"`，確認 `CardPicker2.sln` 的 cross-cutting 測試通過
+- [ ] T092 執行 `dotnet build CardPicker2.sln`，確認 `CardPicker2.sln` 無新增 build warning、formatting 或 naming 違規
+- [ ] T093 執行 `dotnet test CardPicker2.sln`，確認 `CardPicker2.sln` 全部單元、整合、browser、security、performance 與 route-surface 測試通過
+- [ ] T094 依 `specs/007-card-preference-controls/quickstart.md` 完成手動或 browser automation 驗證，覆蓋 schema v5、卡牌庫收藏/排除、詳情頁、排除候選池、空候選池、結果區操作、公平性、語系/主題、reduced motion、RWD、效能、安全與觀察性
 
 ---
 
@@ -203,10 +208,9 @@
 ```text
 階段 1 設定
   -> 階段 2 基礎建設
-      -> US1 手動排除抽卡 (MVP)
-      -> US2 收藏與偏好篩選
-          -> US3 結果區偏好操作
-              -> 階段 6 潤飾
+      -> US1 手動排除抽卡 (MVP) --\
+      -> US2 收藏與偏好篩選 ------> US3 結果區偏好操作
+      -> 階段 6 潤飾 (依賴欲交付的 user stories 完成)
 ```
 
 ### 每個使用者故事內部順序
@@ -221,12 +225,12 @@
 ## 平行處理機會
 
 - T001 到 T005 可平行建立測試 helper，因為修改不同測試輔助檔。
-- T006 到 T009 可平行撰寫 foundation 失敗測試。
-- T011 到 T016 可平行建立互不依賴的模型檔案。
-- US1 的 T028 到 T033 可平行撰寫失敗測試；T043 到 T046 可在 handler contract 穩定後平行處理 resources、CSS 與 JS。
-- US2 的 T048 到 T053 可平行撰寫失敗測試；T062 與 T063 可平行補齊雙語 resource。
-- US3 的 T065 到 T069 可平行撰寫失敗測試；T075 與 T076 可平行補齊雙語 resource。
-- T078 到 T083 可平行補齊 cross-cutting 測試。
+- T006 到 T011 可平行撰寫 foundation 失敗測試。
+- T013 到 T018 可平行建立互不依賴的模型檔案。
+- US1 的 T032 到 T037 可平行撰寫失敗測試；T047 到 T050 可在 handler contract 穩定後平行處理 resources、CSS 與 JS。
+- US2 的 T052 到 T057 可平行撰寫失敗測試；T066 與 T067 可平行補齊雙語 resource。
+- US3 的 T069 到 T073 可平行撰寫失敗測試；T079 與 T080 可平行補齊雙語 resource。
+- T082 到 T088 可平行補齊 cross-cutting 測試。
 
 ---
 
@@ -234,46 +238,46 @@
 
 ```bash
 # 平行撰寫 US1 失敗測試:
-任務: "T028 [US1] tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceMutationTests.cs"
-任務: "T029 [US1] tests/CardPicker2.UnitTests/Services/DrawCandidatePoolPreferenceTests.cs"
-任務: "T030 [US1] tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceDrawTests.cs"
-任務: "T031 [US1] tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredDrawPageTests.cs"
-任務: "T032 [US1] tests/CardPicker2.IntegrationTests/Pages/CardPreferencePageTests.cs"
+任務: "T032 [US1] tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceMutationTests.cs"
+任務: "T033 [US1] tests/CardPicker2.UnitTests/Services/DrawCandidatePoolPreferenceTests.cs"
+任務: "T034 [US1] tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceDrawTests.cs"
+任務: "T035 [US1] tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredDrawPageTests.cs"
+任務: "T036 [US1] tests/CardPicker2.IntegrationTests/Pages/CardPreferencePageTests.cs"
 
 # UI contract 穩定後平行處理文案與前端:
-任務: "T043 [US1] CardPicker2/Resources/SharedResource.zh-TW.resx"
-任務: "T044 [US1] CardPicker2/Resources/SharedResource.en-US.resx"
-任務: "T045 [US1] CardPicker2/wwwroot/css/site.css"
-任務: "T046 [US1] CardPicker2/wwwroot/js/site.js"
+任務: "T047 [US1] CardPicker2/Resources/SharedResource.zh-TW.resx"
+任務: "T048 [US1] CardPicker2/Resources/SharedResource.en-US.resx"
+任務: "T049 [US1] CardPicker2/wwwroot/css/site.css"
+任務: "T050 [US1] CardPicker2/wwwroot/js/site.js"
 ```
 
 ## 平行範例: 使用者故事 2
 
 ```bash
 # 平行撰寫 US2 失敗測試:
-任務: "T049 [US2] tests/CardPicker2.UnitTests/Services/CardPreferenceFilterServiceTests.cs"
-任務: "T050 [US2] tests/CardPicker2.UnitTests/Services/DrawCandidatePoolPreferenceTests.cs"
-任務: "T051 [US2] tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceSearchTests.cs"
-任務: "T052 [US2] tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredCardLibraryPageTests.cs"
-任務: "T053 [US2] tests/CardPicker2.UnitTests/Services/DrawStatisticsPreferenceCompatibilityTests.cs"
+任務: "T053 [US2] tests/CardPicker2.UnitTests/Services/CardPreferenceFilterServiceTests.cs"
+任務: "T054 [US2] tests/CardPicker2.UnitTests/Services/DrawCandidatePoolPreferenceTests.cs"
+任務: "T055 [US2] tests/CardPicker2.UnitTests/Services/CardLibraryPreferenceSearchTests.cs"
+任務: "T056 [US2] tests/CardPicker2.IntegrationTests/Pages/PreferenceFilteredCardLibraryPageTests.cs"
+任務: "T057 [US2] tests/CardPicker2.UnitTests/Services/DrawStatisticsPreferenceCompatibilityTests.cs"
 
 # 卡牌庫 UI contract 穩定後平行處理文案:
-任務: "T062 [US2] CardPicker2/Resources/SharedResource.zh-TW.resx"
-任務: "T063 [US2] CardPicker2/Resources/SharedResource.en-US.resx"
+任務: "T066 [US2] CardPicker2/Resources/SharedResource.zh-TW.resx"
+任務: "T067 [US2] CardPicker2/Resources/SharedResource.en-US.resx"
 ```
 
 ## 平行範例: 使用者故事 3
 
 ```bash
 # 平行撰寫 US3 失敗測試:
-任務: "T065 [US3] tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionTests.cs"
-任務: "T066 [US3] tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionStatisticsTests.cs"
-任務: "T067 [US3] tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionLocalizationTests.cs"
-任務: "T068 [US3] tests/CardPicker2.IntegrationTests/Browser/CardPreferenceResponsiveAccessibilityTests.cs"
+任務: "T069 [US3] tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionTests.cs"
+任務: "T070 [US3] tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionStatisticsTests.cs"
+任務: "T071 [US3] tests/CardPicker2.IntegrationTests/Pages/PreferenceResultActionLocalizationTests.cs"
+任務: "T072 [US3] tests/CardPicker2.IntegrationTests/Browser/CardPreferenceResponsiveAccessibilityTests.cs"
 
 # 結果區 UI contract 穩定後平行處理文案:
-任務: "T075 [US3] CardPicker2/Resources/SharedResource.zh-TW.resx"
-任務: "T076 [US3] CardPicker2/Resources/SharedResource.en-US.resx"
+任務: "T079 [US3] CardPicker2/Resources/SharedResource.zh-TW.resx"
+任務: "T080 [US3] CardPicker2/Resources/SharedResource.en-US.resx"
 ```
 
 ---
