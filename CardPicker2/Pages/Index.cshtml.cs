@@ -159,6 +159,17 @@ public class IndexModel : PageModel
             return;
         }
 
+        if (HasInvalidDrawSubmission())
+        {
+            Statistics = await _cardLibraryService.GetDrawStatisticsAsync(CurrentLanguage, cancellationToken);
+            OperationState = DrawOperationState.Blocked;
+            CurrentFilterSummary = CreateLocalizedFilterSummary(BuildCriteria());
+            StatusMessage = _localizer["Draw.Validation.InvalidSubmission"];
+            ModelState.Clear();
+            ModelState.AddModelError(string.Empty, StatusMessage);
+            return;
+        }
+
         var operation = new DrawOperation
         {
             OperationId = DrawOperationId,
@@ -364,6 +375,11 @@ public class IndexModel : PageModel
     private bool HasInvalidRecentDrawCount(RotationCooldownSettings settings)
     {
         return !settings.IsValid || ModelState[nameof(RecentDrawCount)]?.Errors.Count > 0;
+    }
+
+    private bool HasInvalidDrawSubmission()
+    {
+        return !ModelState.IsValid;
     }
 
     private static IReadOnlyList<string> SplitTags(IEnumerable<string>? values)

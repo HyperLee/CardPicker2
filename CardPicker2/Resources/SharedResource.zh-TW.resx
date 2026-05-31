@@ -96,6 +96,9 @@
   <data name="Home.Status.ResultUnavailable" xml:space="preserve">
     <value>原抽卡結果已無法顯示，請重新抽卡。</value>
   </data>
+  <data name="Draw.Validation.InvalidSubmission" xml:space="preserve">
+    <value>抽卡表單包含不支援的值，請重新選擇後再試。</value>
+  </data>
   <data name="Home.MealSelector.Legend" xml:space="preserve">
     <value>選擇餐別</value>
   </data>
