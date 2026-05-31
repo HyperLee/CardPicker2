@@ -96,6 +96,9 @@
   <data name="Home.Status.ResultUnavailable" xml:space="preserve">
     <value>The previous draw result is no longer available. Draw again.</value>
   </data>
+  <data name="Draw.Validation.InvalidSubmission" xml:space="preserve">
+    <value>The draw form contains an unsupported value. Please choose again and retry.</value>
+  </data>
   <data name="Home.MealSelector.Legend" xml:space="preserve">
     <value>Choose a meal type</value>
   </data>
