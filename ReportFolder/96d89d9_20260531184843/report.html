@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CardPicker2 Codex Security Scan（繁體中文）</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #fff;
+      --bg-elev: #fafafa;
+      --bg-muted: #f5f5f7;
+      --fg: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #2563eb;
+      --code: #f3f4f6;
+      --shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b0f14;
+        --bg-elev: #0f141b;
+        --bg-muted: #121923;
+        --fg: #e5e7eb;
+        --muted: #9ca3af;
+        --border: #243040;
+        --accent: #60a5fa;
+        --code: #111827;
+        --shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 15px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    body.sidebar-collapsed .layout { grid-template-columns: 44px minmax(0, 1fr); }
+
+    .sidebar {
+      min-height: 100vh;
+      border-right: 1px solid var(--border);
+      background: var(--bg-muted);
+    }
+
+    .toc-inner {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 10px 8px;
+    }
+
+    .nav-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin: 0 0 8px;
+      text-transform: uppercase;
+    }
+
+    .nav-toggle {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--fg);
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+    }
+
+    .nav-toggle:hover { box-shadow: var(--shadow); }
+    .nav-meta { color: var(--muted); font-size: 12px; margin: 0 0 12px; padding: 0 4px; }
+
+    body.sidebar-collapsed .toc-inner {
+      display: flex;
+      align-items: center;
+      padding: 8px 6px;
+    }
+
+    body.sidebar-collapsed .nav-title span,
+    body.sidebar-collapsed .nav-meta,
+    body.sidebar-collapsed .toc { display: none; }
+
+    main { max-width: 1040px; padding: 32px 44px 80px; }
+    h1, h2, h3 { line-height: 1.2; margin-top: 1.7em; }
+    h1:first-child { margin-top: 0; }
+    h2 { border-top: 1px solid var(--border); padding-top: 1em; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code { background: var(--code); border-radius: 4px; padding: 0.1em 0.3em; }
+    pre { background: var(--code); border: 1px solid var(--border); border-radius: 8px; overflow: auto; padding: 16px; }
+    pre code { background: transparent; padding: 0; }
+    table { border-collapse: collapse; width: 100%; margin: 18px 0; }
+    th, td { border: 1px solid var(--border); padding: 8px 10px; vertical-align: top; }
+    th { text-align: left; background: var(--code); }
+
+    main h3[id^="0-"] + table,
+    main h3[id^="1-"] + table,
+    main h3[id^="2-"] + table,
+    main h3[id^="3-"] + table,
+    main h3[id^="4-"] + table,
+    main h3[id^="5-"] + table,
+    main h3[id^="6-"] + table,
+    main h3[id^="7-"] + table,
+    main h3[id^="8-"] + table,
+    main h3[id^="9-"] + table {
+      margin: 10px 0 24px;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      background: var(--bg-elev);
+      box-shadow: var(--shadow);
+    }
+
+    main h3[id^="0-"] + table th,
+    main h3[id^="1-"] + table th,
+    main h3[id^="2-"] + table th,
+    main h3[id^="3-"] + table th,
+    main h3[id^="4-"] + table th,
+    main h3[id^="5-"] + table th,
+    main h3[id^="6-"] + table th,
+    main h3[id^="7-"] + table th,
+    main h3[id^="8-"] + table th,
+    main h3[id^="9-"] + table th { display: none; }
+
+    main h3[id^="0-"] + table td:first-child,
+    main h3[id^="1-"] + table td:first-child,
+    main h3[id^="2-"] + table td:first-child,
+    main h3[id^="3-"] + table td:first-child,
+    main h3[id^="4-"] + table td:first-child,
+    main h3[id^="5-"] + table td:first-child,
+    main h3[id^="6-"] + table td:first-child,
+    main h3[id^="7-"] + table td:first-child,
+    main h3[id^="8-"] + table td:first-child,
+    main h3[id^="9-"] + table td:first-child {
+      width: 170px;
+      color: var(--muted);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    main h3[id^="0-"] + table td,
+    main h3[id^="1-"] + table td,
+    main h3[id^="2-"] + table td,
+    main h3[id^="3-"] + table td,
+    main h3[id^="4-"] + table td,
+    main h3[id^="5-"] + table td,
+    main h3[id^="6-"] + table td,
+    main h3[id^="7-"] + table td,
+    main h3[id^="8-"] + table td,
+    main h3[id^="9-"] + table td { border-left: 0; border-right: 0; }
+
+    .toc { list-style: none; padding: 0; margin: 0; }
+    .toc a {
+      display: block;
+      border-radius: 6px;
+      color: var(--fg);
+      font-size: 13px;
+      line-height: 1.3;
+      padding: 4px 6px;
+      position: relative;
+      transition: background 160ms ease, color 160ms ease, padding-left 160ms ease;
+    }
+
+    .toc a:hover { background: var(--bg-elev); text-decoration: none; }
+    .toc-item { list-style: none; margin: 1px 0; }
+    .toc-item.depth-1 > a { font-weight: 700; }
+    .toc-item.depth-2 { padding-left: 14px; }
+    .toc-item.depth-3 { padding-left: 28px; }
+
+    .toc-item.active > a {
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      font-weight: 700;
+      padding-left: 10px;
+    }
+
+    .toc-item.active > a::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 4px;
+      bottom: 4px;
+      width: 3px;
+      border-radius: 2px;
+      background: var(--accent);
+    }
+
+    @media (max-width: 900px) {
+      .layout { display: block; }
+      .sidebar { min-height: 0; border-right: 0; border-bottom: 1px solid var(--border); }
+      .toc-inner { position: static; height: auto; max-height: 45vh; }
+      main { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Table of contents">
+      <div class="toc-inner">
+        <div class="nav-title">
+          <span>Outline</span>
+          <button id="navToggle" class="nav-toggle" aria-pressed="false" aria-label="Collapse sidebar" title="Collapse sidebar">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path id="navToggleIcon" d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <div class="nav-meta">CardPicker2 Codex Security Scan（繁體中文）</div>
+        <ul class="toc">
+          <li class="toc-item depth-1"><a href="#security-review-cardpicker2">Security Review: CardPicker2（繁體中文報告）</a></li>
+<li class="toc-item depth-2"><a href="#scope">Scope</a></li>
+<li class="toc-item depth-3"><a href="#scan-summary">Scan Summary</a></li>
+<li class="toc-item depth-2"><a href="#threat-model">Threat Model</a></li>
+<li class="toc-item depth-3"><a href="#section">概觀</a></li>
+<li class="toc-item depth-3"><a href="#section">資產與信任邊界</a></li>
+<li class="toc-item depth-3"><a href="#section">既有控制</a></li>
+<li class="toc-item depth-3"><a href="#section">嚴重度校準</a></li>
+<li class="toc-item depth-2"><a href="#findings">Findings</a></li>
+<li class="toc-item depth-3"><a href="#confidence-scale">Confidence Scale</a></li>
+<li class="toc-item depth-3"><a href="#1-draw-post">[1] Draw POST 未處理模型繫結錯誤即持久化抽卡結果</a></li>
+<li class="toc-item depth-3"><a href="#2-current-schema-malformed-json-corrupt-file-recovery">[2] Current-schema malformed JSON 可能在 corrupt-file recovery 前丟出例外</a></li>
+<li class="toc-item depth-3"><a href="#3-card-library-symlink">[3] 固定 card-library 暫存路徑會跟隨預先建立的 symlink</a></li>
+<li class="toc-item depth-2"><a href="#reviewed-surfaces">Reviewed Surfaces</a></li>
+        </ul>
+      </div>
+    </aside>
+    <main>
+      <h1 id="security-review-cardpicker2">Security Review: CardPicker2（繁體中文報告）</h1>
+
+<h2 id="scope">Scope</h2>
+
+<ul><li>掃描模式：針對 <code>/Users/qiuzili/CardPicker2</code>、commit <code>96d89d9</code> 執行 repository-wide Codex Security scan。</li><li>執行期範圍：<code>CardPicker2/</code> 下的 ASP.NET Core Razor Pages 應用程式，包含 PageModel、Razor template、service、model、static asset、設定檔、seed data，以及 package/version 宣告。</li><li>支援性範圍：Spec Kit 與開發用 artifact、產生出的 <code>bin/</code> 與 <code>obj/</code> 輸出、測試證據皆已檢視其安全相關性，但不視為已部署的 runtime attack surface。</li><li>產生的掃描脈絡：本掃描產生 per-scan threat model：<code>ReportFolder/96d89d9_20260531184843/artifacts/01_context/threat_model.md</code>，後續階段以該檔作為威脅模型的依據。</li><li>驗證 artifact：動態驗證 harness 輸出位於 <code>ReportFolder/96d89d9_20260531184843/artifacts/03_coverage/validation_harness_output.json</code>。</li><li>最終輸出：本 Markdown 報告位於 <code>ReportFolder/96d89d9_20260531184843/report.md</code>；HTML 報告位於 <code>ReportFolder/96d89d9_20260531184843/report.html</code>。</li></ul>
+
+<h3 id="scan-summary">Scan Summary</h3>
+
+<table>
+<thead><tr>
+<th>Field</th>
+<th>Value</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Reportable findings</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Severity mix</td>
+<td>medium: 3</td>
+</tr>
+<tr>
+<td>Confidence mix</td>
+<td>high: 3</td>
+</tr>
+<tr>
+<td>Coverage</td>
+<td><code>artifacts/02_discovery/work_ledger.jsonl</code> 中 134/134 個 deep-review row 已關閉；<code>artifacts/03_coverage/repository_coverage_ledger.md</code> 中 13 個 repository surface row 已關閉</td>
+</tr>
+<tr>
+<td>Validation mode</td>
+<td>靜態原始碼檢視、subagent full-file receipts、NuGet vulnerable package 查詢、advisory/version 檢查，以及針對原始應用程式碼的 bounded validation harness</td>
+</tr>
+<tr>
+<td>Deferred coverage</td>
+<td>無</td>
+</tr>
+</tbody></table>
+
+<h2 id="threat-model">Threat Model</h2>
+
+<h3 id="section">概觀</h3>
+
+<p>CardPicker2 是單使用者、本機執行的 ASP.NET Core Razor Pages 網頁應用程式，用於管理餐點卡牌，並以 slot-machine 風格抽出餐點。主要 runtime project 是 <code>CardPicker2/</code>；測試、Spec Kit 文件與開發筆記支援產品開發，但預設不是部署後的應用程式 attack surface。</p>
+
+<p>此應用程式暴露 server-rendered Razor Pages、form posts、query-string filters、static assets、localization resources，以及本機 JSON persistence file：<code>CardPicker2/data/cards.json</code>。核心狀態包含餐點卡牌內容、卡牌 metadata、preference state、draw history、draw statistics、language preference，以及暫時性的 UI status messages。</p>
+
+<h3 id="section">資產與信任邊界</h3>
+
+<ul><li><code>cards.json</code> 的完整性，包括 card identity、meal type、metadata、preference state、draw history、deleted-card retention 與 schema version。</li><li>抽卡結果的正確性與公平性，包括 selected meal type、filter criteria、cooldown handling 與 idempotent draw operation IDs。</li><li>有效資料下的卡牌操作可用性，以及 persisted data corrupted 或 unsupported 時的安全 blocking behavior。</li><li>state-changing forms、localized UI 與 static assets 的 browser security controls。</li><li>本機檔案內容、logs、system prompts、connection strings、secrets、stack traces 與 corrupted JSON contents 的機密性。</li><li>Browser-to-server inputs 都是不可信任輸入：route values、query strings、form fields、anti-forgery tokens、cookies 與 headers 都必須在 server-side 驗證。</li><li>本機 JSON 檔案由 operator 控制，但仍具安全相關性，因為 malformed 或遭竄改的資料可能影響所有後續卡牌操作。</li></ul>
+
+<h3 id="section">既有控制</h3>
+
+<ul><li>Razor Pages model binding 加上 service-layer validation 來執行 domain rules。</li><li>ASP.NET Core anti-forgery 機制保護 state-changing Razor form posts。</li><li>Razor 預設 HTML encoding。</li><li>Language change 使用 <code>LocalRedirect</code> 搭配 return URL normalization。</li><li>Supported-culture allowlist 與 unsupported culture cookie fallback。</li><li>Production 環境在 <code>Program.cs</code> 中設定 HSTS、HTTPS redirection 與 CSP。</li><li>JSON document validation、schema checks、corrupted-file blocking，以及 same-process mutation serialization。</li></ul>
+
+<h3 id="section">嚴重度校準</h3>
+
+<p>在此本機單使用者模型下，Critical 或 High finding 仍需要嚴重邊界突破，例如 remote code execution、對 trusted config 有影響的任意檔案寫入、具真實 browser impact 的 stored XSS，或重大敏感資料外洩。Medium findings 包含會持久化 invalid draw/card state 的 server-side validation gaps、會破壞 recovery behavior 的 corrupted JSON handling，或具受限前置條件的 local file-persistence hazards。Low findings 則是 exploitability 有限的 hardening gaps。</p>
+
+<h2 id="findings">Findings</h2>
+
+<table>
+<thead><tr>
+<th>#</th>
+<th>Title</th>
+<th>Severity</th>
+<th>Confidence</th>
+<th>Category</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="#1-draw-post-未處理模型繫結錯誤即持久化抽卡結果">Draw POST 未處理模型繫結錯誤即持久化抽卡結果</a></td>
+<td>Medium</td>
+<td>High</td>
+<td>Server-side input validation bypass</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="#2-current-schema-malformed-json-可能在-corrupt-file-recovery-前丟出例外">Current-schema malformed JSON 可能在 corrupt-file recovery 前丟出例外</a></td>
+<td>Medium</td>
+<td>High</td>
+<td>Malformed local data denial of service</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="#3-固定-card-library-暫存路徑會跟隨預先建立的-symlink">固定 card-library 暫存路徑會跟隨預先建立的 symlink</a></td>
+<td>Medium</td>
+<td>High</td>
+<td>Insecure temporary file handling / symlink-following write</td>
+</tr>
+</tbody></table>
+
+<h3 id="confidence-scale">Confidence Scale</h3>
+
+<table>
+<thead><tr>
+<th>Label</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>high</td>
+<td>直接的 source、configuration 或 runtime evidence 支援 finding，且 reachability 或 exploitability 沒有重大未解 blocker。</td>
+</tr>
+<tr>
+<td>medium</td>
+<td>Source evidence 支援 plausible issue，但 runtime behavior、deployment configuration、role reachability、type constraints 或 exploit reliability 仍需額外證明。</td>
+</tr>
+<tr>
+<td>low</td>
+<td>證據薄弱或不完整；僅在刻意將 follow-up candidates 保留於最終報告時使用。</td>
+</tr>
+</tbody></table>
+
+<h3 id="1-draw-post">[1] Draw POST 未處理模型繫結錯誤即持久化抽卡結果</h3>
+
+<table>
+<thead><tr>
+<th>Field</th>
+<th>Value</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Severity</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Confidence</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Confidence rationale</td>
+<td>Validation harness 以原始 <code>IndexModel.OnPostDrawAsync</code> 執行，於 <code>ModelState</code> 中放入 <code>DrawMode</code> model-binding error，並觀察到成功持久化的 draw history record。</td>
+</tr>
+<tr>
+<td>Category</td>
+<td>Server-side input validation bypass</td>
+</tr>
+<tr>
+<td>CWE</td>
+<td>CWE-20: Improper Input Validation</td>
+</tr>
+<tr>
+<td>Affected lines</td>
+<td><code>CardPicker2/Pages/Index.cshtml.cs:137</code>, <code>CardPicker2/Pages/Index.cshtml.cs:151</code>, <code>CardPicker2/Pages/Index.cshtml.cs:162</code>, <code>CardPicker2/Services/CardLibraryService.cs:421</code></td>
+</tr>
+</tbody></table>
+
+<h4 id="summary">Summary</h4>
+
+<p><code>OnPostDrawAsync</code> 會載入 card library，只檢查 <code>RecentDrawCount</code> 專屬的 binding errors，接著用已繫結的 properties 建立 <code>DrawOperation</code>。其他 model-binding failures，例如無效的 <code>DrawMode</code> 字串導致 typed property 留在 default value，不會阻止抽卡。Service 之後收到看似有效的 typed defaults，並可能 append 成功的 draw record。</p>
+
+<h4 id="validation">Validation</h4>
+
+<p>方法：直接以 PageModel validation harness 驗證原始應用程式碼。Harness 加入一個 <code>DrawMode</code> <code>ModelState</code> error，設定足以走向成功路徑的 typed bound properties，呼叫 <code>OnPostDrawAsync</code>，再檢查 persisted <code>cards.json</code>。</p>
+
+<p>觀察到的證據：<code>artifacts/03_coverage/validation_harness_output.json</code> 中有 <code>modelStateDrawModeErrors=1</code>、<code>resultSucceeded=True</code>、<code>historyRecordFound=True</code>、<code>historyCount=1</code>、<code>persistedDrawMode=Normal</code> 與 <code>persistedMealType=Breakfast</code>。</p>
+
+<p>剩餘不確定性：對本機程式碼路徑沒有重大不確定性。完整 HTTP integration request 可進一步證明 ASP.NET Core 在此 app 中對 invalid enum binding 的精確行為，但 vulnerable handler behavior 已在相同 <code>ModelState</code> 條件下直接重現。</p>
+
+<h4 id="dataflow">Dataflow</h4>
+
+<p>Crafted draw form field -&gt; Razor Page model binding 記錄 error 並留下可用的 typed properties -&gt; <code>IndexModel.OnPostDrawAsync</code> 於 <code>Index.cshtml.cs:137</code> 繼續執行 -&gt; line 151 的 <code>CreateRotationSettings()</code> 只 gate recent draw count -&gt; line 162 建立 <code>DrawOperation</code> -&gt; <code>CardLibraryService.DrawAsync</code> 於 <code>CardLibraryService.cs:421</code> append draw history。</p>
+
+<h4 id="reachability">Reachability</h4>
+
+<p>具有效 anti-forgery token 的 same-user browser request，可直接送出 malformed draw fields 觸發此路徑，而不需透過正常 UI 控制項。Cross-site attacker 若無法繞過 anti-forgery，無法取得此路徑。結果是 draw history 與 statistics 中持久化 invalid-request semantics，不是 account compromise 或敏感資料外洩。</p>
+
+<h4 id="severity">Severity</h4>
+
+<p>Medium。此路徑是實際產品 workflow，副作用是 persistent application-state integrity impact，符合 threat model 中 server-side validation gaps 的 medium 類別。嚴重度低於 high，因為 exploitation 需要 local/same-user draw surface 與有效 token，且不跨越 multi-user authorization boundary。若有 anti-forgery 可被繞過，或 invalid persisted draws 可造成更廣泛 file corruption 的證據，嚴重度會提高；若能證明 ASP.NET Core 對任何 posted draw field 都不會產生此 <code>ModelState</code>/default-value 組合，嚴重度會降低。</p>
+
+<h4 id="remediation">Remediation</h4>
+
+<p>在建立 <code>DrawOperation</code> 前，只要 <code>ModelState</code> 含有任何 binding error 就拒絕 draw submission，同時保留既有欄位專屬錯誤訊息。新增 integration test：以有效 anti-forgery token POST 無效的 <code>DrawMode</code> 或 metadata enum 字串，並 assert 沒有 append draw history。</p>
+
+<h3 id="2-current-schema-malformed-json-corrupt-file-recovery">[2] Current-schema malformed JSON 可能在 corrupt-file recovery 前丟出例外</h3>
+
+<table>
+<thead><tr>
+<th>Field</th>
+<th>Value</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Severity</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Confidence</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Confidence rationale</td>
+<td>Validation harness 寫入 schema v5 <code>cards.json</code>，其中 <code>decisionMetadata.dietaryPreferences=null</code>，並在 service 回傳 blocked corrupt-file result 前重現 <code>ArgumentNullException</code>。</td>
+</tr>
+<tr>
+<td>Category</td>
+<td>Malformed local data denial of service</td>
+</tr>
+<tr>
+<td>CWE</td>
+<td>CWE-20: Improper Input Validation; CWE-248: Uncaught Exception</td>
+</tr>
+<tr>
+<td>Affected lines</td>
+<td><code>CardPicker2/Services/CardLibraryService.cs:83</code>, <code>CardPicker2/Services/CardLibraryService.cs:94</code>, <code>CardPicker2/Services/CardLibraryService.cs:107</code>, <code>CardPicker2/Services/CardLibraryService.cs:1068</code>, <code>CardPicker2/Models/MealCardDecisionMetadata.cs:56</code>, <code>CardPicker2/Services/MealCardMetadataValidator.cs:47</code></td>
+</tr>
+</tbody></table>
+
+<h4 id="summary">Summary</h4>
+
+<p>Repository 預期 corrupted 或 invalid <code>cards.json</code> 應被保留，並轉換為 blocking recovery state。對 current-schema documents，<code>DeserializeDocument</code> 會呼叫 <code>NormalizeCurrentDocument</code>，而該方法在 <code>ValidateDocument</code> 能拒絕 malformed child state 前，就先 normalize 每張卡牌。Parseable JSON 中的 null child collections 因此可能在 normalization 或 metadata validation 時丟出例外，而 <code>LoadAsync</code> 在 deserialization 周圍只 catch <code>JsonException</code>。</p>
+
+<h4 id="validation">Validation</h4>
+
+<p>方法：直接以 service validation harness 驗證 <code>CardLibraryService.LoadAsync</code>，輸入是一個 schema v5 JSON file，內含一張 active card，且 <code>decisionMetadata.dietaryPreferences=null</code>。</p>
+
+<p>觀察到的證據：<code>artifacts/03_coverage/validation_harness_output.json</code> 中有 <code>exceptionType=System.ArgumentNullException</code> 與 <code>exceptionMessagePrefix=Value cannot be null. (Parameter &#x27;source&#x27;)</code>。輸入檔保存在 <code>artifacts/03_coverage/null-metadata-case/cards.json</code>。</p>
+
+<p>剩餘不確定性：對重現的 null metadata collection 沒有重大不確定性。相似的 null localized strings 與 localization dictionaries 應由同一修正與 regression tests 涵蓋。</p>
+
+<h4 id="dataflow">Dataflow</h4>
+
+<p>Local <code>cards.json</code> bytes -&gt; <code>CardLibraryService.LoadAsync</code> 於 line 94 讀取檔案 -&gt; <code>DeserializeDocument</code> 處理 parseable current-schema JSON -&gt; <code>NormalizeCurrentDocument</code> 在 line 1068 執行 <code>document.Cards.Select(card =&gt; card.Normalize())</code> -&gt; <code>MealCardDecisionMetadata.Normalize()</code> 於 line 56 enumerate <code>DietaryPreferences</code> -&gt; unhandled exception escape，而不是回傳 <code>CardLibraryLoadResult.BlockedCorrupt</code>。</p>
+
+<h4 id="reachability">Reachability</h4>
+
+<p>本機使用者或程序竄改 <code>cards.json</code> 後，任何呼叫 <code>LoadAsync</code> 的 page 或 operation 都可能觸發 crash。此 app 是 single-user/local，因此預設不是 remote unauthenticated denial of service。不過這仍在 scope 內，因為 threat model 將 local JSON tampering 與 recovery-state behavior 視為 security-relevant availability and integrity concerns。</p>
+
+<h4 id="severity">Severity</h4>
+
+<p>Medium。影響是 persistent local availability loss，並繞過設計中的 corrupt-file recovery behavior。低於 high，因為 attacker 必須能影響本機 data file，而且重現效果是 request failure，不是 code execution、secret disclosure 或 cross-user compromise。若 browser-facing app path 可在沒有 local filesystem access 下寫入此 malformed state，嚴重度會提高；若有廣泛 exception wrapper 可可靠地將所有 malformed current-schema shapes 轉成 blocked recovery，嚴重度會降低。</p>
+
+<h4 id="remediation">Remediation</h4>
+
+<p>在 normalization 前先 validate 或 sanitize nullable child state。Null collections 與 localized strings 應被視為 validation failures，或在任何 dereference 前 normalize 成 empty values。擴充 corrupted-file handling tests，加入 schema v5 的 null <code>localizations</code>、null localized <code>name</code>/<code>description</code>、null <code>decisionMetadata.tags</code>、null <code>decisionMetadata.dietaryPreferences</code> cases，並 assert <code>BlockedCorrupt</code> 與原始檔 preservation。</p>
+
+<h3 id="3-card-library-symlink">[3] 固定 card-library 暫存路徑會跟隨預先建立的 symlink</h3>
+
+<table>
+<thead><tr>
+<th>Field</th>
+<th>Value</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Severity</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Confidence</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Confidence rationale</td>
+<td>Validation harness 預先將 <code>cards.json.tmp</code> 建成 symlink，並觀察到 <code>CreateAsync</code> 以 serialized card-library JSON 覆寫 symlink target。</td>
+</tr>
+<tr>
+<td>Category</td>
+<td>Insecure temporary file handling / symlink-following write</td>
+</tr>
+<tr>
+<td>CWE</td>
+<td>CWE-377: Insecure Temporary File; CWE-59: Link Following</td>
+</tr>
+<tr>
+<td>Affected lines</td>
+<td><code>CardPicker2/Services/CardLibraryService.cs:941</code>, <code>CardPicker2/Services/CardLibraryService.cs:944</code>, <code>CardPicker2/Services/CardLibraryService.cs:956</code></td>
+</tr>
+</tbody></table>
+
+<h4 id="summary">Summary</h4>
+
+<p><code>WriteDocumentAsync</code> 使用可預測的 temporary filename：<code>filePath + &quot;.tmp&quot;</code>，接著以 <code>FileMode.Create</code> 開啟。如果 local attacker 或其他 process 能先把該 path 建成 symbolic link，write 會在 service 將 temp path move 到 <code>cards.json</code> 前跟隨該 link。<code>CardLibraryFileCoordinator</code> 的 same-process serialization 無法防護 process 外部預先建立的 filesystem object。</p>
+
+<h4 id="validation">Validation</h4>
+
+<p>方法：直接以 service validation harness 驗證，在呼叫 <code>CardLibraryService.CreateAsync</code> 前，先將 <code>cards.json.tmp</code> symlink 到同 directory 中可寫的 sibling file。</p>
+
+<p>觀察到的證據：<code>artifacts/03_coverage/validation_harness_output.json</code> 中有 <code>mutationStatus=Succeeded</code>、<code>victimChanged=True</code>、<code>victimLengthBefore=23</code>、<code>victimLengthAfter=19114</code> 與 <code>victimStartsWithJsonObject=True</code>。Validation case files 位於 <code>artifacts/03_coverage/temp-symlink-case/</code>。</p>
+
+<p>剩餘不確定性：本機程式碼行為已重現。Deployment-specific impact 取決於 card-library directory 周邊的 filesystem permissions，以及較低權限 actor 是否可在 app 以較高權限寫入時建立 temp-path symlink。</p>
+
+<h4 id="dataflow">Dataflow</h4>
+
+<p>Local filesystem object at <code>cards.json.tmp</code> -&gt; <code>WriteDocumentAsync</code> 於 <code>CardLibraryService.cs:941</code> 計算 deterministic temp path -&gt; line 944 的 <code>new FileStream(tempPath, FileMode.Create, ...)</code> 跟隨預先建立的 symlink -&gt; JSON serialization 寫入 symlink target -&gt; line 956 的 <code>File.Move(tempPath, filePath, overwrite: true)</code> promote 該 filesystem object。</p>
+
+<h4 id="reachability">Reachability</h4>
+
+<p>Web UI 不暴露任意 path selection。Realistic attacker 是 local user 或其他 process，需具備 card-library directory 的 write access，但不一定能直接寫入被選定的 symlink target。任何後續 app write，例如 draw history、create、edit、delete 或 preference update，都可觸發 overwrite。在預設 single-user local setup 中，這通常退化為 same-user file access；但若 data directory 可由低權限 actor 寫入，而 app 以較高權限執行，這會變成更強的 boundary issue。</p>
+
+<h4 id="severity">Severity</h4>
+
+<p>Medium。此 primitive 是受限 local filesystem 前置條件下的 app-account arbitrary file overwrite。未達 high，因為掃描未找到 browser-controlled path 可建立 symlink，也未證明可覆寫 executable/startup/config files，且預期部署是 local single-user。若有 production data directory 可被低權限寫入，或可覆寫 trusted executable/config paths 的證據，嚴重度會提高；若能證明該 directory 永遠只對 app account private，嚴重度會降低。</p>
+
+<h4 id="remediation">Remediation</h4>
+
+<p>在同一 directory 中使用 random temporary filename，並以 exclusive creation 開啟；若 path 已存在則 fail。優先採用不跟隨 pre-existing links 的 safe replace pattern，並只清理 process 自己建立的 exact temp file。新增 filesystem regression test：預先將 <code>cards.json.tmp</code> 建成 symlink，並 assert write 失敗且 target 未被修改。</p>
+
+<h2 id="reviewed-surfaces">Reviewed Surfaces</h2>
+
+<table>
+<thead><tr>
+<th>Surface</th>
+<th>Risk Area</th>
+<th>Outcome</th>
+<th>Notes</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Draw POST model binding and persistence</td>
+<td>Server-side input validation</td>
+<td>Reported</td>
+<td>成為 finding 1。</td>
+</tr>
+<tr>
+<td>Card-library JSON load, normalization, and validation</td>
+<td>Malformed local data / recovery state</td>
+<td>Reported</td>
+<td>成為 finding 2。</td>
+</tr>
+<tr>
+<td>Card-library write path</td>
+<td>Filesystem temp file handling</td>
+<td>Reported</td>
+<td>成為 finding 3。</td>
+</tr>
+<tr>
+<td>Razor forms for draw、preferences、create、edit、delete、language</td>
+<td>CSRF</td>
+<td>No issue found</td>
+<td>State-changing Razor forms 使用 ASP.NET Core anti-forgery tag helpers；既有測試涵蓋 draw/security flows 的 missing-token rejection。</td>
+</tr>
+<tr>
+<td>Razor templates 與 localized/card content rendering</td>
+<td>Stored/reflected XSS</td>
+<td>No issue found</td>
+<td>Templates 使用一般 Razor encoding；reviewed runtime pages 或 <code>site.js</code> 未發現 <code>Html.Raw</code> 或 raw DOM sink。</td>
+</tr>
+<tr>
+<td>Language switcher 與 returnUrl handling</td>
+<td>Open redirect / cookie tampering</td>
+<td>No issue found</td>
+<td><code>GetSafeReturnUrl</code> 會拒絕 absolute/scheme-relative values，handler 使用 <code>LocalRedirect</code>；culture 有 allowlist，cookie 僅儲存 UI preference。</td>
+</tr>
+<tr>
+<td><code>Program.cs</code> production middleware</td>
+<td>Security headers / CSP / HSTS</td>
+<td>No issue found</td>
+<td>Production branch 啟用 HSTS、HTTPS redirection、nonce-based CSP、<code>form-action &#x27;self&#x27;</code> 與 <code>frame-ancestors &#x27;none&#x27;</code>。</td>
+</tr>
+<tr>
+<td>Card management service 與 PageModels</td>
+<td>Create/edit/delete validation and recovery-state bypass</td>
+<td>No issue found</td>
+<td>PageModels 委派給 service validation；service 會阻擋 invalid inputs、duplicates、deleted cards 與 unavailable libraries。</td>
+</tr>
+<tr>
+<td>Draw pool、filters、cooldown、statistics、replay</td>
+<td>Draw integrity / replay / randomness</td>
+<td>No issue found</td>
+<td>Pool builder 依 mode 與 metadata 篩選 active/drawable cards；replay 是 idempotent；在此 local app 中 <code>Random.Shared</code> 不是 security boundary。</td>
+</tr>
+<tr>
+<td>Client JavaScript <code>site.js</code></td>
+<td>DOM injection / client-side trust</td>
+<td>No issue found</td>
+<td>未發現 <code>innerHTML</code>、<code>eval</code>、<code>fetch</code> 或 token persistence；<code>CSS.escape</code> 保護 restored selector names；server 仍是 authoritative。</td>
+</tr>
+<tr>
+<td>NuGet 與 bundled client dependencies</td>
+<td>Known vulnerable dependencies</td>
+<td>No issue found</td>
+<td><code>dotnet list ... --vulnerable --include-transitive</code> 未回報 vulnerable NuGet packages；Bootstrap 5.3.3 與 jQuery Validation 1.21.0 不在已檢查 advisory ranges 內。詳見 <code>artifacts/01_context/seed_research.md</code>。</td>
+</tr>
+<tr>
+<td>Spec Kit scripts、workflows、generated <code>bin/</code>/<code>obj</code> outputs</td>
+<td>Developer/generated artifacts</td>
+<td>Not applicable</td>
+<td>不屬於此 local app scan 的 deployed runtime surfaces；未提升任何 privileged automation path。</td>
+</tr>
+<tr>
+<td>appsettings、launchSettings、resources、seed data</td>
+<td>Secrets / sensitive disclosure</td>
+<td>No issue found</td>
+<td>Reviewed config/resource/data surfaces 未發現 secrets、connection strings、keys、完整 corrupt JSON、stack traces 或 system prompts。</td>
+</tr>
+</tbody></table>
+    </main>
+  </div>
+  <script>
+    const toggle = document.getElementById('navToggle');
+    const icon = document.getElementById('navToggleIcon');
+    const collapsedKey = 'codex-security-report:sidebar-collapsed';
+
+    function setCollapsed(collapsed) {
+      document.body.classList.toggle('sidebar-collapsed', collapsed);
+      if (toggle) {
+        toggle.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
+        toggle.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
+        toggle.setAttribute('title', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
+      }
+      if (icon) icon.setAttribute('d', collapsed ? 'M9 6l6 6-6 6' : 'M15 6l-6 6 6 6');
+      try { localStorage.setItem(collapsedKey, collapsed ? '1' : '0'); } catch {}
+    }
+
+    try { setCollapsed(localStorage.getItem(collapsedKey) === '1'); } catch {}
+    if (toggle) toggle.addEventListener('click', () => setCollapsed(!document.body.classList.contains('sidebar-collapsed')));
+
+    const tocLinks = Array.from(document.querySelectorAll('.toc a'));
+    const sections = tocLinks.map((link) => {
+      const id = decodeURIComponent(link.getAttribute('href').slice(1));
+      return [link, document.getElementById(id)];
+    }).filter((pair) => pair[1]);
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+      if (!visible) return;
+      tocLinks.forEach((link) => link.parentElement.classList.remove('active'));
+      const active = tocLinks.find((link) => link.getAttribute('href') === '#' + visible.target.id);
+      if (active) active.parentElement.classList.add('active');
+    }, { rootMargin: '-10% 0px -75% 0px', threshold: [0, 1] });
+
+    sections.forEach(([, section]) => observer.observe(section));
+  </script>
+</body>
+</html>
